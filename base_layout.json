@@ -1,0 +1,121 @@
+{
+  "hubs": [
+    {
+      "x": 0,
+      "y": 44,
+      "width": 1710,
+      "height": 1068,
+      "state": {
+        "sidebar": {
+          "width": 350,
+          "expanded": [
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs/Odometry",
+            "/AdvantageKit/RealOutputs/Odometry/Robot",
+            "/RealOutputs/RobotState/Elevator",
+            "/RealOutputs/RobotState/Arm",
+            "/RealOutputs/RobotState/Elevator/null",
+            "/RealOutputs/RobotState/Arm/null",
+            "/RealOutputs/RobotState/Wrist",
+            "/RealOutputs/RobotState/Wrist/null",
+            "/RealOutputs",
+            "/RealOutputs/FieldSimulation",
+            "/RealOutputs/RobotState",
+            "/RealOutputs/Vision/Camera0",
+            "/RealOutputs/Vision/Camera1"
+          ]
+        },
+        "tabs": {
+          "selected": 1,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "grimvlgu9aluj8btvwotco2wpj0pto2h",
+              "renderer": "#/",
+              "controlsHeight": 0
+            },
+            {
+              "type": 3,
+              "title": "Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2024 KitBot"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "/RealOutputs/Vision/Camera1/RobotPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "model": "2024 KitBot",
+                      "color": "#00ff00"
+                    }
+                  },
+                  {
+                    "type": "vision",
+                    "logKey": "/RealOutputs/Vision/Camera1/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "/RealOutputs/Vision/Camera0/RobotPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "model": "2024 KitBot",
+                      "color": "#ff0000"
+                    }
+                  },
+                  {
+                    "type": "vision",
+                    "logKey": "/RealOutputs/Vision/Camera0/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff0000",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "game": "2024 Field",
+                "origin": "blue"
+              },
+              "controllerUUID": "psf0y633oclnjyocus23hcnq1d4tpyte",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  -3.7173018760558336,
+                  7.264066532607625,
+                  -9.265755593555426
+                ],
+                "cameraTarget": [
+                  1.9304587175388233,
+                  -2.281910053323566,
+                  0.7373602611733245
+                ]
+              },
+              "controlsHeight": 335
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "4.0.0-beta-1"
+}
