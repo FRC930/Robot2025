@@ -51,6 +51,7 @@ public class RobotContainer {
   private final Vision vision;
 
   private AutoCommandManager autoCommandManager;
+  private RobotState robotState;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -113,6 +114,7 @@ public class RobotContainer {
     }
 
     autoCommandManager = new AutoCommandManager(drive);
+    robotState = RobotState.instance();
 
     // Configure the button bindings
     configureButtonBindings();
