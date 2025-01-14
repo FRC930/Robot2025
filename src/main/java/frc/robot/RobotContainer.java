@@ -36,6 +36,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOTalonFX;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -59,6 +62,11 @@ public class RobotContainer {
 
   private final double DRIVE_SPEED = 1.0;
   private final double ANGULAR_SPEED = 0.75;
+
+  // TODO: SET PROPER MOTOR IDS
+  private final ArmSubsystem arm =
+      new ArmSubsystem(
+          Robot.isReal() ? new ArmIOTalonFX(1037474, 192944) : new ArmIOSim(18718, 1845723));
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
