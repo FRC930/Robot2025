@@ -13,7 +13,21 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutDistance;
 import frc.robot.util.LoggedTunableNumber;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutDistance;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.VirtualSubsystem;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotState extends VirtualSubsystem {
@@ -91,8 +105,7 @@ public class RobotState extends VirtualSubsystem {
         new Pose3d(ELEVATOR_ATTACH_OFFSET.getTranslation(), ELEVATOR_ATTACH_OFFSET.getRotation())
             .transformBy(
                 new Transform3d(
-                    new Translation3d(
-                        Meters.zero(), Meters.zero(), Inches.of(elevatorHeightTune.get())),
+                    new Translation3d(Meters.zero(), Meters.zero(), Inches.of(elevatorHeightTune.get())),
                     new Rotation3d()));
 
     Pose3d shoulderPose =
@@ -101,8 +114,7 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(
                 new Transform3d(
                     new Translation3d(),
-                    new Rotation3d(
-                        Degrees.of(shoulderAngleTune.get()), Degrees.zero(), Degrees.zero())))
+                    new Rotation3d(Degrees.of(shoulderAngleTune.get()), Degrees.zero(), Degrees.zero())))
             .transformBy(SHOULDER_PIVOT_OFFSET.inverse());
 
     Pose3d elbowPose =
@@ -111,8 +123,7 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(
                 new Transform3d(
                     new Translation3d(),
-                    new Rotation3d(
-                        Degrees.of(elbowAngleTune.get()), Degrees.zero(), Degrees.zero())))
+                    new Rotation3d(Degrees.of(elbowAngleTune.get()), Degrees.zero(), Degrees.zero())))
             .transformBy(ELBOW_PIVOT_OFFSET.inverse());
 
     testStuff.mut_replace(testStuff.plus(Degrees.of(.25)));
@@ -122,9 +133,8 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(WRIST_ATTACH_OFFSET)
             .transformBy(
                 new Transform3d(
-                    new Translation3d(),
-                    new Rotation3d(
-                        Degrees.of(0), Degrees.of(wristTwistTune.get()), Degrees.zero())))
+                    new Translation3d(), 
+                    new Rotation3d(Degrees.of(0), Degrees.of(wristTwistTune.get()), Degrees.zero())))
             .transformBy(WRIST_PIVOT_OFFSET.inverse());
 
     Logger.recordOutput("RobotState/Elevator/" + key, elevatorPose);

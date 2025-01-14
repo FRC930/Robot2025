@@ -76,6 +76,7 @@ public class RobotContainer {
   private final AprilTagVision vision;
 
   private AutoCommandManager autoCommandManager;
+  private RobotState robotState;
 
   private boolean m_TeleopInitialized = false;
   private RobotState robotState;
