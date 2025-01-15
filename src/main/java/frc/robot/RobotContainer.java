@@ -60,13 +60,12 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
+  // TODO: SET PROPER MOTOR IDS
   private final double DRIVE_SPEED = 1.0;
   private final double ANGULAR_SPEED = 0.75;
 
-  // TODO: SET PROPER MOTOR IDS
   private final ArmSubsystem arm =
-      new ArmSubsystem(
-          Robot.isReal() ? new ArmIOTalonFX(1037474, 192944) : new ArmIOSim(18718, 1845723));
+      new ArmSubsystem(Robot.isReal() ? new ArmIOTalonFX(876, 543) : new ArmIOSim(876, 543));
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,7 +78,6 @@ public class RobotContainer {
   private RobotState robotState;
 
   private boolean m_TeleopInitialized = false;
-  private RobotState robotState;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -141,7 +139,6 @@ public class RobotContainer {
     }
 
     autoCommandManager = new AutoCommandManager(drive);
-    robotState = RobotState.instance();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -185,6 +182,10 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+    controller
+        .leftTrigger()
+        .onTrue(arm.getNewSetAngle1Command(90))
+        .onFalse(arm.getNewSetAngle1Command(0));
 
     characterizeController
         .back()
@@ -221,7 +222,42 @@ public class RobotContainer {
                   System.out.println("Stopped Logger");
                 }));
 
-    // Auto aim command example FOR DIFFERENTIAL DRIVE
+    characterizeController
+        .back()
+        .and(characterizeController.y())
+        .whileTrue(drive.sysIdDynamic(Direction.kForward));
+    characterizeController
+        .back()
+        .and(characterizeController.x())
+        .whileTrue(drive.sysIdDynamic(Direction.kReverse));
+    characterizeController
+        .start()
+        .and(characterizeController.y())
+        .whileTrue(drive.sysIdQuasistatic(Direction.kForward));
+    characterizeController
+        .start()
+        .and(characterizeController.x())
+        .whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
+    characterizeController
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  SignalLogger.setPath("/media/sda1/logs");
+                  // SignalLogger.enableAutoLogging(true);
+                  SignalLogger.start();
+                  System.out.println("Started Logger");
+                }));
+    characterizeController
+        .b()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  SignalLogger.stop();
+                  System.out.println("Stopped Logger");
+                }));
+
+    z// Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);

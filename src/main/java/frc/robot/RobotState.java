@@ -105,7 +105,8 @@ public class RobotState extends VirtualSubsystem {
         new Pose3d(ELEVATOR_ATTACH_OFFSET.getTranslation(), ELEVATOR_ATTACH_OFFSET.getRotation())
             .transformBy(
                 new Transform3d(
-                    new Translation3d(Meters.zero(), Meters.zero(), Inches.of(elevatorHeightTune.get())),
+                    new Translation3d(
+                        Meters.zero(), Meters.zero(), Inches.of(elevatorHeightTune.get())),
                     new Rotation3d()));
 
     Pose3d shoulderPose =
@@ -114,7 +115,8 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(
                 new Transform3d(
                     new Translation3d(),
-                    new Rotation3d(Degrees.of(shoulderAngleTune.get()), Degrees.zero(), Degrees.zero())))
+                    new Rotation3d(
+                        Degrees.of(shoulderAngleTune.get()), Degrees.zero(), Degrees.zero())))
             .transformBy(SHOULDER_PIVOT_OFFSET.inverse());
 
     Pose3d elbowPose =
@@ -123,7 +125,8 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(
                 new Transform3d(
                     new Translation3d(),
-                    new Rotation3d(Degrees.of(elbowAngleTune.get()), Degrees.zero(), Degrees.zero())))
+                    new Rotation3d(
+                        Degrees.of(elbowAngleTune.get()), Degrees.zero(), Degrees.zero())))
             .transformBy(ELBOW_PIVOT_OFFSET.inverse());
 
     testStuff.mut_replace(testStuff.plus(Degrees.of(.25)));
@@ -133,8 +136,9 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(WRIST_ATTACH_OFFSET)
             .transformBy(
                 new Transform3d(
-                    new Translation3d(), 
-                    new Rotation3d(Degrees.of(0), Degrees.of(wristTwistTune.get()), Degrees.zero())))
+                    new Translation3d(),
+                    new Rotation3d(
+                        Degrees.of(0), Degrees.of(wristTwistTune.get()), Degrees.zero())))
             .transformBy(WRIST_PIVOT_OFFSET.inverse());
 
     Logger.recordOutput("RobotState/Elevator/" + key, elevatorPose);
