@@ -48,10 +48,8 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  // TODO: SET PROPER MOTOR IDS
   private final ArmSubsystem arm =
-      new ArmSubsystem(
-          Robot.isReal() ? new ArmIOTalonFX(1037474, 192944) : new ArmIOSim(18718, 1845723));
+      new ArmSubsystem(Robot.isReal() ? new ArmIOTalonFX(876, 543) : new ArmIOSim(876, 543));
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -59,7 +57,6 @@ public class RobotContainer {
   private final Vision vision;
 
   private AutoCommandManager autoCommandManager;
-  private RobotState robotState;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -122,7 +119,6 @@ public class RobotContainer {
     }
 
     autoCommandManager = new AutoCommandManager(drive);
-    robotState = RobotState.instance();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -166,6 +162,10 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+    controller
+        .leftTrigger()
+        .onTrue(arm.getNewSetAngle1Command(90))
+        .onFalse(arm.getNewSetAngle1Command(0));
 
     // Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")
