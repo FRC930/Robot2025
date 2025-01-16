@@ -1,26 +1,46 @@
 package frc.robot.subsystems.arm;
 
+import java.util.Optional;
+
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
+
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+
 public interface ArmIO {
 
+  @AutoLog
   public static class ArmOutput {
-
+    public Angle joint1Angle;
+    public Angle joint2Angle;
+    public AngularVelocity joint1AngularVelocity;
+    public AngularVelocity joint2AngularVelocity;
+    public Angle joint1SetPoint;
+    public Angle joint2SetPoint;
   }
 
-  public static class ArmRequest {
-
+  @AutoLog
+  public static class ArmInput {
+    public Optional<Angle> joint1Setpoint;
+    public Optional<Angle> joint2Setpoint;
   }
   
-  public void SetAngle1(double angle);
+  public ArmOutput getOutputs();
 
-  public void SetAngle2(double angle);
+  public void updateInputs(Angle Angle);
 
-  public double getAngle1();
+  // public void SetAngle1(double angle);
 
-  public double getAngle2();
+  // public void SetAngle2(double angle);
 
-  public double getVelocity1();
+  // public double getAngle1();
 
-  public double getVelocity2();
+  // public double getAngle2();
+
+  // public double getVelocity1();
+
+  // public double getVelocity2();
 
   public void periodic();
 }

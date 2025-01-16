@@ -1,10 +1,14 @@
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.units.measure.Angle;
 import frc.robot.util.Gains;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.PhoenixUtil;
@@ -47,37 +51,49 @@ public class ArmIOTalonFX implements ArmIO {
     Motor1.getConfigurator().apply(mm_cfg);
   }
 
-  @Override
   public void SetAngle1(double angle) {
     Request1 = Request1.withPosition(angle);
     Motor1.setControl(Request1);
   }
 
-  @Override
   public void SetAngle2(double angle) {
     Request2 = Request2.withPosition(angle);
     Motor2.setControl(Request2);
   }
 
-  @Override
   public double getAngle1() {
     return Motor1.getPosition().getValueAsDouble();
   }
 
-  @Override
   public double getAngle2() {
     return Motor2.getPosition().getValueAsDouble();
   }
 
-  @Override
   public double getVelocity1() {
     return Motor1.getVelocity().getValueAsDouble();
   }
 
-  @Override
   public double getVelocity2() {
     return Motor1.getVelocity().getValueAsDouble();
   }
 
   public void periodic() {}
+
+  @Override
+  public ArmOutput getOutputs() {
+    ArmIO.ArmOutput output = new ArmIO.ArmOutput();
+    output.joint1Angle = Motor1.getPosition().getValue();
+    output.joint2Angle = Motor2.getPosition().getValue();
+    output.joint1AngularVelocity = Motor1.getVelocity().getValue();
+    output.joint2AngularVelocity = Motor2.getVelocity().getValue();
+    output.joint1SetPoint = Angle.ofRelativeUnits(((MotionMagicVoltage)Motor1.getAppliedControl()).Position,Rotations);
+    output.joint2SetPoint = Angle.ofRelativeUnits(((MotionMagicVoltage)Motor2.getAppliedControl()).Position,Rotations); 
+    return output;
+  }
+
+  @Override
+  public void updateInputs(Angle Angle) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+  }
 }
