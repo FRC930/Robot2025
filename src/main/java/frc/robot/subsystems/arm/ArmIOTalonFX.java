@@ -79,6 +79,5 @@ public class ArmIOTalonFX implements ArmIO {
     return Motor1.getVelocity().getValueAsDouble();
   }
 
-  public void periodic() {
-  }
+  public void periodic() {}
 }

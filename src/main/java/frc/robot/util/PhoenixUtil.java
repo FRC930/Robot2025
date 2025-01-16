@@ -14,14 +14,30 @@
 package frc.robot.util;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.hardware.ParentDevice;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class PhoenixUtil {
   /** Attempts to run the command until no error is produced. */
-  public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
+  public static StatusCode tryUntilOk(
+      int maxAttempts, Supplier<StatusCode> command, Optional<ParentDevice> device) {
+    StatusCode error = StatusCode.NotFound;
     for (int i = 0; i < maxAttempts; i++) {
-      var error = command.get();
+      error = command.get();
       if (error.isOK()) break;
+      DriverStation.reportWarning(
+          String.format(
+              "Unable to configure device %s: %s",
+              device.isPresent() ? device.get().getDeviceID() : "?", error.toString()),
+          true);
     }
+    return error;
+  }
+
+  public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
+    tryUntilOk(maxAttempts, command, Optional.empty());
   }
 }
