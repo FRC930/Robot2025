@@ -2,6 +2,8 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.system.LinearSystem;
@@ -18,15 +20,12 @@ public class ArmIOSim implements ArmIO {
   public final double J1_KD = 1.0;
 
   public final double J2_KP = 1.0;
-  public final double J2_KD = 1.0;
+    public final double J2_KD = 1.0;
 
   private final DCMotorSim joint1Sim;
   private final DCMotorSim joint2Sim;
 
   private static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
-
-  private PIDController joint1Controller = new PIDController(J1_KP, 0, J1_KD);
-  private PIDController joint2Controller = new PIDController(J2_KP, 0, J2_KD);
 
   private TalonFX talon1;
   private TalonFX talon2;
@@ -34,7 +33,8 @@ public class ArmIOSim implements ArmIO {
   private static final double flwheel_kA = 0.00032;
   private static final double flwheel_kV = 1.0;
 
-  private final LinearSystem<N2, N1, N2> m_flywheelPlant = LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
+  private final LinearSystem<N2, N1, N2> m_flywheelPlant =
+      LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
 
   public ArmIOSim(int motor1Id, int motor2Id) {
     joint1Sim = new DCMotorSim(m_flywheelPlant, DRIVE_GEARBOX, 0.001, 0.001);

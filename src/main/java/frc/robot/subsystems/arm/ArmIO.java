@@ -1,6 +1,15 @@
 package frc.robot.subsystems.arm;
 
 public interface ArmIO {
+
+  public static class ArmOutput {
+
+  }
+
+  public static class ArmRequest {
+
+  }
+  
   public void SetAngle1(double angle);
 
   public void SetAngle2(double angle);
