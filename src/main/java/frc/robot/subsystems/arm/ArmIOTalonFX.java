@@ -7,9 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.units.measure.Angle;
-import frc.robot.util.Gains;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.PhoenixUtil;
 
@@ -27,10 +25,7 @@ public class ArmIOTalonFX implements ArmIO {
     Motor2 = new TalonFX(Motor2Id);
     Request1 = new MotionMagicVoltage(0);
     Request2 = new MotionMagicVoltage(0);
-  }
-
-  public void configureMotors() {
-    Gains.builder();
+    configureTalons();
   }
 
   private void configureTalons() {
@@ -52,6 +47,7 @@ public class ArmIOTalonFX implements ArmIO {
   }
 
   public void SetAngle1(double angle) {
+
     Request1 = Request1.withPosition(angle);
     Motor1.setControl(Request1);
   }
@@ -86,14 +82,24 @@ public class ArmIOTalonFX implements ArmIO {
     output.joint2Angle = Motor2.getPosition().getValue();
     output.joint1AngularVelocity = Motor1.getVelocity().getValue();
     output.joint2AngularVelocity = Motor2.getVelocity().getValue();
-    output.joint1SetPoint = Angle.ofRelativeUnits(((MotionMagicVoltage)Motor1.getAppliedControl()).Position,Rotations);
-    output.joint2SetPoint = Angle.ofRelativeUnits(((MotionMagicVoltage)Motor2.getAppliedControl()).Position,Rotations); 
+    output.joint1SetPoint =
+        Angle.ofRelativeUnits(
+            ((MotionMagicVoltage) Motor1.getAppliedControl()).Position, Rotations);
+    output.joint2SetPoint =
+        Angle.ofRelativeUnits(
+            ((MotionMagicVoltage) Motor2.getAppliedControl()).Position, Rotations);
     return output;
   }
 
   @Override
-  public void updateInputs(Angle Angle) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+  public void updateInputs(ArmIO.ArmInput input) {
+    if (input.joint1Setpoint.isPresent()) {
+      Request1 = Request1.withPosition(input.joint1Setpoint.get());
+      Motor1.setControl(Request1);
+    }
+    if (input.joint2Setpoint.isPresent()) {
+      Request2 = Request2.withPosition(input.joint2Setpoint.get());
+      Motor2.setControl(Request2);
+    }
   }
 }

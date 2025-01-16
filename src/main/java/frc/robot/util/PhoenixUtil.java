@@ -16,7 +16,6 @@ package frc.robot.util;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.wpilibj.DriverStation;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 

@@ -3,9 +3,7 @@ package frc.robot.util;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-/** 
- *  Class with a map of logs and runnables to run when logs are changed. 
- * */
+/** Class with a map of logs and runnables to run when logs are changed. */
 public class LoggerTracker {
   HashMap<LoggedTunableNumber, Consumer<LoggedTunableNumber>> logs;
 
