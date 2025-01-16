@@ -1,12 +1,9 @@
 package frc.robot.subsystems.arm;
 
-import java.util.Optional;
-
-import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.AutoLogOutput;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import java.util.Optional;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
 
@@ -20,15 +17,14 @@ public interface ArmIO {
     public Angle joint2SetPoint;
   }
 
-  @AutoLog
   public static class ArmInput {
     public Optional<Angle> joint1Setpoint;
     public Optional<Angle> joint2Setpoint;
   }
-  
+
   public ArmOutput getOutputs();
 
-  public void updateInputs(Angle Angle);
+  public void updateInputs(ArmInput input);
 
   // public void SetAngle1(double angle);
 
