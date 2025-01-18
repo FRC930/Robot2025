@@ -18,7 +18,9 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -30,6 +32,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.led.LedIOReal;
+import frc.robot.subsystems.led.LedIOSim;
+import frc.robot.subsystems.led.LedSubsystem;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -44,6 +49,13 @@ import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+
+  // NOTE: DO NOT DO SUBSYSTEMS LIKE THIS AGAIN!!!!!!!! (Me saying it to myself mostly, don't worry)
+  // -Keegan
+  // These should be put in the case switch with the drive and vision subsystems. Make sure to do
+  // this in the future
+  private LedSubsystem ledChannel1 =
+      new LedSubsystem(Robot.isReal() ? new LedIOReal(4, 60) : new LedIOSim(4, 60));
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -118,6 +130,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    if (Robot.isSimulation()) {
+      configureSimBindings();
+    }
   }
 
   /**
@@ -174,6 +189,17 @@ public class RobotContainer {
     //               drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
     //             },
     //             drive));
+  }
+
+  /**
+   * A method to configure bindings and commands exclusively for sim. Do not put anything in here
+   * that could cause something to break on the real robot. Only nonessential behavior should live
+   * here
+   */
+  private void configureSimBindings() {
+    ledChannel1.addLEDView("main", 0, 59);
+    SmartDashboard.putData(
+        "LEDTestCommand", ledChannel1.newRunPatternCommand("main", LEDPattern.rainbow(255, 128)));
   }
 
   /**
