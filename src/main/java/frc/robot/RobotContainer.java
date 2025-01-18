@@ -31,10 +31,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -64,6 +66,9 @@ import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.vision.AprilTagVision;
+import frc.robot.subsystems.led.LedIOReal;
+import frc.robot.subsystems.led.LedIOSim;
+import frc.robot.subsystems.led.LedSubsystem;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -96,6 +101,8 @@ public class RobotContainer {
   private final Fingeys fingeys;
 
   private final Intake intake;
+
+  private final LedSubsystem ledChannel1;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -141,6 +148,8 @@ public class RobotContainer {
         //You'll have to initialize this yourself, since there's no CAN range marked.
         intake = null;
 
+        ledChannel1 = new LedSubsystem(new LedIOReal(4, 115));
+
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
 
@@ -171,6 +180,8 @@ public class RobotContainer {
         elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
         fingeys = new Fingeys(new FingeysIOSim(121));
         intake = new Intake(new IntakeIOSim(15));
+
+        ledChannel1 = new LedSubsystem(new LedIOSim(4, 115));
         
         break;
 
@@ -194,6 +205,7 @@ public class RobotContainer {
         elbow = null;
         fingeys = null;
         intake = null;
+        ledChannel1 = null;
         break;
     }
 
@@ -202,6 +214,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    if (Robot.isSimulation()) {
+      configureSimBindings();
+    }
   }
 
   /**
@@ -300,6 +315,17 @@ public class RobotContainer {
     //               drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
     //             },
     //             drive));
+  }
+
+  /**
+   * A method to configure bindings and commands exclusively for sim. Do not put anything in here
+   * that could cause something to break on the real robot. Only nonessential behavior should live
+   * here
+   */
+  private void configureSimBindings() {
+    ledChannel1.addLEDView("main", 0, 59);
+    SmartDashboard.putData(
+        "LEDTestCommand", ledChannel1.newRunPatternCommand("main", LEDPattern.rainbow(255, 128)));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
