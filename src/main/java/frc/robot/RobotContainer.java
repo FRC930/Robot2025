@@ -13,7 +13,11 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
+import static edu.wpi.first.units.Units.*;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCamera0;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCamera1;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,6 +41,9 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.wrist.WristIOSim;
+import frc.robot.subsystems.wrist.WristIOTalonFX;
+import frc.robot.subsystems.wrist.WristSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -47,6 +54,8 @@ import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+
+  private final WristSubsystem wrist;
 
   private final ArmSubsystem arm =
       new ArmSubsystem(Robot.isReal() ? new ArmIOTalonFX(876, 543) : new ArmIOSim(876, 543));
@@ -76,6 +85,9 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
+
+        wrist = new WristSubsystem(new WristIOTalonFX(3));
+
         // vision =
         //     new Vision(
         //         demoDrive::addVisionMeasurement,
@@ -101,6 +113,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
 
+        wrist = new WristSubsystem(new WristIOSim(3));
         break;
 
       default:
@@ -115,7 +128,7 @@ public class RobotContainer {
         // Replayed robot, disable IO implementations
         // (Use same number of dummy implementations as the real robot)
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
+        wrist = null;
         break;
     }
 
@@ -153,6 +166,9 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // Turns wrist when Y button is pressed
+    controller.y().onTrue(wrist.newWristTurnCommand(90)).onFalse(wrist.newWristTurnCommand(0));
 
     // Reset gyro to 0° when B button is pressed
     controller
