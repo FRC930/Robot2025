@@ -19,6 +19,8 @@
  */
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
@@ -49,6 +51,9 @@ import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.wrist.WristIOSim;
+import frc.robot.subsystems.wrist.WristIOTalonFX;
+import frc.robot.subsystems.wrist.WristSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,6 +68,7 @@ public class RobotContainer {
   // TODO: SET PROPER MOTOR IDS
   private final double DRIVE_SPEED = 1.0;
   private final double ANGULAR_SPEED = 0.75;
+  private final WristSubsystem wrist;
 
   private final ArmSubsystem arm =
       new ArmSubsystem(Robot.isReal() ? new ArmIOTalonFX(876, 543) : new ArmIOSim(876, 543));
@@ -97,7 +103,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(limelightFrontName, drive::getRotation),
                 new VisionIOLimelight(limelightBackName, drive::getRotation));
-
+        wrist = new WristSubsystem(new WristIOTalonFX(3));
         // Real robot, instantiate hardware IO implementations
         break;
 
@@ -118,6 +124,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
                 new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
+        wrist = new WristSubsystem(new WristIOSim(3));
         break;
 
       default:
@@ -134,7 +141,7 @@ public class RobotContainer {
         vision =
             new AprilTagVision(
                 drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
+        wrist = null;
         break;
     }
 
@@ -171,6 +178,9 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // Turns wrist when Y button is pressed
+    controller.y().onTrue(wrist.newWristTurnCommand(90)).onFalse(wrist.newWristTurnCommand(0));
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -257,7 +267,7 @@ public class RobotContainer {
                   System.out.println("Stopped Logger");
                 }));
 
-    z// Auto aim command example FOR DIFFERENTIAL DRIVE
+    // Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
