@@ -32,7 +32,8 @@ public class WristIOSim implements WristIO {
   private static final double flwheel_kA = 0.00032;
   private static final double flwheel_kV = 1.0;
 
-  private final LinearSystem<N2, N1, N2> m_flywheelPlant = LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
+  private final LinearSystem<N2, N1, N2> m_flywheelPlant =
+      LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
 
   public WristIOSim(int motor3Id) {
     joint3Sim = new DCMotorSim(m_flywheelPlant, DRIVE_GEARBOX, 0.1, 0.1);

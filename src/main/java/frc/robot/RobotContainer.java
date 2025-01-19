@@ -29,8 +29,10 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,9 +40,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.arm.ArmIOTalonFX;
-import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.arm.ArmJoint;
+import frc.robot.subsystems.arm.ArmJointIOSim;
+import frc.robot.subsystems.arm.ArmJointIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -70,8 +72,14 @@ public class RobotContainer {
   private final double ANGULAR_SPEED = 0.75;
   private final WristSubsystem wrist;
 
-  private final ArmSubsystem arm =
-      new ArmSubsystem(Robot.isReal() ? new ArmIOTalonFX(876, 543) : new ArmIOSim(876, 543));
+  private final ArmJoint arm =
+      new ArmJoint(
+          Robot.isReal()
+              ? new ArmJointIOTalonFX(876)
+              : new ArmJointIOSim(
+                  876,
+                  new SingleJointedArmSim(
+                      DCMotor.getKrakenX60Foc(1), 1, 0.5, 0.75, -180, 180, true, 0, 0.001, 0.001)));
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -194,8 +202,8 @@ public class RobotContainer {
                 .ignoringDisable(true));
     controller
         .leftTrigger()
-        .onTrue(arm.getNewSetAngle1Command(90))
-        .onFalse(arm.getNewSetAngle1Command(0));
+        .onTrue(arm.getNewSetAngleCommand(90))
+        .onFalse(arm.getNewSetAngleCommand(0));
 
     characterizeController
         .back()
