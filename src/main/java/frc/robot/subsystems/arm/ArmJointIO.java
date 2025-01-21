@@ -32,7 +32,5 @@ public interface ArmJointIO {
    */
   public void updateInputs(ArmInputs input);
 
-  public void periodic();
-
   public void stop();
 }

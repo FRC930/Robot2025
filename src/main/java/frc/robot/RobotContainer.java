@@ -56,6 +56,7 @@ import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.WristIOSim;
 import frc.robot.subsystems.wrist.WristIOTalonFX;
 import frc.robot.subsystems.wrist.WristSubsystem;
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -79,7 +80,17 @@ public class RobotContainer {
               : new ArmJointIOSim(
                   876,
                   new SingleJointedArmSim(
-                      DCMotor.getKrakenX60Foc(1), 1, 0.5, 0.75, -180, 180, true, 0, 0.001, 0.001)));
+                      DCMotor.getKrakenX60Foc(1),
+                      50,
+                      0.03,
+                      0.75,
+                      -180,
+                      180,
+                      false,
+                      0,
+                      0.001,
+                      0.001)),
+          Optional.empty());
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);

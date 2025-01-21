@@ -6,8 +6,8 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
@@ -19,7 +19,7 @@ public class ArmJointIOSim implements ArmJointIO {
   private ArmFeedforward ff = new ArmFeedforward(0.0, 0.0, 0.0, 0.0);
 
   private final ProfiledPIDController controller =
-      new ProfiledPIDController(0.1, 0.0, 0.0, new Constraints(100000, 100000));
+      new ProfiledPIDController(0.4, 0.0, 0.0, new Constraints(100000, 361));
 
   private final SingleJointedArmSim sim;
 
@@ -29,15 +29,16 @@ public class ArmJointIOSim implements ArmJointIO {
 
   @Override
   public void setTarget(Angle target) {
+    controller.setGoal(new State(target.in(Degrees), 0));
+  }
+
+  private void updateVoltageSetpoint() {
     Angle currentAngle = Radians.of(sim.getAngleRads());
 
-    Angle setpointAngle = Degrees.of(controller.getSetpoint().position);
-    AngularVelocity setpointVelocity = DegreesPerSecond.of(controller.getSetpoint().velocity);
-
-    Voltage controllerVoltage =
-        Volts.of(controller.calculate(currentAngle.in(Degrees), setpointAngle.in(Degrees)));
+    Voltage controllerVoltage = Volts.of(controller.calculate(currentAngle.in(Degrees)));
     Voltage feedForwardVoltage =
-        Volts.of(ff.calculate(setpointAngle.in(Radians), setpointVelocity.in(RadiansPerSecond)));
+        Volts.of(
+            ff.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
 
     Voltage effort = controllerVoltage.plus(feedForwardVoltage);
 
@@ -50,17 +51,19 @@ public class ArmJointIOSim implements ArmJointIO {
 
   @Override
   public void updateInputs(ArmInputs input) {
-    input.jointAngle.mut_replace(sim.getAngleRads(), Radians);
-    input.jointAngularVelocity.mut_replace(sim.getVelocityRadPerSec(), RadiansPerSecond);
-    input.jointSetPoint.mut_replace(controller.getSetpoint().position, Degrees);
+    input.jointAngle.mut_replace(Degrees.convertFrom(sim.getAngleRads(), Radians), Degrees);
+    input.jointAngularVelocity.mut_replace(
+        DegreesPerSecond.convertFrom(sim.getVelocityRadPerSec(), RadiansPerSecond),
+        DegreesPerSecond);
+    input.jointSetPoint.mut_replace(controller.getGoal().position, Degrees);
     input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
     input.torqueCurrent.mut_replace(input.supplyCurrent.in(Amps), Amps);
     input.voltageSetPoint.mut_replace(appliedVoltage);
     periodic();
   }
 
-  @Override
   public void periodic() {
+    updateVoltageSetpoint();
     sim.setInputVoltage(appliedVoltage.in(Volts));
     sim.update(0.02);
   }
