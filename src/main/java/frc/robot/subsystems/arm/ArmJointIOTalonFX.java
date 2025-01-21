@@ -58,7 +58,4 @@ public class ArmJointIOTalonFX implements ArmJointIO {
   public void stop() {
     Motor.setControl(new StaticBrake());
   }
-
-  @Override
-  public void periodic() {}
 }
