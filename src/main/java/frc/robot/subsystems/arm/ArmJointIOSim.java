@@ -51,6 +51,7 @@ public class ArmJointIOSim implements ArmJointIO {
 
   @Override
   public void updateInputs(ArmInputs input) {
+    // updinputs
     input.jointAngle.mut_replace(Degrees.convertFrom(sim.getAngleRads(), Radians), Degrees);
     input.jointAngularVelocity.mut_replace(
         DegreesPerSecond.convertFrom(sim.getVelocityRadPerSec(), RadiansPerSecond),
@@ -59,10 +60,8 @@ public class ArmJointIOSim implements ArmJointIO {
     input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
     input.torqueCurrent.mut_replace(input.supplyCurrent.in(Amps), Amps);
     input.voltageSetPoint.mut_replace(appliedVoltage);
-    periodic();
-  }
 
-  public void periodic() {
+    // Periodic
     updateVoltageSetpoint();
     sim.setInputVoltage(appliedVoltage.in(Volts));
     sim.update(0.02);
