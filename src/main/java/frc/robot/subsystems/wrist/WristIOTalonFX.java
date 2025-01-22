@@ -1,6 +1,6 @@
 package frc.robot.subsystems.wrist;
 
-import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,14 +12,12 @@ import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.PhoenixUtil;
 
 public class WristIOTalonFX implements WristIO {
-  public MotionMagicVoltage request3;
-  public LoggedTunableNumber accelerationConfigNumber = new LoggedTunableNumber("Arm/Joint1/kA");
+  public MotionMagicVoltage Request;
+  public TalonFX Motor;
 
-  public TalonFX Motor3;
-
-  public WristIOTalonFX(int Motor3Id) {
-    Motor3 = new TalonFX(Motor3Id);
-    request3 = new MotionMagicVoltage(0);
+  public WristIOTalonFX(int MotorId) {
+    Motor= new TalonFX(MotorId);
+    Request = new MotionMagicVoltage(0);
     configureTalons();
   }
 
@@ -34,27 +32,22 @@ public class WristIOTalonFX implements WristIO {
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     cfg.Voltage.PeakForwardVoltage = 7;
     cfg.Voltage.PeakReverseVoltage = 7;
-    // cfg.CurrentLimits.;
-    // cfg.CurrentLimits.; TODO: Set Current Limits
-    PhoenixUtil.tryUntilOk(5, () -> Motor3.getConfigurator().apply(cfg));
-    Motor3.getConfigurator().apply(mm_cfg);
+    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
+    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(mm_cfg));
   }
 
   public void setTarget(Angle target) {
-    request3 = request3.withPosition(target);
-    Motor3.setControl(request3);
+    Request = Request.withPosition(target);
+    Motor.setControl(Request);
   }
 
   @Override
-  public WristInputs updateInputs(WristInputs inputs) {
-    inputs.joint3Angle.mut_replace(Motor3.getPosition().getValue());
-    inputs.joint3AngularVelocity.mut_replace(Motor3.getVelocity().getValue());
-    inputs.joint3SetPoint.mut_replace(
+  public void updateInputs(WristInputs inputs) {
+    inputs.wristAngle.mut_replace(Motor.getPosition().getValue());
+    inputs.wristAngularVelocity.mut_replace(Motor.getVelocity().getValue());
+    inputs.wristSetPoint.mut_replace(
         Angle.ofRelativeUnits(
-            ((MotionMagicVoltage) Motor3.getAppliedControl()).Position, Rotations));
-    return inputs;
+            ((MotionMagicVoltage) Motor.getAppliedControl()).Position, Rotations));
+    inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
   }
-
-  @Override
-  public void periodic() {}
 }

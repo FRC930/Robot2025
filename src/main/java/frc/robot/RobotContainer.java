@@ -22,8 +22,10 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCamera1;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,7 +47,7 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.WristIOSim;
 import frc.robot.subsystems.wrist.WristIOTalonFX;
-import frc.robot.subsystems.wrist.WristSubsystem;
+import frc.robot.subsystems.wrist.Wrist;
 import java.util.Optional;
 
 /**
@@ -58,7 +60,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  private final WristSubsystem wrist;
+  private final Wrist wrist;
 
   private final ArmJoint arm =
       new ArmJoint(
@@ -105,7 +107,7 @@ public class RobotContainer {
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
 
-        wrist = new WristSubsystem(new WristIOTalonFX(3));
+        wrist = new Wrist(new WristIOTalonFX(3));
 
         // vision =
         //     new Vision(
@@ -132,7 +134,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
 
-        wrist = new WristSubsystem(new WristIOSim(3));
+        wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
         break;
 
       default:
@@ -187,7 +189,7 @@ public class RobotContainer {
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Turns wrist when Y button is pressed
-    controller.y().onTrue(wrist.newWristTurnCommand(90)).onFalse(wrist.newWristTurnCommand(0));
+    controller.y().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
 
     // Reset gyro to 0° when B button is pressed
     controller
