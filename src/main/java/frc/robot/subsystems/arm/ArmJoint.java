@@ -6,6 +6,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.arm.constants.ArmJointConstants;
+
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
@@ -16,7 +18,9 @@ public class ArmJoint extends SubsystemBase {
 
   ArmInputsAutoLogged loggedarm = new ArmInputsAutoLogged();
 
-  public ArmJoint(ArmJointIO armIO, Optional<String> loggedName) {
+  private final ArmJointConstants m_Constants;
+
+  public ArmJoint(ArmJointIO armIO, ArmJointConstants constants) {
     m_ArmIO = armIO;
     loggedarm.jointAngle = Degrees.mutable(0);
     loggedarm.jointAngularVelocity = DegreesPerSecond.mutable(0);
@@ -26,11 +30,9 @@ public class ArmJoint extends SubsystemBase {
     loggedarm.torqueCurrent = Amps.mutable(0);
     loggedarm.voltageSetPoint = Volts.mutable(0);
 
-    if (loggedName.isPresent()) {
-      loggerSuffix = loggedName.get();
-    } else {
-      loggerSuffix = "" + this.hashCode();
-    }
+    m_Constants = armIO.getConstants();
+    
+    loggerSuffix = m_Constants.LoggedName;
   }
 
   public void setAngle(Angle angle) {
