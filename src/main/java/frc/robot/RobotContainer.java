@@ -33,6 +33,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,26 +80,10 @@ public class RobotContainer {
   private final double ANGULAR_SPEED = 0.75;
   private final Wrist wrist;
 
-  private final ArmJoint arm =
-      new ArmJoint(
-          Robot.isReal()
-              ? new ArmJointIOTalonFX(876)
-              : new ArmJointIOSim(
-                  876,
-                  new SingleJointedArmSim(
-                      DCMotor.getKrakenX60Foc(1),
-                      50,
-                      0.03,
-                      0.75,
-                      -180,
-                      180,
-                      false,
-                      0,
-                      0.001,
-                      0.001)),
-          Optional.empty());
+  // private final ArmJoint arm;
 
-  // private final ElevatorSubsystem elevator;
+  private final ElevatorSubsystem elevator;
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController co_controller = new CommandXboxController(1);
@@ -131,7 +116,9 @@ public class RobotContainer {
                 new VisionIOLimelight(limelightBackName, drive::getRotation));
         wrist = new Wrist(new WristIOTalonFX(3));
 
-        // elevator = new ElevatorSubsystem(new ElevatorIOTalonFX(4), java.util.Optional.empty());
+        elevator = new ElevatorSubsystem(new ElevatorIOTalonFX(4), Optional.of("Elevator"));
+
+        // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
         // vision =
         //     new Vision(
@@ -160,9 +147,8 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
         wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
+        elevator = new ElevatorSubsystem(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), 40.75, 68.25, false, 40.75, 0.001)), Optional.of("Elevator"));
         break;
-
-        // elevator = new ElevatorSubsystem(new ElevatorIOSim(4), null)
 
       default:
         drive =
@@ -179,6 +165,7 @@ public class RobotContainer {
             new AprilTagVision(
                 drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         wrist = null;
+        elevator = null;
         break;
     }
 
@@ -217,7 +204,7 @@ public class RobotContainer {
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Turns wrist when Y button is pressed
-    // controller.y().onTrue(ElevatorSubsystem.getNewSetDistanceCommand(0.75)).onFalse(ElevatorSubsystem.getNewSetDistanceCommand(0));
+    controller.y().onTrue(elevator.getNewSetDistanceCommand(0.75)).onFalse(elevator.getNewSetDistanceCommand(0));
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -229,10 +216,10 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-    controller
-        .leftTrigger()
-        .onTrue(arm.getNewSetAngleCommand(90))
-        .onFalse(arm.getNewSetAngleCommand(0));
+    // controller
+    //     .leftTrigger()
+    //     .onTrue(arm.getNewSetAngleCommand(90))
+    //     .onFalse(arm.getNewSetAngleCommand(0));
 
     characterizeController
         .back()

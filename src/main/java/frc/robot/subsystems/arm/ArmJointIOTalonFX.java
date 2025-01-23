@@ -5,37 +5,42 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
+import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.PhoenixUtil;
 
 public class ArmJointIOTalonFX implements ArmJointIO {
-  public MotionMagicVoltage Request;
+  public PositionVoltage Request;
   public TalonFX Motor;
 
   public ArmInputs inputs;
 
-  public ArmJointIOTalonFX(int Motor1Id) {
-    Motor = new TalonFX(Motor1Id);
-    Request = new MotionMagicVoltage(0);
+  private final ArmJointConstants m_Constants;
+
+  public ArmJointIOTalonFX(ArmJointConstants constants) {
+    m_Constants = constants;
+    Motor = new TalonFX(constants.LeaderProfile.id());
+    Request = new PositionVoltage(constants.StartingAngle);
     configureTalons();
   }
 
   private void configureTalons() {
-    MotionMagicConfigs mm_cfg = new MotionMagicConfigs();
-    mm_cfg.MotionMagicAcceleration = 0.0;
-    mm_cfg.MotionMagicCruiseVelocity = 0.0;
-    mm_cfg.MotionMagicExpo_kA = 0.0;
-    mm_cfg.MotionMagicExpo_kV = 0.0;
-    mm_cfg.MotionMagicJerk = 0.0;
     TalonFXConfiguration cfg = new TalonFXConfiguration();
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    cfg.Voltage.PeakForwardVoltage = 7;
-    cfg.Voltage.PeakReverseVoltage = 7;
+    cfg.Slot0.kP = m_Constants.TalonFXGains.kP;
+    cfg.Slot0.kI = m_Constants.TalonFXGains.kI;
+    cfg.Slot0.kD = m_Constants.TalonFXGains.kD;
+    cfg.Slot0.kG = m_Constants.TalonFXGains.kG;
+    cfg.Slot0.kS = m_Constants.TalonFXGains.kS;
+    cfg.Slot0.kV = m_Constants.TalonFXGains.kV;
+    cfg.Slot0.kA = m_Constants.TalonFXGains.kA;
+    cfg.CurrentLimits.SupplyCurrentLimit = m_Constants.SupplyCurrentLimit.in(Amp);
+    cfg.CurrentLimits.StatorCurrentLimit = m_Constants.TorqueCurrentLimit.in(Amp);
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(mm_cfg));
   }
 
   @Override
@@ -57,5 +62,10 @@ public class ArmJointIOTalonFX implements ArmJointIO {
   @Override
   public void stop() {
     Motor.setControl(new StaticBrake());
+  }
+
+  @Override
+  public ArmJointConstants getConstants() {
+    return m_Constants;
   }
 }
