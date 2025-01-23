@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class Elevator extends SubsystemBase {
   private ElevatorIO m_ElevatorIO;
   private String loggerSuffix;
 
   ElevatorInputsAutoLogged loggedelevator = new ElevatorInputsAutoLogged();
 
-  public ElevatorSubsystem(ElevatorIO elevatorIO, Optional<String> loggedName) {
+  public Elevator(ElevatorIO elevatorIO, Optional<String> loggedName) {
     //Keegan - Turn this into Distance
     m_ElevatorIO = elevatorIO;
     loggedelevator.elevatorDistance = Meters.mutable(0);

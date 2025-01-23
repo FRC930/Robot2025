@@ -44,7 +44,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -68,7 +68,7 @@ public class RobotContainer {
 
   // private final ArmJoint arm;
 
-  private final ElevatorSubsystem elevator;
+  private final Elevator elevator;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -98,7 +98,7 @@ public class RobotContainer {
 
         wrist = new Wrist(new WristIOTalonFX(3));
 
-        elevator = new ElevatorSubsystem(new ElevatorIOTalonFX(4), Optional.of("Elevator"));
+        elevator = new Elevator(new ElevatorIOTalonFX(4), Optional.of("Elevator"));
 
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
@@ -128,7 +128,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
 
         wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
-        elevator = new ElevatorSubsystem(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), 40.75, 68.25, false, 40.75, 0.001)), Optional.of("Elevator"));
+        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), 40.75, 68.25, false, 40.75, 0.001, 0.001)), Optional.of("Elevator"));
         break;
 
       default:

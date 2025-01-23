@@ -1,84 +1,91 @@
 package frc.robot.subsystems.fingeys;
 
-import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
+import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.PhoenixUtil;
 
 public class FingeysIOSim implements FingeysIO {
 
-  public MotionMagicVoltage Request;
+  private Voltage appliedVoltage = Volts.mutable(0.0);
 
-  public final double J_KP = 1.0;
-  public final double J_KD = 1.0;
-  public final double J_GEARING = 1.0;
+  private ArmFeedforward ff;
 
-  private final DCMotorSim jointSim;
+  private final ProfiledPIDController controller;
 
-  private static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
+  private final FlywheelSim sim;
 
-  private TalonFX talon;
+  private final ArmJointConstants m_Constants;
 
-  private static final double flwheel_kA = 0.00032;
-  private static final double flwheel_kV = 1.0;
-
-  private final LinearSystem<N2, N1, N2> m_flywheelPlant =
-      LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
-
-  public FingeysIOSim(int motor1Id, int motor2Id) {
-    jointSim = new DCMotorSim(m_flywheelPlant, DRIVE_GEARBOX, 0.1, 0.1);
-    talon = new TalonFX(motor1Id, "rio");
-    Request = new MotionMagicVoltage(0);
-    configureTalons();
-  }
-  /** configures the sim motor: acceleration, velocity, and other stuff */
-  private void configureTalons() {
-    MotionMagicConfigs mm_cfg = new MotionMagicConfigs();
-    mm_cfg.MotionMagicAcceleration = 1.0;
-    mm_cfg.MotionMagicCruiseVelocity = 1.0;
-    mm_cfg.MotionMagicExpo_kA = 1.0;
-    mm_cfg.MotionMagicExpo_kV = 1.0;
-    mm_cfg.MotionMagicJerk = 1.0;
-    TalonFXConfiguration cfg = new TalonFXConfiguration();
-    cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    cfg.Voltage.PeakForwardVoltage = 7;
-    cfg.Voltage.PeakReverseVoltage = 7;
-    // cfg.CurrentLimits.;
-    // cfg.CurrentLimits.; TODO: Set Current Limits
-    PhoenixUtil.tryUntilOk(5, () -> talon.getConfigurator().apply(cfg));
-
-    PhoenixUtil.tryUntilOk(5, () -> talon.getConfigurator().apply(mm_cfg));
+  public FingeysIOSim(int motorId, FingeysConstants constants) {
+    sim = new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.05, 1), DCMotor.getKrakenX60Foc(1), 1);
+    controller = new ProfiledPIDController(0.0, 0.0, 0.0, new Constraints(0.0,0.0));
   }
 
   @Override
-  public FingeysOutput getOutputs() {
+  public void setTarget(Angle target) {
+    controller.setGoal(new State(target.in(Degrees), 0));
+  }
+
+  private void updateVoltageSetpoint() {
+    AngularVelocity currentVelocity = RadiansPerSecond.of(sim.getAngularVelocityRadPerSec());
+
+    Voltage controllerVoltage = Volts.of(controller.calculate(currentVelocity.in(DegreesPerSecond)));
+
+    Voltage effort = controllerVoltage;
+    runVolts(effort);
+  }
+
+  private void runVolts(Voltage volts) {
+    this.appliedVoltage = volts;
+  }
+
+  @Override
+  public void updateInputs(FingeysInputs input) {
+    input.jointAngularVelocity.mut_replace(
+        DegreesPerSecond.convertFrom(sim.getAngularVelocityRadPerSec(), RadiansPerSecond),
+        DegreesPerSecond);
+    input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
+    input.torqueCurrent.mut_replace(input.supplyCurrent.in(Amps), Amps);
+    input.voltageSetPoint.mut_replace(appliedVoltage);
+
+    // Periodic
+    updateVoltageSetpoint();
+    sim.setInputVoltage(appliedVoltage.in(Volts));
+    sim.update(0.02);
+  }
+
+  @Override
+  public void setTarget(AngularVelocity target) {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getOutputs'");
+    throw new UnsupportedOperationException("Unimplemented method 'setTarget'");
   }
 
   @Override
-  public void updateInputs(FingeysInput input) {
+  public void stop() {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
-  }
-
-  @Override
-  public void periodic() {
-    talon.getSimState().setSupplyVoltage(12.0);
-
-    jointSim.setInputVoltage(jointSim.getAngularPosition().times(J_GEARING).in(Degrees));
-
-    // 0.02 is default delta secs for commands
-    jointSim.update(0.02);
+    throw new UnsupportedOperationException("Unimplemented method 'stop'");
   }
 }
