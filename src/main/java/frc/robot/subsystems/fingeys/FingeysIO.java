@@ -1,24 +1,41 @@
 package frc.robot.subsystems.fingeys;
 
+import static edu.wpi.first.units.Units.*;
+
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutCurrent;
+import edu.wpi.first.units.measure.MutVoltage;
+import frc.robot.subsystems.arm.constants.ArmJointConstants;
+
 import java.util.Optional;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface FingeysIO {
 
   @AutoLog
-  public static class FingeysOutput {
-    public Angle jointAngle;
-    public Angle jointSetPoint;
+  public static class FingeysInputs {
+    /** The time in seconds from the FPGA start and the creation of this set of inputs */
+    public double timestamp;
+
+    public MutAngularVelocity jointAngularVelocity;
+    public MutAngularVelocity jointSetPoint;
+    public MutVoltage voltageSetPoint;
+    public MutCurrent supplyCurrent;
+    public MutCurrent torqueCurrent;
   }
 
-  public static class FingeysInput {
-    public Optional<Angle> jointSetpoint;
-  }
+  public void setTarget(AngularVelocity target);
 
-  public FingeysOutput getOutputs();
+  /**
+   * Takes a set of inputs, retrieves the current values of these inputs, then updates the given
+   * input set.
+   *
+   * <p>
+   */
+  public void updateInputs(FingeysInputs input);
 
-  public void updateInputs(FingeysInput input);
-
-  public void periodic();
+  public void stop();
 }

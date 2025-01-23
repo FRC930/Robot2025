@@ -1,64 +1,71 @@
 package frc.robot.subsystems.fingeys;
 
-import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.units.VelocityUnit;
 import edu.wpi.first.units.measure.Angle;
-import frc.robot.util.LoggedTunableNumber;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Velocity;
+import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
+import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.PhoenixUtil;
 
 public class FingeysIOTalonFX implements FingeysIO {
-
-  public MotionMagicVoltage Request;
-  public LoggedTunableNumber accelerationConfigNumber = new LoggedTunableNumber("Arm/Joint1/kA");
-
+  public VelocityVoltage Request;
   public TalonFX Motor;
 
-  public FingeysIOTalonFX(int MotorId) {
-    Motor = new TalonFX(MotorId);
-    Request = new MotionMagicVoltage(0);
+  public ArmInputs inputs;
+
+  private final FingeysConstants m_Constants;
+
+  public FingeysIOTalonFX(FingeysConstants constants) {
+    m_Constants = constants;
+    Motor = new TalonFX(constants.LeaderProfile.id());
+    Request = new PositionVoltage(constants.StartingAngle);
     configureTalons();
   }
-  /** configures the real motor: acceleration, velocity, and other stuff */
+
   private void configureTalons() {
-    MotionMagicConfigs mm_cfg = new MotionMagicConfigs();
-    mm_cfg.MotionMagicAcceleration = 0.0;
-    mm_cfg.MotionMagicCruiseVelocity = 0.0;
-    mm_cfg.MotionMagicExpo_kA = 0.0;
-    mm_cfg.MotionMagicExpo_kV = 0.0;
-    mm_cfg.MotionMagicJerk = 0.0;
     TalonFXConfiguration cfg = new TalonFXConfiguration();
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    cfg.Voltage.PeakForwardVoltage = 7;
-    cfg.Voltage.PeakReverseVoltage = 7;
-    // cfg.CurrentLimits.;
-    // cfg.CurrentLimits.; TODO: Set Current Limits
+    cfg.Slot0.kP = m_Constants.TalonFXGains.kP;
+    cfg.Slot0.kI = m_Constants.TalonFXGains.kI;
+    cfg.Slot0.kD = m_Constants.TalonFXGains.kD;
+    cfg.Slot0.kG = m_Constants.TalonFXGains.kG;
+    cfg.Slot0.kS = m_Constants.TalonFXGains.kS;
+    cfg.Slot0.kV = m_Constants.TalonFXGains.kV;
+    cfg.Slot0.kA = m_Constants.TalonFXGains.kA;
+    cfg.CurrentLimits.SupplyCurrentLimit = m_Constants.SupplyCurrentLimit.in(Amp);
+    cfg.CurrentLimits.StatorCurrentLimit = m_Constants.TorqueCurrentLimit.in(Amp);
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
-    Motor.getConfigurator().apply(mm_cfg);
   }
 
   @Override
-  public FingeysOutput getOutputs() {
-    FingeysIO.FingeysOutput output = new FingeysIO.FingeysOutput();
-    output.jointAngle = Motor.getPosition().getValue();
-    output.jointSetPoint =
-        Angle.ofRelativeUnits(((MotionMagicVoltage) Motor.getAppliedControl()).Position, Rotations);
-    return output;
+  public void updateInputs(FingeysInputs inputs) {
+    inputs.jointAngularVelocity.mut_replace(Motor.getVelocity().getValue());
+    inputs.jointSetPoint.mut_replace(
+        Angle.ofRelativeUnits(
+            ((VelocityVoltage) Motor.getAppliedControl()).Velocity, RotationsPerSecond));
+    inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
   }
 
   @Override
-  public void updateInputs(FingeysInput input) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+  public void setTarget(AngularVelocity target) {
+    Request = Request.withVelocity(target);
+    Motor.setControl(Request);
   }
 
   @Override
-  public void periodic() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'periodic'");
+  public void stop() {
+    Motor.setControl(new StaticBrake());
   }
 }
