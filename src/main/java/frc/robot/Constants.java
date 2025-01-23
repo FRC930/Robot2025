@@ -21,6 +21,10 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
+  public class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+  }
+
   // When changing Mode.SIM to Mode.REPLAY, also change SimGui default flag in build.gradle
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;

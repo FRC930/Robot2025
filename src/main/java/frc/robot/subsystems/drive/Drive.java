@@ -45,6 +45,8 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -108,6 +110,9 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
+  private final Field2d ppField2d = new Field2d();
+  private final Field2d robotField2d = new Field2d();
+
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
@@ -127,6 +132,8 @@ public class Drive extends SubsystemBase {
     PhoenixOdometryThread.getInstance().start();
 
     // Configure AutoBuilder for PathPlanner
+    SmartDashboard.putData("pp_field", ppField2d);
+    SmartDashboard.putData("robot_field", robotField2d);
     AutoBuilder.configure(
         this::getPose,
         this::setPose,
@@ -145,6 +152,7 @@ public class Drive extends SubsystemBase {
         });
     PathPlannerLogging.setLogTargetPoseCallback(
         (targetPose) -> {
+          ppField2d.setRobotPose(targetPose);
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
 
@@ -329,7 +337,9 @@ public class Drive extends SubsystemBase {
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
-    return poseEstimator.getEstimatedPosition();
+    Pose2d pose = poseEstimator.getEstimatedPosition();
+    robotField2d.setRobotPose(pose);
+    return pose;
   }
 
   /** Returns the current odometry rotation. */
