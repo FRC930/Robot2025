@@ -52,6 +52,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
@@ -94,6 +98,7 @@ public class RobotContainer {
                       0.001)),
           Optional.empty());
 
+  // private final ElevatorSubsystem elevator;
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController co_controller = new CommandXboxController(1);
@@ -125,6 +130,15 @@ public class RobotContainer {
                 new VisionIOLimelight(limelightFrontName, drive::getRotation),
                 new VisionIOLimelight(limelightBackName, drive::getRotation));
         wrist = new Wrist(new WristIOTalonFX(3));
+
+        // elevator = new ElevatorSubsystem(new ElevatorIOTalonFX(4), java.util.Optional.empty());
+
+        // vision =
+        //     new Vision(
+        //         demoDrive::addVisionMeasurement,
+        //         new VisionIOPhotonVision(camera0Name, robotToCamera0),
+        //         new VisionIOPhotonVision(camera1Name, robotToCamera1));
+
         // Real robot, instantiate hardware IO implementations
         break;
 
@@ -147,6 +161,8 @@ public class RobotContainer {
 
         wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
         break;
+
+        // elevator = new ElevatorSubsystem(new ElevatorIOSim(4), null)
 
       default:
         drive =
@@ -201,7 +217,7 @@ public class RobotContainer {
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Turns wrist when Y button is pressed
-    controller.y().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
+    // controller.y().onTrue(ElevatorSubsystem.getNewSetDistanceCommand(0.75)).onFalse(ElevatorSubsystem.getNewSetDistanceCommand(0));
 
     // Reset gyro to 0° when B button is pressed
     controller
