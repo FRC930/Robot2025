@@ -20,8 +20,8 @@ public interface FingeysIO {
     /** The time in seconds from the FPGA start and the creation of this set of inputs */
     public double timestamp;
 
-    public MutAngularVelocity jointAngularVelocity;
-    public MutAngularVelocity jointSetPoint;
+    public MutAngularVelocity angularVelocity;
+    public MutAngularVelocity velocitySetPoint;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;
@@ -38,4 +38,6 @@ public interface FingeysIO {
   public void updateInputs(FingeysInputs input);
 
   public void stop();
+
+  public FingeysConstants getConstants();
 }

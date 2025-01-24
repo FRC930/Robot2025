@@ -51,6 +51,6 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     m_ElevatorIO.updateInputs(loggedelevator);
-    Logger.processInputs("RobotState/Elevator" + loggerSuffix, loggedelevator);
+    Logger.processInputs("RobotState/" + loggerSuffix, loggedelevator);
   }
 }

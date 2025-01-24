@@ -55,6 +55,8 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.fingeys.Fingeys;
+import frc.robot.subsystems.fingeys.FingeysIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -83,6 +85,8 @@ public class RobotContainer {
   // private final ArmJoint arm;
 
   private final Elevator elevator;
+
+  // private final Fingeys fingeys;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -118,6 +122,8 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIOTalonFX(4), Optional.of("Elevator"));
 
+        // fingeys = new Fingeys(new FingeysIOTalonFX(1));
+
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
         // vision =
@@ -148,6 +154,8 @@ public class RobotContainer {
 
         wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
         elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), 40.75, 68.25, false, 40.75, 0.001, 0.001)), Optional.of("Elevator"));
+        // fingeys = new Fingeys(null);
+        
         break;
 
       default:
@@ -166,6 +174,7 @@ public class RobotContainer {
                 drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         wrist = null;
         elevator = null;
+        // fingeys = null;
         break;
     }
 

@@ -20,7 +20,7 @@ public class ArmJoint extends SubsystemBase {
 
   private final ArmJointConstants m_Constants;
 
-  public ArmJoint(ArmJointIO armIO, ArmJointConstants constants) {
+  public ArmJoint(ArmJointIO armIO) {
     m_ArmIO = armIO;
     loggedarm.jointAngle = Degrees.mutable(0);
     loggedarm.jointAngularVelocity = DegreesPerSecond.mutable(0);

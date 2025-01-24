@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake;
 
-public class IntakeSubsystem {
+public class Intake {
   private IntakeIO intakeIO;
 
   public void setSpeed(double speed) {
