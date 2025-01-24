@@ -16,9 +16,6 @@ public class AutoCommandManager {
   public AutoCommandManager(Drive drive) {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    PathPlannerAuto MidScore1 = new PathPlannerAuto("MidScore1");
-    PathPlannerAuto MidScore2 = new PathPlannerAuto("MidScore2");
     PathPlannerAuto Circle = new PathPlannerAuto("Circle");
     PathPlannerAuto Straight = new PathPlannerAuto("Straight");
     PathPlannerAuto Diagonal = new PathPlannerAuto("Diagonal");
@@ -38,8 +35,6 @@ public class AutoCommandManager {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption("MidScore2", MidScore2);
-    autoChooser.addOption("MidScore1", MidScore1);
     autoChooser.addOption("Circle", Circle);
     autoChooser.addOption("Straight", Straight);
     autoChooser.addOption("Diagonal", Diagonal);

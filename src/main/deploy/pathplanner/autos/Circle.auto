@@ -9,24 +9,6 @@
           "data": {
             "pathName": "Circle.0"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "printB"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Circle.1"
-          }
         }
       ]
     }
