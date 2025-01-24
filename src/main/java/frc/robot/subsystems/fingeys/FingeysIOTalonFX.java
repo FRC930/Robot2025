@@ -30,7 +30,7 @@ public class FingeysIOTalonFX implements FingeysIO {
   public FingeysIOTalonFX(FingeysConstants constants) {
     m_Constants = constants;
     Motor = new TalonFX(constants.LeaderProfile.id());
-    Request = new PositionVoltage(constants.StartingAngle);
+    Request = new VelocityVoltage(constants.StartingAngularVelocity);
     configureTalons();
   }
 
@@ -51,9 +51,9 @@ public class FingeysIOTalonFX implements FingeysIO {
 
   @Override
   public void updateInputs(FingeysInputs inputs) {
-    inputs.jointAngularVelocity.mut_replace(Motor.getVelocity().getValue());
-    inputs.jointSetPoint.mut_replace(
-        Angle.ofRelativeUnits(
+    inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
+    inputs.velocitySetPoint.mut_replace(
+        AngularVelocity.ofRelativeUnits(
             ((VelocityVoltage) Motor.getAppliedControl()).Velocity, RotationsPerSecond));
     inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
   }
@@ -67,5 +67,10 @@ public class FingeysIOTalonFX implements FingeysIO {
   @Override
   public void stop() {
     Motor.setControl(new StaticBrake());
+  }
+
+  @Override
+  public FingeysConstants getConstants() {
+    return m_Constants;
   }
 }
