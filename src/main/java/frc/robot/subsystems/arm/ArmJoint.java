@@ -52,5 +52,6 @@ public class ArmJoint extends SubsystemBase {
   public void periodic() {
     m_ArmIO.updateInputs(loggedarm);
     Logger.processInputs("RobotState/ArmJoint" + loggerSuffix, loggedarm);
+    m_Constants.mechanismSimCallback.accept(loggedarm.jointAngle.copy());
   }
 }

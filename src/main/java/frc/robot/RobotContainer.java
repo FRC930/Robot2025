@@ -46,6 +46,9 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.arm.ArmJointIOSim;
 import frc.robot.subsystems.arm.ArmJointIOTalonFX;
+import frc.robot.subsystems.arm.constants.ArmJointConstants;
+import frc.robot.subsystems.arm.constants.ElbowConstants;
+import frc.robot.subsystems.arm.constants.ShoulderConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -82,7 +85,8 @@ public class RobotContainer {
   private final double ANGULAR_SPEED = 0.75;
   private final Wrist wrist;
 
-  // private final ArmJoint arm;
+  private final ArmJoint shoulder;
+  private final ArmJoint elbow;
 
   private final Elevator elevator;
 
@@ -122,6 +126,9 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIOTalonFX(4), Optional.of("Elevator"));
 
+        shoulder = new ArmJoint( new ArmJointIOTalonFX(new ShoulderConstants()));
+        elbow = new ArmJoint( new ArmJointIOTalonFX(new ElbowConstants()));
+
         // fingeys = new Fingeys(new FingeysIOTalonFX(1));
 
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
@@ -153,7 +160,10 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
         wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
-        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), 40.75, 68.25, false, 40.75, 0.001, 0.001)), Optional.of("Elevator"));
+        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)), Optional.of("Elevator"));
+
+        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
+        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
         // fingeys = new Fingeys(null);
         
         break;
@@ -174,6 +184,8 @@ public class RobotContainer {
                 drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         wrist = null;
         elevator = null;
+        shoulder = null;
+        elbow = null;
         // fingeys = null;
         break;
     }
@@ -213,7 +225,9 @@ public class RobotContainer {
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Turns wrist when Y button is pressed
-    controller.y().onTrue(elevator.getNewSetDistanceCommand(0.75)).onFalse(elevator.getNewSetDistanceCommand(0));
+    controller.y().onTrue(elevator.getNewSetDistanceCommand(Meters.convertFrom(58, Inches))).onFalse(elevator.getNewSetDistanceCommand(0));
+    controller.leftBumper().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
+    controller.rightBumper().onTrue(elbow.getNewSetAngleCommand(45).alongWith(shoulder.getNewSetAngleCommand(30))).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
 
     // Reset gyro to 0° when B button is pressed
     controller
