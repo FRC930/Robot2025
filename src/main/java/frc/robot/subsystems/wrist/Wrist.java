@@ -17,6 +17,8 @@ public class Wrist extends SubsystemBase {
 
   WristInputsAutoLogged loggedwrist = new WristInputsAutoLogged();
 
+  //WRIST WEIGHT
+  //2.173 lbs
   public Wrist(WristIO wristIO) {
     m_WristIO = wristIO;
     loggedwrist.wristAngle = Degrees.mutable(0);
