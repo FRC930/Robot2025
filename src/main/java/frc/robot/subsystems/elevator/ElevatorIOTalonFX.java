@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -23,32 +24,29 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   public static final double ROTATIONS_TO_DISTANCE = 1.0;//TODO: Set this
 
-  public MotionMagicVoltage Request;
+  public PositionVoltage Request;
   public TalonFX Motor;
 
   public ArmInputs inputs;
 
   public ElevatorIOTalonFX(int Motor1Id) {
     Motor = new TalonFX(Motor1Id);
-    Request = new MotionMagicVoltage(0);
+    Request = new PositionVoltage(0);
 
     Motor.setControl(Request);
     configureTalons();
   }
 
   private void configureTalons() {
-    MotionMagicConfigs mm_cfg = new MotionMagicConfigs();
-    mm_cfg.MotionMagicAcceleration = 0.0;
-    mm_cfg.MotionMagicCruiseVelocity = 0.0;
-    mm_cfg.MotionMagicExpo_kA = 0.0;
-    mm_cfg.MotionMagicExpo_kV = 0.0;
-    mm_cfg.MotionMagicJerk = 0.0;
     TalonFXConfiguration cfg = new TalonFXConfiguration();
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     cfg.Voltage.PeakForwardVoltage = 7;
     cfg.Voltage.PeakReverseVoltage = 7;
+
+    cfg.Slot0.kP = 1.0;
+
+
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(mm_cfg));
   }
 
   @Override
