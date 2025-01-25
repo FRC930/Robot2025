@@ -33,6 +33,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -56,6 +57,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.led.LedIOReal;
+import frc.robot.subsystems.led.LedIOSim;
+import frc.robot.subsystems.led.LedSubsystem;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.fingeys.Fingeys;
@@ -214,9 +218,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    if (Robot.isSimulation()) {
-      configureSimBindings();
-    }
   }
 
   /**
@@ -327,6 +328,7 @@ public class RobotContainer {
     SmartDashboard.putData(
         "LEDTestCommand", ledChannel1.newRunPatternCommand("main", LEDPattern.rainbow(255, 128)));
   }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
