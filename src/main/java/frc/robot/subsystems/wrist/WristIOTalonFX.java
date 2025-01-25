@@ -18,6 +18,8 @@ public class WristIOTalonFX implements WristIO {
   public WristIOTalonFX(int MotorId) {
     Motor= new TalonFX(MotorId);
     Request = new MotionMagicVoltage(0);
+
+    Motor.setControl(Request);
     configureTalons();
   }
 

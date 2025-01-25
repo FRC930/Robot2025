@@ -30,6 +30,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     Motor = new TalonFX(id);
     Request = new VoltageOut(0.0);
     rangeSensor = new CANrange(CANrangeID);
+
+    Motor.setControl(Request);
     configureTalons();
   }
 

@@ -31,6 +31,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   public ElevatorIOTalonFX(int Motor1Id) {
     Motor = new TalonFX(Motor1Id);
     Request = new MotionMagicVoltage(0);
+
+    Motor.setControl(Request);
     configureTalons();
   }
 
