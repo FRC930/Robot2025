@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inch;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
@@ -38,14 +39,14 @@ public class RobotState extends VirtualSubsystem {
   private MutAngle elbowAngle = Degrees.mutable(0);
   private MutAngle wristTwist = Degrees.mutable(0);
 
-  private final LoggedTunableNumber elevatorHeightTune =
-      new LoggedTunableNumber("robotState/elevatorHeight", 0);
-  private final LoggedTunableNumber shoulderAngleTune =
-      new LoggedTunableNumber("robotState/shoulderAngle", 0);
-  private final LoggedTunableNumber elbowAngleTune =
-      new LoggedTunableNumber("robotState/elbowAngle", 0);
-  private final LoggedTunableNumber wristTwistTune =
-      new LoggedTunableNumber("robotState/wristTwist", 0);
+  // private final LoggedTunableNumber elevatorHeightTune =
+  //     new LoggedTunableNumber("robotState/elevatorHeight", 0);
+  // private final LoggedTunableNumber shoulderAngleTune =
+  //     new LoggedTunableNumber("robotState/shoulderAngle", 0);
+  // private final LoggedTunableNumber elbowAngleTune =
+  //     new LoggedTunableNumber("robotState/elbowAngle", 0);
+  // private final LoggedTunableNumber wristTwistTune =
+  //     new LoggedTunableNumber("robotState/wristTwist", 0);
 
   private MutAngle testStuff = Degrees.mutable(0);
 
@@ -99,6 +100,22 @@ public class RobotState extends VirtualSubsystem {
     this.wristTwist.mut_replace(wristTwist);
   }
 
+  public void setElevatorSource(MutDistance elevatorHeight) {
+    this.elevatorHeight = elevatorHeight;
+  }
+
+  public void setShoulderSource(MutAngle shoulderAngle) {
+    this.shoulderAngle = shoulderAngle;
+  }
+
+  public void setElbowSource(MutAngle elbowAngle) {
+    this.elbowAngle = elbowAngle;
+  }
+
+  public void setWristSource(MutAngle wristTwist) {
+    this.wristTwist = wristTwist;
+  }
+
   private void visualize() {
 
     Pose3d elevatorPose =
@@ -106,7 +123,7 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(
                 new Transform3d(
                     new Translation3d(
-                        Meters.zero(), Meters.zero(), Inches.of(elevatorHeightTune.get())),
+                        Meters.zero(), Meters.zero(), this.elevatorHeight),
                     new Rotation3d()));
 
     Pose3d shoulderPose =
@@ -116,7 +133,7 @@ public class RobotState extends VirtualSubsystem {
                 new Transform3d(
                     new Translation3d(),
                     new Rotation3d(
-                        Degrees.of(shoulderAngleTune.get()), Degrees.zero(), Degrees.zero())))
+                        this.shoulderAngle, Degrees.zero(), Degrees.zero())))
             .transformBy(SHOULDER_PIVOT_OFFSET.inverse());
 
     Pose3d elbowPose =
@@ -126,7 +143,7 @@ public class RobotState extends VirtualSubsystem {
                 new Transform3d(
                     new Translation3d(),
                     new Rotation3d(
-                        Degrees.of(elbowAngleTune.get()), Degrees.zero(), Degrees.zero())))
+                        this.elbowAngle, Degrees.zero(), Degrees.zero())))
             .transformBy(ELBOW_PIVOT_OFFSET.inverse());
 
     testStuff.mut_replace(testStuff.plus(Degrees.of(.25)));
@@ -138,7 +155,7 @@ public class RobotState extends VirtualSubsystem {
                 new Transform3d(
                     new Translation3d(),
                     new Rotation3d(
-                        Degrees.of(0), Degrees.of(wristTwistTune.get()), Degrees.zero())))
+                        Degrees.of(0), wristTwist, Degrees.zero())))
             .transformBy(WRIST_PIVOT_OFFSET.inverse());
 
     Logger.recordOutput("RobotState/Elevator/" + key, elevatorPose);

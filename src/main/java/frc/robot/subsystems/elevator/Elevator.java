@@ -11,6 +11,7 @@ import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
 
 public class Elevator extends SubsystemBase {
   private ElevatorIO m_ElevatorIO;
@@ -28,6 +29,8 @@ public class Elevator extends SubsystemBase {
     loggedelevator.timestamp = 0.0;
     loggedelevator.torqueCurrent = Amps.mutable(0);
     loggedelevator.voltageSetPoint = Volts.mutable(0);
+
+    RobotState.instance().setElevatorSource(loggedelevator.elevatorDistance);
 
     if (loggedName.isPresent()) {
       loggerSuffix = loggedName.get();

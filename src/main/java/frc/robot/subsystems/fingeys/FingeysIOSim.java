@@ -22,7 +22,13 @@ public class FingeysIOSim implements FingeysIO {
   private final FlywheelSim sim;
 
   public FingeysIOSim(int motorId) {
-    sim = new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.05, 1), DCMotor.getKrakenX60Foc(1), 1);
+    sim = new FlywheelSim(
+      LinearSystemId.createFlywheelSystem(
+        DCMotor.getKrakenX60Foc(1), 
+        0.05, 
+        1
+        ), 
+      DCMotor.getKrakenX60Foc(1), 0.01);
   }
 
   @Override

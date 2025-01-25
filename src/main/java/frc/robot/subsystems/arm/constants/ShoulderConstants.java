@@ -21,7 +21,7 @@ public class ShoulderConstants extends ArmJointConstants {
         this.LeaderProfile = CanDef.builder().id(0).bus(CanBus.Rio).build();
 
         this.SimGains =
-            Gains.builder().kS(0.0).kG(0.0).kV(1.45).kA(0.0).kP(0.1).kI(0.0).kD(0.0).build();
+            Gains.builder().kS(0.0).kG(0.0).kV(0.0).kA(0.0).kP(0.1).kI(0.0).kD(0.0).build();
 
         this.TalonFXGains =
             Gains.builder().kS(0.0).kG(0.0).kV(0.0).kA(0.0).kP(0.0).kI(0.0).kD(0.0).build();
@@ -50,7 +50,7 @@ public class ShoulderConstants extends ArmJointConstants {
 
         this.LoggedName = "Shoulder";
         this.mechanismSimCallback = (d) -> {
-            RobotState.instance().setShoulderAngle(d);
+            RobotState.instance().setShoulderSource(d);
         };
     }
 }

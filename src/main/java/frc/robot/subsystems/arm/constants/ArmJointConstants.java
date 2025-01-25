@@ -12,6 +12,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MutAngle;
 import frc.robot.util.CanDef;
 import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.Gains;
@@ -47,6 +48,6 @@ public abstract class ArmJointConstants {
 
     public String LoggedName;
 
-    public Consumer<Angle> mechanismSimCallback;
+    public Consumer<MutAngle> mechanismSimCallback;
 }
 

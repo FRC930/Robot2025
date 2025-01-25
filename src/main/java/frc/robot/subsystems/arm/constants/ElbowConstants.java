@@ -21,7 +21,13 @@ public class ElbowConstants extends ArmJointConstants {
         this.LeaderProfile = CanDef.builder().id(0).bus(CanBus.Rio).build();
 
         this.SimGains =
-            Gains.builder().kS(0.0).kG(0.0).kV(1.45).kA(0.0).kP(0.1).kI(0.0).kD(0.0).build();
+            Gains.builder()
+                //Feed Forward
+                .kS(0.0)
+                .kG(0.0)
+                .kV(0.0)
+                .kA(0.0)
+                .kP(0.1).kI(0.0).kD(0.0).build();
 
         this.TalonFXGains =
             Gains.builder().kS(0.0).kG(0.0).kV(0.0).kA(0.0).kP(0.0).kI(0.0).kD(0.0).build();
@@ -49,8 +55,12 @@ public class ElbowConstants extends ArmJointConstants {
         this.PitchModifier = Degrees.of(84);
 
         this.LoggedName = "Elbow";
+        /**
+         * This callback defines where we will put our mut_angle on initialize for the purpose of mechanism simulation
+         * <p> Whatever function is here gets called once on initialize, and should point to whatever mut_angle source we want to set.
+         */
         this.mechanismSimCallback = (d) -> {
-            RobotState.instance().setElbowAngle(d);
+            RobotState.instance().setElbowSource(d);
         };
     }
 }
