@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,12 +17,9 @@ import frc.robot.subsystems.arm.constants.ArmJointConstants;
 public class Fingeys extends SubsystemBase {
   private FingeysIO m_FingeysIO;
 
-  private AngularVelocity setpoint;
-  private String loggerSuffix;
+  private Voltage setpoint;
 
   FingeysInputsAutoLogged loggedfingeys = new FingeysInputsAutoLogged();
-
-  private final FingeysConstants m_Constants;
 
   public Fingeys(FingeysIO fingeysIO) {
     m_FingeysIO = fingeysIO;
@@ -30,21 +28,17 @@ public class Fingeys extends SubsystemBase {
     loggedfingeys.timestamp = 0.0;
     loggedfingeys.torqueCurrent = Amps.mutable(0);
     loggedfingeys.voltageSetPoint = Volts.mutable(0);
-
-    m_Constants = m_FingeysIO.getConstants();
-
-    loggerSuffix = m_Constants.LoggedName;
   }
 
-  public void setAngularVelocity(AngularVelocity angularVelocity) {
-    setpoint = angularVelocity;
-    m_FingeysIO.setTarget(angularVelocity);
+  public void setTarget(Voltage target) {
+    setpoint = target;
+    m_FingeysIO.setTarget(target);
   }
 
   public Command getNewSetAngleCommand(double i) {
     return new InstantCommand(
         () -> {
-          setAngularVelocity(DegreesPerSecond.of(i));
+          setTarget(Volts.of(i));
         },
         this);
   }
@@ -52,6 +46,6 @@ public class Fingeys extends SubsystemBase {
   @Override
   public void periodic() {
     m_FingeysIO.updateInputs(loggedfingeys);
-    Logger.processInputs("RobotState/" + loggerSuffix, loggedfingeys);
+    Logger.processInputs("RobotState/Fingeys", loggedfingeys);
   }
 }

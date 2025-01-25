@@ -54,7 +54,7 @@ public class ElevatorIOSim implements ElevatorIO {
     public void updateInputs(ElevatorInputs input) {
       // updinputs
       //Keegan - Turn this into Distance
-      input.elevatorDistance.mut_replace(Distance.ofRelativeUnits(0, Meters));
+      input.elevatorDistance.mut_replace(Distance.ofRelativeUnits(sim.getPositionMeters(), Meters));
       input.elevatorVelocity.mut_replace(MetersPerSecond.of(sim.getVelocityMetersPerSecond()));
       input.elevatorSetPoint.mut_replace(Meters.of(controller.getGoal().position));
       input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);

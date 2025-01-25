@@ -8,6 +8,7 @@ import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutCurrent;
 import edu.wpi.first.units.measure.MutVoltage;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 
 import java.util.Optional;
@@ -21,13 +22,13 @@ public interface FingeysIO {
     public double timestamp;
 
     public MutAngularVelocity angularVelocity;
-    public MutAngularVelocity velocitySetPoint;
+    public MutVoltage voltage;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;
   }
 
-  public void setTarget(AngularVelocity target);
+  public void setTarget(Voltage target);
 
   /**
    * Takes a set of inputs, retrieves the current values of these inputs, then updates the given
@@ -38,6 +39,4 @@ public interface FingeysIO {
   public void updateInputs(FingeysInputs input);
 
   public void stop();
-
-  public FingeysConstants getConstants();
 }
