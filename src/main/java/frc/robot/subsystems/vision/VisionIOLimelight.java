@@ -1,4 +1,4 @@
-// Copyright 2021-2024 FRC 6328
+// Copyright 2021-2025 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
 // This program is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@ public class VisionIOLimelight implements VisionIO {
   private final DoubleSubscriber tySubscriber;
   private final DoubleArraySubscriber megatag1Subscriber;
   private final DoubleArraySubscriber megatag2Subscriber;
+  private String cameraName;
 
   /**
    * Creates a new VisionIOLimelight.
@@ -46,6 +47,7 @@ public class VisionIOLimelight implements VisionIO {
    * @param rotationSupplier Supplier for the current estimated rotation, used for MegaTag 2.
    */
   public VisionIOLimelight(String name, Supplier<Rotation2d> rotationSupplier) {
+    this.cameraName = name;
     var table = NetworkTableInstance.getDefault().getTable(name);
     this.rotationSupplier = rotationSupplier;
     orientationPublisher = table.getDoubleArrayTopic("robot_orientation_set").publish();
@@ -59,8 +61,10 @@ public class VisionIOLimelight implements VisionIO {
 
   @Override
   public void updateInputs(VisionIOInputs inputs) {
+    inputs.cameraName = this.cameraName;
     // Update connection status based on whether an update has been seen in the last 250ms
-    inputs.connected = (RobotController.getFPGATime() - latencySubscriber.getLastChange()) < 250;
+    inputs.connected =
+        ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
 
     // Update target observation
     inputs.latestTargetObservation =
@@ -76,56 +80,67 @@ public class VisionIOLimelight implements VisionIO {
     // Read new pose observations from NetworkTables
     Set<Integer> tagIds = new HashSet<>();
     List<PoseObservation> poseObservations = new LinkedList<>();
-    for (var rawSample : megatag1Subscriber.readQueue()) {
-      if (rawSample.value.length == 0) continue;
-      for (int i = 10; i < rawSample.value.length; i += 7) {
-        tagIds.add((int) rawSample.value[i]);
+    // Added booleans to control which pases we will use for debugging purpose and may want to
+    // control in code
+    boolean useMega1 = true;
+    boolean useBoth = true;
+    if (useMega1 || useBoth)
+      for (var rawSample : megatag1Subscriber.readQueue()) {
+        if (rawSample.value.length == 0) continue;
+        for (int i = 11; i < rawSample.value.length; i += 7) {
+          tagIds.add((int) rawSample.value[i]);
+        }
+        poseObservations.add(
+            new PoseObservation(
+                cameraName,
+
+                // Timestamp, based on server timestamp of publish and latency
+                rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
+
+                // 3D pose estimate
+                parsePose(rawSample.value),
+
+                // Ambiguity, using only the first tag because ambiguity isn't applicable for
+                // multitag
+                rawSample.value.length >= 18 ? rawSample.value[17] : 0.0,
+
+                // Tag count
+                (int) rawSample.value[7],
+
+                // Average tag distance
+                rawSample.value[9],
+
+                // Observation type
+                PoseObservationType.MEGATAG_1));
       }
-      poseObservations.add(
-          new PoseObservation(
-              // Timestamp, based on server timestamp of publish and latency
-              rawSample.timestamp * 1.0e-9 - rawSample.value[7] * 1.0e-3,
+    if (!useMega1 || useBoth)
+      for (var rawSample : megatag2Subscriber.readQueue()) {
+        if (rawSample.value.length == 0) continue;
+        for (int i = 11; i < rawSample.value.length; i += 7) {
+          tagIds.add((int) rawSample.value[i]);
+        }
+        poseObservations.add(
+            new PoseObservation(
+                cameraName,
 
-              // 3D pose estimate
-              parsePose(rawSample.value),
+                // Timestamp, based on server timestamp of publish and latency
+                rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
 
-              // Ambiguity, using only the first tag because ambiguity isn't applicable for multitag
-              rawSample.value.length >= 17 ? rawSample.value[16] : 0.0,
+                // 3D pose estimate
+                parsePose(rawSample.value),
 
-              // Tag count
-              (int) rawSample.value[8],
+                // Ambiguity, zeroed because the pose is already disambiguated
+                0.0,
 
-              // Average tag distance
-              rawSample.value[10],
+                // Tag count
+                (int) rawSample.value[7],
 
-              // Observation type
-              PoseObservationType.MEGATAG_1));
-    }
-    for (var rawSample : megatag2Subscriber.readQueue()) {
-      if (rawSample.value.length == 0) continue;
-      for (int i = 10; i < rawSample.value.length; i += 7) {
-        tagIds.add((int) rawSample.value[i]);
+                // Average tag distance
+                rawSample.value[9],
+
+                // Observation type
+                PoseObservationType.MEGATAG_2));
       }
-      poseObservations.add(
-          new PoseObservation(
-              // Timestamp, based on server timestamp of publish and latency
-              rawSample.timestamp * 1.0e-9 - rawSample.value[7] * 1.0e-3,
-
-              // 3D pose estimate
-              parsePose(rawSample.value),
-
-              // Ambiguity, zeroed because the pose is already disambiguated
-              0.0,
-
-              // Tag count
-              (int) rawSample.value[8],
-
-              // Average tag distance
-              rawSample.value[10],
-
-              // Observation type
-              PoseObservationType.MEGATAG_2));
-    }
 
     // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];

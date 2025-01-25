@@ -11,14 +11,21 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and trigger mappings) should be declared here. *
+ */
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCamera0;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCamera1;
+import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
+import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -30,7 +37,9 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.ArmJoint;
@@ -54,6 +63,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -73,6 +83,9 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
+  private final double DRIVE_SPEED = 1.0;
+  private final double ANGULAR_SPEED = 0.75;
+
   private final Wrist wrist;
 
   private final ArmJoint shoulder;
@@ -86,10 +99,14 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController co_controller = new CommandXboxController(1);
+  private final CommandXboxController characterizeController = new CommandXboxController(2);
 
-  private final Vision vision;
+  private final AprilTagVision vision;
 
   private AutoCommandManager autoCommandManager;
+
+  private boolean m_TeleopInitialized = false;
   private RobotState robotState;
 
 
@@ -106,10 +123,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
         vision =
-            new Vision(
+            new AprilTagVision(
+                drive::setPose,
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation),
-                new VisionIOLimelight(camera1Name, drive::getRotation));
+                new VisionIOLimelight(limelightFrontName, drive::getRotation),
+                new VisionIOLimelight(limelightBackName, drive::getRotation));
 
         wrist = new Wrist(new WristIOTalonFX(3));
 
@@ -125,11 +143,6 @@ public class RobotContainer {
 
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
-        // vision =
-        //     new Vision(
-        //         demoDrive::addVisionMeasurement,
-        //         new VisionIOPhotonVision(camera0Name, robotToCamera0),
-        //         new VisionIOPhotonVision(camera1Name, robotToCamera1));
 
         // Real robot, instantiate hardware IO implementations
         break;
@@ -145,10 +158,11 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackRight));
 
         vision =
-            new Vision(
+            new AprilTagVision(
+                drive::setPose,
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
-                new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
+                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
+                new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
         wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
         elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)), Optional.of("Elevator"));
@@ -171,7 +185,9 @@ public class RobotContainer {
 
         // Replayed robot, disable IO implementations
         // (Use same number of dummy implementations as the real robot)
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        vision =
+            new AprilTagVision(
+                drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         wrist = null;
         elevator = null;
         shoulder = null;
@@ -192,16 +208,16 @@ public class RobotContainer {
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * edu.wpi.first.wpilibj2.command.button.JoystickButton}. Used for getting SysIDs
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -controller.getLeftY() * DRIVE_SPEED,
+            () -> -controller.getLeftX() * DRIVE_SPEED,
+            () -> -controller.getRightX() * ANGULAR_SPEED));
 
     // Lock to 0° when A button is held
     controller
@@ -234,6 +250,41 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    characterizeController
+        .back()
+        .and(characterizeController.y())
+        .whileTrue(drive.sysIdDynamic(Direction.kForward));
+    characterizeController
+        .back()
+        .and(characterizeController.x())
+        .whileTrue(drive.sysIdDynamic(Direction.kReverse));
+    characterizeController
+        .start()
+        .and(characterizeController.y())
+        .whileTrue(drive.sysIdQuasistatic(Direction.kForward));
+    characterizeController
+        .start()
+        .and(characterizeController.x())
+        .whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
+    characterizeController
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  SignalLogger.setPath("/media/sda1/logs");
+                  // SignalLogger.enableAutoLogging(true);
+                  SignalLogger.start();
+                  System.out.println("Started Logger");
+                }));
+    characterizeController
+        .b()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  SignalLogger.stop();
+                  System.out.println("Stopped Logger");
+                }));
+
     // Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
@@ -250,13 +301,32 @@ public class RobotContainer {
     //             },
     //             drive));
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoCommandManager.getAutonomousCommand();
+    Command autoCommand = autoCommandManager.getAutonomousCommand();
+    // Turn off updating odometry based on Apriltags
+    vision.disableUpdateOdometryBasedOnApriltags();
+    if (autoCommand != null) {
+      // Tell vision autonomous path was executed, so pose was set
+      vision.updateAutonomous();
+    }
+    return autoCommand;
+  }
+
+  public void teleopInit() {
+    if (!this.m_TeleopInitialized) {
+      // Only want to initialize starting position once (if teleop multiple times dont reset pose
+      // again)
+      vision.updateStartingPosition();
+      // Turn on updating odometry based on Apriltags
+      vision.enableUpdateOdometryBasedOnApriltags();
+      m_TeleopInitialized = true;
+      SignalLogger.setPath("/media/sda1/");
+      SignalLogger.start();
+    }
   }
 }

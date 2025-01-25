@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -15,6 +16,9 @@ public class AutoCommandManager {
   public AutoCommandManager(Drive drive) {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    PathPlannerAuto Circle = new PathPlannerAuto("Circle");
+    PathPlannerAuto Straight = new PathPlannerAuto("Straight");
+    PathPlannerAuto Diagonal = new PathPlannerAuto("Diagonal");
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -31,6 +35,9 @@ public class AutoCommandManager {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption("Circle", Circle);
+    autoChooser.addOption("Straight", Straight);
+    autoChooser.addOption("Diagonal", Diagonal);
   }
 
   public Command getAutonomousCommand() {
