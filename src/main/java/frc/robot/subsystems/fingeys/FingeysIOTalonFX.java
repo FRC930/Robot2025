@@ -27,10 +27,7 @@ public class FingeysIOTalonFX implements FingeysIO {
 
   public ArmInputs inputs;
 
-  private final FingeysConstants m_Constants;
-
-  public FingeysIOTalonFX(int id,FingeysConstants constants) {
-    m_Constants = constants;
+  public FingeysIOTalonFX(int id) {
     Motor = new TalonFX(id);
     Request = new VoltageOut(0.0);
     configureTalons();
