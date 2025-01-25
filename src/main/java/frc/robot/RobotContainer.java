@@ -50,6 +50,9 @@ import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.fingeys.Fingeys;
 import frc.robot.subsystems.fingeys.FingeysIOSim;
 import frc.robot.subsystems.fingeys.FingeysIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -78,6 +81,8 @@ public class RobotContainer {
   private final Elevator elevator;
 
   private final Fingeys fingeys;
+
+  private final Intake intake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -115,6 +120,9 @@ public class RobotContainer {
 
         fingeys = null;
 
+        //You'll have to initialize this yourself, since there's no CAN range marked.
+        intake = null;
+
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
         // vision =
@@ -148,6 +156,7 @@ public class RobotContainer {
         shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
         elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
         fingeys = new Fingeys(new FingeysIOSim(121));
+        intake = new Intake(new IntakeIOSim(15));
         
         break;
 
@@ -168,6 +177,7 @@ public class RobotContainer {
         shoulder = null;
         elbow = null;
         fingeys = null;
+        intake = null;
         break;
     }
 
@@ -211,6 +221,7 @@ public class RobotContainer {
     controller.leftBumper().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
     controller.rightBumper().onTrue(elbow.getNewSetAngleCommand(45).alongWith(shoulder.getNewSetAngleCommand(30))).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
     controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
+    controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
     // Reset gyro to 0° when B button is pressed
     controller
         .b()
