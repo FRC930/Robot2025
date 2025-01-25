@@ -11,6 +11,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
 import frc.robot.subsystems.arm.ArmInputsAutoLogged;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 
@@ -35,7 +36,7 @@ public class Fingeys extends SubsystemBase {
     m_FingeysIO.setTarget(target);
   }
 
-  public Command getNewSetAngleCommand(double i) {
+  public Command getNewSetVoltsCommand(double i) {
     return new InstantCommand(
         () -> {
           setTarget(Volts.of(i));

@@ -6,6 +6,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
+
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,6 +26,8 @@ public class Wrist extends SubsystemBase {
     loggedwrist.timestamp = 0.0;
     loggedwrist.torqueCurrent = Amps.mutable(0);
     loggedwrist.voltageSetPoint = Volts.mutable(0);
+
+    RobotState.instance().setWristSource(loggedwrist.wristAngle);
   }
 
   public void setAngle(Angle angle) {

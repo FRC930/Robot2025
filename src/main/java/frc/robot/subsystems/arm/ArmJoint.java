@@ -33,6 +33,8 @@ public class ArmJoint extends SubsystemBase {
     m_Constants = armIO.getConstants();
     
     loggerSuffix = m_Constants.LoggedName;
+
+    m_Constants.mechanismSimCallback.accept(loggedarm.jointAngle);
   }
 
   public void setAngle(Angle angle) {
@@ -52,6 +54,5 @@ public class ArmJoint extends SubsystemBase {
   public void periodic() {
     m_ArmIO.updateInputs(loggedarm);
     Logger.processInputs("RobotState/ArmJoint" + loggerSuffix, loggedarm);
-    m_Constants.mechanismSimCallback.accept(loggedarm.jointAngle.copy());
   }
 }
