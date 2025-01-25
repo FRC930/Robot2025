@@ -2,6 +2,9 @@ package frc.robot.subsystems.arm.constants;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -43,5 +46,7 @@ public abstract class ArmJointConstants {
     public Angle PitchModifier;
 
     public String LoggedName;
+
+    public Consumer<Angle> mechanismSimCallback;
 }
 

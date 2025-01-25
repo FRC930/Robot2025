@@ -26,16 +26,16 @@ public class ArmJointIOSim implements ArmJointIO {
 
   private final ArmJointConstants m_Constants;
 
-  public ArmJointIOSim(int motorId, ArmJointConstants constants) {
+  public ArmJointIOSim(ArmJointConstants constants) {
     sim = new SingleJointedArmSim(
                       DCMotor.getKrakenX60Foc(1),
                       constants.Gearing,
                       SingleJointedArmSim.estimateMOI(constants.Length.in(Meters), constants.Weight.in(Kilograms)),
                       constants.Length.in(Meters),
-                      constants.MinimumAngle.in(Degrees),
-                      constants.MaximumAngle.in(Degrees),
+                      constants.MinimumAngle.in(Radians),
+                      constants.MaximumAngle.in(Radians),
                       true,
-                      constants.StartingAngle.in(Degrees),
+                      constants.StartingAngle.in(Radians),
                       0.001,
                       0.001);
     controller = new ProfiledPIDController(constants.SimGains.kP, constants.SimGains.kI, constants.SimGains.kD, new Constraints(constants.MaxVelocity.in(DegreesPerSecond), constants.MaxAcceleration.in(DegreesPerSecondPerSecond)));
