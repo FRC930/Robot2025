@@ -19,32 +19,15 @@ public class FingeysIOSim implements FingeysIO {
 
   private Voltage appliedVoltage = Volts.mutable(0.0);
 
-  private ArmFeedforward ff;
-
-  private final ProfiledPIDController controller;
-
   private final FlywheelSim sim;
 
-  private final FingeysConstants m_Constants;
-
-  public FingeysIOSim(int motorId, FingeysConstants constants) {
+  public FingeysIOSim(int motorId) {
     sim = new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.05, 1), DCMotor.getKrakenX60Foc(1), 1);
-    controller = new ProfiledPIDController(0.0, 0.0, 0.0, new Constraints(0.0,0.0));
-    m_Constants = constants;
   }
 
   @Override
-  public void setTarget(AngularVelocity target) {
-    controller.setGoal(new State(target.in(DegreesPerSecond), 0));
-  }
-
-  private void updateVoltageSetpoint() {
-    AngularVelocity currentVelocity = RadiansPerSecond.of(sim.getAngularVelocityRadPerSec());
-
-    Voltage controllerVoltage = Volts.of(controller.calculate(currentVelocity.in(DegreesPerSecond)));
-
-    Voltage effort = controllerVoltage;
-    runVolts(effort);
+  public void setTarget(Voltage target) {
+    runVolts(target);
   }
 
   private void runVolts(Voltage volts) {
@@ -61,18 +44,12 @@ public class FingeysIOSim implements FingeysIO {
     input.voltageSetPoint.mut_replace(appliedVoltage);
 
     // Periodic
-    updateVoltageSetpoint();
     sim.setInputVoltage(appliedVoltage.in(Volts));
     sim.update(0.02);
   }
 
   @Override
   public void stop() {
-    setTarget(RadiansPerSecond.of(0.0));
-  }
-
-  @Override
-  public FingeysConstants getConstants() {
-    return m_Constants;
+    setTarget(Volts.of(0.0));
   }
 }
