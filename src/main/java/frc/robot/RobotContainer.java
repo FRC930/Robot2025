@@ -168,7 +168,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
                 new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
-        wrist = new Wrist(new WristIOSim(3, new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 4, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001})));
+        wrist = new Wrist(new WristIOSim(3));
         elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)), Optional.of("Elevator"));
 
         shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));

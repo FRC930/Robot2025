@@ -30,12 +30,12 @@ public class WristIOSim implements WristIO {
   private Voltage appliedVoltage = Volts.mutable(0.0);
 
   private final ProfiledPIDController controller =
-      new ProfiledPIDController(0.4, 0.0, 0.0, new Constraints(100000, 361));
+      new ProfiledPIDController(2.4, 0.0, 0.0, new Constraints(100000, 361));
 
   private final FlywheelSim sim;
 
-  public WristIOSim(int motorId, FlywheelSim wristSim) {
-    sim = wristSim;
+  public WristIOSim(int motorId) {
+    sim =  new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.0028616, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001});
   }
 
   @Override

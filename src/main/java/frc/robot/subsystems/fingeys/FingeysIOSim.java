@@ -25,7 +25,7 @@ public class FingeysIOSim implements FingeysIO {
     sim = new FlywheelSim(
       LinearSystemId.createFlywheelSystem(
         DCMotor.getKrakenX60Foc(1), 
-        0.05, 
+        0.0005, 
         1
         ), 
       DCMotor.getKrakenX60Foc(1), 0.01);
