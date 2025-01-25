@@ -30,6 +30,8 @@ public class FingeysIOTalonFX implements FingeysIO {
   public FingeysIOTalonFX(int id) {
     Motor = new TalonFX(id);
     Request = new VoltageOut(0.0);
+
+    Motor.setControl(Request);
     configureTalons();
   }
 

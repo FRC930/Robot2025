@@ -241,6 +241,7 @@ public class RobotContainer {
     controller.rightBumper().onTrue(elbow.getNewSetAngleCommand(45).alongWith(shoulder.getNewSetAngleCommand(30))).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
     controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
     controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
+    
     // Reset gyro to 0° when B button is pressed
     controller
         .b()
