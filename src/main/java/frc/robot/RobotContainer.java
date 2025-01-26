@@ -26,16 +26,13 @@ import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -44,9 +41,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.ArmJoint;
-import frc.robot.subsystems.arm.ArmJointIOSim;
 import frc.robot.subsystems.arm.ArmJointIOTalonFX;
-import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.subsystems.arm.constants.ElbowConstants;
 import frc.robot.subsystems.arm.constants.ShoulderConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -69,10 +64,8 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-import frc.robot.subsystems.wrist.WristIOSim;
-import frc.robot.subsystems.wrist.WristIOTalonFX;
 import frc.robot.subsystems.wrist.Wrist;
-import java.util.Optional;
+import frc.robot.subsystems.wrist.WristIOTalonFX;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -168,14 +161,6 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
                 new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
-        wrist = new Wrist(new WristIOSim(3));
-        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)), Optional.of("Elevator"));
-
-        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
-        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
-        fingeys = new Fingeys(new FingeysIOSim(121));
-        intake = new Intake(new IntakeIOSim(15));
-        
         break;
 
       default:
@@ -192,12 +177,7 @@ public class RobotContainer {
         vision =
             new AprilTagVision(
                 drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-        wrist = null;
-        elevator = null;
-        shoulder = null;
-        elbow = null;
-        fingeys = null;
-        intake = null;
+
         break;
     }
 
@@ -235,13 +215,6 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Turns wrist when Y button is pressed
-    controller.y().onTrue(elevator.getNewSetDistanceCommand(Meters.convertFrom(58, Inches))).onFalse(elevator.getNewSetDistanceCommand(0));
-    controller.leftBumper().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
-    controller.rightBumper().onTrue(elbow.getNewSetAngleCommand(45).alongWith(shoulder.getNewSetAngleCommand(30))).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
-    controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
-    controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
-    
     // Reset gyro to 0° when B button is pressed
     controller
         .b()

@@ -14,15 +14,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
-import frc.robot.subsystems.fingeys.FingeysIO.FingeysInputs;
 import frc.robot.util.PhoenixUtil;
 
 public class IntakeIOTalonFX implements IntakeIO {
   public VoltageOut Request;
   public TalonFX Motor;
-
-  public ArmInputs inputs;
 
   private CANrange rangeSensor;
 

@@ -14,7 +14,6 @@ import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.fingeys.FingeysIO.FingeysInputs;
 
 public interface IntakeIO {
 
