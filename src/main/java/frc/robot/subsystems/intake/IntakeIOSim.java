@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.fingeys.FingeysIO.FingeysInputs;
 import frc.robot.util.LoggedTunableNumber;
 
 public class IntakeIOSim implements IntakeIO {
