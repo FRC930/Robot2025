@@ -2,7 +2,6 @@ package frc.robot.subsystems.arm;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -45,9 +44,9 @@ public class ArmJointIOTalonFX implements ArmJointIO {
 
   @Override
   public void updateInputs(ArmInputs inputs) {
-    inputs.jointAngle.mut_replace(Motor.getPosition().getValue());
-    inputs.jointAngularVelocity.mut_replace(Motor.getVelocity().getValue());
-    inputs.jointSetPoint.mut_replace(
+    inputs.angle.mut_replace(Motor.getPosition().getValue());
+    inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
+    inputs.setPoint.mut_replace(
         Angle.ofRelativeUnits(
             ((MotionMagicVoltage) Motor.getAppliedControl()).Position, Rotations));
     inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());

@@ -19,6 +19,7 @@
  */
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
@@ -27,8 +28,10 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,16 +39,31 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.arm.ArmJoint;
+import frc.robot.subsystems.arm.ArmJointIOSim;
+import frc.robot.subsystems.arm.ArmJointIOTalonFX;
+import frc.robot.subsystems.arm.constants.ElbowConstants;
+import frc.robot.subsystems.arm.constants.ShoulderConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.fingeys.Fingeys;
+import frc.robot.subsystems.fingeys.FingeysIOSim;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.wrist.WristIOSim;
+import frc.robot.subsystems.wrist.WristIOTalonFX;
+import frc.robot.subsystems.wrist.Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -59,6 +77,17 @@ public class RobotContainer {
 
   private final double DRIVE_SPEED = 1.0;
   private final double ANGULAR_SPEED = 0.75;
+
+  private final Wrist wrist;
+
+  private final ArmJoint shoulder;
+  private final ArmJoint elbow;
+
+  private final Elevator elevator;
+
+  private final Fingeys fingeys;
+
+  private final Intake intake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -91,6 +120,21 @@ public class RobotContainer {
                 new VisionIOLimelight(limelightFrontName, drive::getRotation),
                 new VisionIOLimelight(limelightBackName, drive::getRotation));
 
+        wrist = new Wrist(new WristIOTalonFX(3));
+
+        elevator = new Elevator(new ElevatorIOTalonFX(4));
+
+        shoulder = new ArmJoint( new ArmJointIOTalonFX(new ShoulderConstants()));
+        elbow = new ArmJoint( new ArmJointIOTalonFX(new ElbowConstants()));
+
+        fingeys = null;
+
+        //You'll have to initialize this yourself, since there's no CAN range marked.
+        intake = null;
+
+        // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
+
+
         // Real robot, instantiate hardware IO implementations
         break;
 
@@ -111,6 +155,14 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
                 new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
 
+        wrist = new Wrist(new WristIOSim(3));
+        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)));
+
+        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
+        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
+        fingeys = new Fingeys(new FingeysIOSim(121));
+        intake = new Intake(new IntakeIOSim(15));
+        
         break;
 
       default:
@@ -128,6 +180,12 @@ public class RobotContainer {
             new AprilTagVision(
                 drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
+        wrist = null;
+        elevator = null;
+        shoulder = null;
+        elbow = null;
+        fingeys = null;
+        intake = null;
         break;
     }
 

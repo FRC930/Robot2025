@@ -2,14 +2,12 @@ package frc.robot.subsystems.wrist;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
-import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.PhoenixUtil;
 
 public class WristIOTalonFX implements WristIO {

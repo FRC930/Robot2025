@@ -2,12 +2,9 @@ package frc.robot.subsystems.elevator;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,28 +12,19 @@ import frc.robot.RobotState;
 
 public class Elevator extends SubsystemBase {
   private ElevatorIO m_ElevatorIO;
-  private String loggerSuffix;
 
   ElevatorInputsAutoLogged loggedelevator = new ElevatorInputsAutoLogged();
 
-  public Elevator(ElevatorIO elevatorIO, Optional<String> loggedName) {
-    //Keegan - Turn this into Distance
+  public Elevator(ElevatorIO elevatorIO) {
     m_ElevatorIO = elevatorIO;
-    loggedelevator.elevatorDistance = Meters.mutable(0);
-    loggedelevator.elevatorVelocity = MetersPerSecond.mutable(0);
-    loggedelevator.elevatorSetPoint = Meters.mutable(0);
+    loggedelevator.distance = Meters.mutable(0);
+    loggedelevator.velocity = MetersPerSecond.mutable(0);
+    loggedelevator.setPoint = Meters.mutable(0);
     loggedelevator.supplyCurrent = Amps.mutable(0);
-    loggedelevator.timestamp = 0.0;
     loggedelevator.torqueCurrent = Amps.mutable(0);
     loggedelevator.voltageSetPoint = Volts.mutable(0);
 
-    RobotState.instance().setElevatorSource(loggedelevator.elevatorDistance);
-
-    if (loggedName.isPresent()) {
-      loggerSuffix = loggedName.get();
-    } else {
-      loggerSuffix = "" + this.hashCode();
-    }
+    RobotState.instance().setElevatorSource(loggedelevator.distance);
   }
 
   public void setDistance(Distance target) {
@@ -54,6 +42,6 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     m_ElevatorIO.updateInputs(loggedelevator);
-    Logger.processInputs("RobotState/" + loggerSuffix, loggedelevator);
+    Logger.processInputs("RobotState/Elevator", loggedelevator);
   }
 }
