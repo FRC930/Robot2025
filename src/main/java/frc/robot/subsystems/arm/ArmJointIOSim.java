@@ -31,7 +31,7 @@ public class ArmJointIOSim implements ArmJointIO {
                       constants.Length.in(Meters),
                       constants.MinimumAngle.in(Radians),
                       constants.MaximumAngle.in(Radians),
-                      true,
+                      false, //TODO: Tune FFs to allow this to be true
                       constants.StartingAngle.in(Radians),
                       0.001,
                       0.001);

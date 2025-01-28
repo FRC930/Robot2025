@@ -2,10 +2,12 @@ package frc.robot.subsystems.wrist;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotState;
 
 import org.littletonrobotics.junction.Logger;
@@ -39,6 +41,12 @@ public class Wrist extends SubsystemBase {
           setAngle(Degrees.of(i));
         },
         this);
+  }
+
+  public Trigger getNewAtAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return MathUtil.isNear(angle.baseUnitMagnitude(), loggedwrist.wristAngle.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
+    });
   }
 
   @Override

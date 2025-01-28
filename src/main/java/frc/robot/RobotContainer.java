@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
@@ -289,44 +290,20 @@ public class RobotContainer {
     
     controller.y().onTrue(elevator.getNewSetDistanceCommand(Meters.convertFrom(58, Inches))).onFalse(elevator.getNewSetDistanceCommand(0));
     controller.leftBumper().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
-    controller.rightBumper().onTrue(elbow.getNewSetAngleCommand(45).alongWith(shoulder.getNewSetAngleCommand(30))).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
     controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
     controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
 
-    characterizeController
-        .back()
-        .and(characterizeController.y())
-        .whileTrue(drive.sysIdDynamic(Direction.kForward));
-    characterizeController
-        .back()
-        .and(characterizeController.x())
-        .whileTrue(drive.sysIdDynamic(Direction.kReverse));
-    characterizeController
-        .start()
-        .and(characterizeController.y())
-        .whileTrue(drive.sysIdQuasistatic(Direction.kForward));
-    characterizeController
-        .start()
-        .and(characterizeController.x())
-        .whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
-    characterizeController
-        .a()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  SignalLogger.setPath("/media/sda1/logs");
-                  // SignalLogger.enableAutoLogging(true);
-                  SignalLogger.start();
-                  System.out.println("Started Logger");
-                }));
-    characterizeController
-        .b()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  SignalLogger.stop();
-                  System.out.println("Stopped Logger");
-                }));
+
+    controller.rightBumper()
+    .onTrue(
+      elbow.getNewSetAngleCommand(30).alongWith(shoulder.getNewSetAngleCommand(-75))
+      .andThen(new WaitUntilCommand(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger())))
+      .andThen(
+        elbow.getNewSetAngleCommand(70)
+        .until(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger()))
+      )
+    
+    ).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
 
     // Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")
