@@ -1,10 +1,6 @@
 package frc.robot.subsystems.arm.constants;
 
-import static edu.wpi.first.units.Units.*;
-
 import java.util.function.Consumer;
-import java.util.function.Function;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -14,7 +10,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MutAngle;
 import frc.robot.util.CanDef;
-import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.Gains;
 
 public abstract class ArmJointConstants {

@@ -13,12 +13,9 @@ public interface ArmJointIO {
 
   @AutoLog
   public static class ArmInputs {
-    /** The time in seconds from the FPGA start and the creation of this set of inputs */
-    public double timestamp;
-
-    public MutAngle jointAngle;
-    public MutAngularVelocity jointAngularVelocity;
-    public MutAngle jointSetPoint;
+    public MutAngle angle;
+    public MutAngularVelocity angularVelocity;
+    public MutAngle setPoint;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;
@@ -29,12 +26,14 @@ public interface ArmJointIO {
   /**
    * Takes a set of inputs, retrieves the current values of these inputs, then updates the given
    * input set.
-   *
-   * <p>
    */
   public void updateInputs(ArmInputs input);
 
   public void stop();
 
+  /**
+   * Returns the constants associated with this instance of the arm.
+   * @return
+   */
   public ArmJointConstants getConstants();
 }

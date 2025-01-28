@@ -8,38 +8,34 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 
-import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmJoint extends SubsystemBase {
-  private ArmJointIO m_ArmIO;
-  private Angle setpoint;
-  private String loggerSuffix;
 
-  ArmInputsAutoLogged loggedarm = new ArmInputsAutoLogged();
+  private ArmJointIO m_armJointIO;
 
-  private final ArmJointConstants m_Constants;
+  private final ArmJointConstants m_constants;
 
-  public ArmJoint(ArmJointIO armIO) {
-    m_ArmIO = armIO;
-    loggedarm.jointAngle = Degrees.mutable(0);
-    loggedarm.jointAngularVelocity = DegreesPerSecond.mutable(0);
-    loggedarm.jointSetPoint = Degrees.mutable(0);
-    loggedarm.supplyCurrent = Amps.mutable(0);
-    loggedarm.timestamp = 0.0;
-    loggedarm.torqueCurrent = Amps.mutable(0);
-    loggedarm.voltageSetPoint = Volts.mutable(0);
+  ArmInputsAutoLogged m_loggedArm = new ArmInputsAutoLogged();
 
-    m_Constants = armIO.getConstants();
-    
-    loggerSuffix = m_Constants.LoggedName;
+  public ArmJoint(ArmJointIO armJointIO) {
+    m_armJointIO = armJointIO;
+    m_loggedArm.angle = Degrees.mutable(0);
+    m_loggedArm.angularVelocity = DegreesPerSecond.mutable(0);
+    m_loggedArm.setPoint = Degrees.mutable(0);
+    m_loggedArm.supplyCurrent = Amps.mutable(0);
+    m_loggedArm.torqueCurrent = Amps.mutable(0);
+    m_loggedArm.voltageSetPoint = Volts.mutable(0);
 
-    m_Constants.mechanismSimCallback.accept(loggedarm.jointAngle);
+    // The weirdest hackiest part of this constants setup.
+    // Since we don't have an instance of this class in the IO, but we do have an instance of the IO in this class, we have 
+    //    to pass the constants instance back up from the IO to get an instance of it in the subsystem.
+    m_constants = armJointIO.getConstants();
+    m_constants.mechanismSimCallback.accept(m_loggedArm.angle);
   }
 
   public void setAngle(Angle angle) {
-    setpoint = angle;
-    m_ArmIO.setTarget(angle);
+    m_armJointIO.setTarget(angle);
   }
 
   public Command getNewSetAngleCommand(double i) {
@@ -52,7 +48,7 @@ public class ArmJoint extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_ArmIO.updateInputs(loggedarm);
-    Logger.processInputs("RobotState/ArmJoint" + loggerSuffix, loggedarm);
+    m_armJointIO.updateInputs(m_loggedArm);
+    Logger.processInputs("RobotState/" + m_constants.LoggedName, m_loggedArm);
   }
 }
