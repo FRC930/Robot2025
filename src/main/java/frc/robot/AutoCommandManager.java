@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -13,6 +14,10 @@ public class AutoCommandManager {
   private final LoggedDashboardChooser<Command> autoChooser;
 
   public AutoCommandManager(Drive drive) {
+
+    PathPlannerAuto CharacterizationTest = new PathPlannerAuto("CharacterizeAuto");
+    PathPlannerAuto ChoreoStraightAuto = new PathPlannerAuto("ChoreoStraightAuto");
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -31,6 +36,10 @@ public class AutoCommandManager {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    // Add Choreo Paths
+    autoChooser.addOption("Characterization Test Path", CharacterizationTest);
+    autoChooser.addOption("[Choreo] Straight Test", ChoreoStraightAuto);
   }
 
   public Command getAutonomousCommand() {
