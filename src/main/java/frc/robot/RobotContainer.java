@@ -62,6 +62,9 @@ import frc.robot.subsystems.fingeys.Fingeys;
 import frc.robot.subsystems.fingeys.FingeysIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intakeextender.IntakeExtender;
+import frc.robot.subsystems.intakeextender.IntakeExtenderIOSim;
+import frc.robot.subsystems.intakeextender.IntakeExtenderIOTalonFX;
 import frc.robot.subsystems.toesies.Toesies;
 import frc.robot.subsystems.toesies.ToesiesIOSim;
 import frc.robot.subsystems.toesies.ToesiesIOTalonFX;
@@ -109,6 +112,8 @@ public class RobotContainer {
 
   private final Toesies toesies;
 
+  private final IntakeExtender intakeExtender;
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController co_controller = new CommandXboxController(1);
@@ -151,6 +156,8 @@ public class RobotContainer {
         //You'll have to initialize this yourself, since there's no CAN range marked.
         intake = null;
 
+        intakeExtender = new IntakeExtender( new IntakeExtenderIOTalonFX(16));
+
         toesies = new Toesies( new ToesiesIOTalonFX(6));
 
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
@@ -191,6 +198,7 @@ public class RobotContainer {
         fingeys = new Fingeys(new FingeysIOSim(121));
         intake = new Intake(new IntakeIOSim(15));
         toesies = new Toesies(new ToesiesIOSim(12));
+        intakeExtender = new IntakeExtender( new IntakeExtenderIOSim(16));
         
         break;
 
@@ -216,6 +224,7 @@ public class RobotContainer {
         fingeys = null;
         intake = null;
         toesies = null;
+        intakeExtender = null;
         break;
     }
 
@@ -304,6 +313,7 @@ public class RobotContainer {
     controller.rightBumper().onTrue(toesies.getNewSetVoltsCommand(3)).onFalse(toesies.getNewSetVoltsCommand(0));
     controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
     controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
+    controller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(90)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
 
 
     controller.rightBumper()
