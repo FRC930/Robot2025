@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -26,6 +27,11 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutDistance;
 import frc.robot.util.LoggedTunableNumber;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.util.VirtualSubsystem;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.Logger;
@@ -47,12 +53,48 @@ public class RobotState extends VirtualSubsystem {
   // private final LoggedTunableNumber wristTwistTune =
   //     new LoggedTunableNumber("robotState/wristTwist", 0);
 
+  private final Mechanism2d primaryMechanism2d;
+
+  private final MechanismRoot2d primaryMechanismRoot; 
+  private final MechanismLigament2d shoulderLigament2d;
+  private final MechanismLigament2d elbowLigament2d;
+  private final MechanismLigament2d elevatorLigament2d;
+
+  private final MechanismRoot2d wristMechanismRoot;
+  private final MechanismLigament2d wristMechanismLigament;
+
+  private final MechanismRoot2d robotBaseRoot;
+  private final MechanismLigament2d baseLigament2d = new MechanismLigament2d("RobotBase", 150, 0, 16, new Color8Bit(0, 0, 255));
+
   private MutAngle testStuff = Degrees.mutable(0);
 
   private final String key;
 
   private RobotState(String key) {
     this.key = key;
+
+    primaryMechanism2d = new Mechanism2d(500, 300);
+    elevatorLigament2d = new MechanismLigament2d("ElevatorLigament", elevatorHeight.in(Centimeters), 90);
+    shoulderLigament2d = new MechanismLigament2d("ShoulderLigament", Centimeters.convertFrom(15, Inches), shoulderAngle.in(Degrees));
+    elbowLigament2d = new MechanismLigament2d("ElbowLigament", Centimeters.convertFrom(18, Inches),elbowAngle.in(Degrees));
+    wristMechanismLigament = new MechanismLigament2d("WristLigament", Centimeters.convertFrom(18, Inches), wristTwist.in(Degrees));
+
+
+    primaryMechanismRoot = primaryMechanism2d.getRoot("2dPrimary", 300, 20);
+    primaryMechanismRoot.append(elevatorLigament2d);
+    elevatorLigament2d.append(shoulderLigament2d);
+    shoulderLigament2d.append(elbowLigament2d);
+
+    wristMechanismRoot = primaryMechanism2d.getRoot("2dWrist", 30, 20);
+    wristMechanismRoot.append(wristMechanismLigament);
+
+    robotBaseRoot = primaryMechanism2d.getRoot("2dBaseRoot", 225, 20);
+    robotBaseRoot.append(baseLigament2d);
+
+    SmartDashboard.putData("Mech2d",primaryMechanism2d);
+
+    // shoulder 18in
+    // elbow 15in
   }
 
   public static RobotState instance() {
@@ -156,6 +198,11 @@ public class RobotState extends VirtualSubsystem {
                     new Rotation3d(
                         Degrees.of(0), wristTwist, Degrees.zero())))
             .transformBy(WRIST_PIVOT_OFFSET.inverse());
+
+    elevatorLigament2d.setLength(elevatorHeight.in(Centimeters));
+    shoulderLigament2d.setAngle(shoulderAngle.in(Degrees) + 180);
+    elbowLigament2d.setAngle(elbowAngle.in(Degrees));
+    wristMechanismLigament.setAngle(wristTwist.in(Degrees));
 
     Logger.recordOutput("RobotState/Elevator/" + key, elevatorPose);
     Logger.recordOutput("RobotState/Shoulder/" + key, shoulderPose);

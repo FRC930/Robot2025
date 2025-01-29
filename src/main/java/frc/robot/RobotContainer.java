@@ -256,7 +256,8 @@ public class RobotContainer {
             drive,
             () -> -controller.getLeftY() * DRIVE_SPEED,
             () -> -controller.getLeftX() * DRIVE_SPEED,
-            () -> -controller.getRightX() * ANGULAR_SPEED));
+            () -> -controller.getRightX() * ANGULAR_SPEED)
+          );
 
     // Lock to 0° when A button is held
     controller
@@ -319,7 +320,7 @@ public class RobotContainer {
 
     controller.rightBumper()
     .onTrue(
-      elbow.getNewSetAngleCommand(30).alongWith(shoulder.getNewSetAngleCommand(-75))
+      elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
       .andThen(new WaitUntilCommand(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger())))
       .andThen(
         elbow.getNewSetAngleCommand(70)
