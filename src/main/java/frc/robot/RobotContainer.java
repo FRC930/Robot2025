@@ -19,6 +19,11 @@
  */
 package frc.robot;
 
+import static frc.robot.subsystems.vision.VisionConstants.limelightBackLeftName;
+import static frc.robot.subsystems.vision.VisionConstants.limelightBackRightName;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -131,6 +136,25 @@ public class RobotContainer {
     CanDef.Builder rioCanBuilder = CanDef.builder().bus(CanBus.Rio);
 
     switch (Constants.currentMode) {
+      case REAL:
+        drive =
+            new Drive(
+                new GyroIOPigeon2(),
+                new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                new ModuleIOTalonFX(TunerConstants.FrontRight),
+                new ModuleIOTalonFX(TunerConstants.BackLeft),
+                new ModuleIOTalonFX(TunerConstants.BackRight));
+
+        vision =
+            new AprilTagVision(
+                drive::setPose,
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(limelightBackRightName, drive::getRotation),
+                new VisionIOLimelight(limelightBackLeftName, drive::getRotation));
+
+        // Real robot, instantiate hardware IO implementations
+        break;
+
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive =
@@ -145,8 +169,10 @@ public class RobotContainer {
             new AprilTagVision(
                 drive::setPose,
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
-                new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
+                new VisionIOPhotonVisionSim(
+                    limelightBackLeftName, robotToCameraFront, drive::getPose),
+                new VisionIOPhotonVisionSim(
+                    limelightBackRightName, robotToCameraBack, drive::getPose));
 
         wrist = new Wrist(new WristIOSim(3));
         elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)));
