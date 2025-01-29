@@ -19,8 +19,8 @@
  */
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
-import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
+import static frc.robot.subsystems.vision.VisionConstants.limelightBackLeftName;
+import static frc.robot.subsystems.vision.VisionConstants.limelightBackRightName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 
@@ -88,8 +88,8 @@ public class RobotContainer {
             new AprilTagVision(
                 drive::setPose,
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(limelightFrontName, drive::getRotation),
-                new VisionIOLimelight(limelightBackName, drive::getRotation));
+                new VisionIOLimelight(limelightBackRightName, drive::getRotation),
+                new VisionIOLimelight(limelightBackLeftName, drive::getRotation));
 
         // Real robot, instantiate hardware IO implementations
         break;
@@ -108,8 +108,10 @@ public class RobotContainer {
             new AprilTagVision(
                 drive::setPose,
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
-                new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
+                new VisionIOPhotonVisionSim(
+                    limelightBackLeftName, robotToCameraFront, drive::getPose),
+                new VisionIOPhotonVisionSim(
+                    limelightBackRightName, robotToCameraBack, drive::getPose));
 
         break;
 
