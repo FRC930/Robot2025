@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intakeextender;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
@@ -11,10 +11,10 @@ import org.littletonrobotics.junction.AutoLog;
 public interface IntakeExtenderIO {
 
   @AutoLog
-  public static class WristInputs {
-    public MutAngle wristAngle;
-    public MutAngularVelocity wristAngularVelocity;
-    public MutAngle wristSetPoint;
+  public static class IntakeExtenderInputs {
+    public MutAngle Angle;
+    public MutAngularVelocity IntakeExtenderAngularVelocity;
+    public MutAngle IntakeExtenderSetPoint;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;
@@ -22,5 +22,5 @@ public interface IntakeExtenderIO {
 
   public void setTarget(Angle target);
 
-  public void updateInputs(WristInputs inputs);
+  public void updateInputs(IntakeExtenderInputs inputs);
 }

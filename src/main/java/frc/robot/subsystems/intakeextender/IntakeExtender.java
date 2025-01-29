@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intakeextendor;
+package frc.robot.subsystems.intakeextender;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -11,32 +11,35 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotState;
-import frc.robot.subsystems.wrist.WristIO;
 
 public class IntakeExtender extends SubsystemBase {
-  private IntakeExtender m_intakeextenderIO;
+  private IntakeExtenderIO m_intakeextenderIO;
 
-  Intakeextender loggedintakeextender = new IntakeextenderAutoLogged();
+  IntakeExtenderInputsAutoLogged loggedintakeExtender = new IntakeExtenderInputsAutoLogged();
 
   //WRIST WEIGHT
   //2.173 lbs
-  public intakeextender(Intakeextender IntakeextenderIO) {
-    m_IntakeextenderIO = IntakeextenderIO;
-    loggedintakeextendor.intakeextendorAngle = Degrees.mutable(0);
-    loggedintakeextender.intakeextendorAngularVelocity = DegreesPerSecond.mutable(0);
-    loggedintakeextender.intakeSetPoint = Degrees.mutable(0);
-    loggedintakeextender.supplyCurrent = Amps.mutable(0);
-    loggedintakeextender.torqueCurrent = Amps.mutable(0);
-    loggedintakeextender.voltageSetPoint = Volts.mutable(0);
+  public IntakeExtender(IntakeExtenderIO intakeExtenderIO) {
+    m_intakeextenderIO = intakeExtenderIO;
+    loggedintakeExtender.Angle = Degrees.mutable(0);
+    loggedintakeExtender.IntakeExtenderAngularVelocity = DegreesPerSecond.mutable(0);
+    loggedintakeExtender.IntakeExtenderSetPoint = Degrees.mutable(0);
+    loggedintakeExtender.supplyCurrent = Amps.mutable(0);
+    loggedintakeExtender.torqueCurrent = Amps.mutable(0);
+    loggedintakeExtender.voltageSetPoint = Volts.mutable(0);
 
-    RobotState.instance().setWristSource(loggedintakeextender.intakeextenderAngle);
   }
 
   public void setAngle(Angle angle) {
-    m_IntakeExtenderIO.setTarget(angle);
-  }
-
-  public Command getNewWristTurnCommand(double i) {
+    m_intakeextenderIO.setTarget(angle);
+      }
+    
+      private void setTarget(Angle angle) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTarget'");
+      }
+    
+      public Command getNewIntakeExtenderTurnCommand(double i) {
     return new InstantCommand(
         () -> {
           setAngle(Degrees.of(i));
@@ -45,14 +48,14 @@ public class IntakeExtender extends SubsystemBase {
   }
 
   public Trigger getNewAtAngleTrigger(Angle angle,Angle tolerance) {
-    return new Trigger(() -> {
-      return MathUtil.isNear(angle.baseUnitMagnitude(), loggedintakeextender.intakeextenderAngle.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
+     return new Trigger(() -> {
+      return MathUtil.isNear(angle.baseUnitMagnitude(), loggedintakeExtender.Angle.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
     });
   }
 
   @Override
   public void periodic() {
-    m_IntakeExtenderIO.updateInputs(loggedintakeextender);
-    Logger.processInputs("RobotState/Wrist", loggedintakeextender);
+    m_intakeextenderIO.updateInputs(loggedintakeExtender);
+    Logger.processInputs("RobotState/IntakeExtender", loggedintakeExtender);
   }
 }
