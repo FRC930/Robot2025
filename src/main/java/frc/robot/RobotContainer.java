@@ -19,7 +19,8 @@
  */
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
@@ -28,6 +29,7 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import java.util.Optional;
 
 import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -53,13 +55,16 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.fingeys.Fingeys;
 import frc.robot.subsystems.fingeys.FingeysIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
-import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.toesies.Toesies;
+import frc.robot.subsystems.toesies.ToesiesIOSim;
+import frc.robot.subsystems.toesies.ToesiesIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
@@ -74,9 +79,9 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIOSim;
 import frc.robot.subsystems.wrist.WristIOTalonFX;
-import frc.robot.subsystems.wrist.Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -101,6 +106,8 @@ public class RobotContainer {
   private final Fingeys fingeys;
 
   private final Intake intake;
+
+  private final Toesies toesies;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -144,6 +151,8 @@ public class RobotContainer {
         //You'll have to initialize this yourself, since there's no CAN range marked.
         intake = null;
 
+        toesies = new Toesies( new ToesiesIOTalonFX(6));
+
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
         // vision =
@@ -181,6 +190,7 @@ public class RobotContainer {
         elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
         fingeys = new Fingeys(new FingeysIOSim(121));
         intake = new Intake(new IntakeIOSim(15));
+        toesies = new Toesies(new ToesiesIOSim(12));
         
         break;
 
@@ -205,6 +215,7 @@ public class RobotContainer {
         elbow = null;
         fingeys = null;
         intake = null;
+        toesies = null;
         break;
     }
 
@@ -290,6 +301,7 @@ public class RobotContainer {
     
     controller.y().onTrue(elevator.getNewSetDistanceCommand(Meters.convertFrom(58, Inches))).onFalse(elevator.getNewSetDistanceCommand(0));
     controller.leftBumper().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
+    controller.rightBumper().onTrue(toesies.getNewSetVoltsCommand(3)).onFalse(toesies.getNewSetVoltsCommand(0));
     controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
     controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
 
