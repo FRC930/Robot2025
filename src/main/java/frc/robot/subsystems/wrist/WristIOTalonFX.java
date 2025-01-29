@@ -1,12 +1,13 @@
 package frc.robot.subsystems.wrist;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.util.PhoenixUtil;
 
@@ -27,6 +28,10 @@ public class WristIOTalonFX implements WristIO {
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     cfg.Voltage.PeakForwardVoltage = 7;
     cfg.Voltage.PeakReverseVoltage = 7;
+    cfg.CurrentLimits.StatorCurrentLimit = 0;
+    cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     cfg.Slot0.kP = 1.0;
 
