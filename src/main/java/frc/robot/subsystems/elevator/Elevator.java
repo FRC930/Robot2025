@@ -2,16 +2,21 @@ package frc.robot.subsystems.elevator;
 
 import static edu.wpi.first.units.Units.*;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotState;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Elevator extends SubsystemBase {
   private ElevatorIO m_ElevatorIO;
@@ -34,15 +39,23 @@ public class Elevator extends SubsystemBase {
     m_ElevatorIO.setTarget(target);
   }
 
-  public Command getNewSetDistanceCommand(double i) {
+  public Command getNewSetDistanceCommand(LoggedTunableNumber distance) {
     return new InstantCommand(
         () -> {
-          setDistance(Meters.of(i));
+          setDistance(Meter.of((Meters.convertFrom(distance.get(), Inches))));
         },
         this);
   }
 
-  public Trigger getNewAtAngleTrigger(Distance dist,Distance tolerance) {
+  public Command getNewSetDistanceCommand(double i) {
+    return new InstantCommand(
+        () -> {
+          setDistance(Meter.of((Meters.convertFrom(i, Inches))));
+        },
+        this);
+  }
+
+  public Trigger getNewAtAngleTrigger(Distance dist, Distance tolerance) {
     return new Trigger(() -> {
       return MathUtil.isNear(dist.baseUnitMagnitude(), loggedelevator.distance.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
     });

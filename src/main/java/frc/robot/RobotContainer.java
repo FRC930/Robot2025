@@ -85,6 +85,7 @@ import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIOSim;
 import frc.robot.subsystems.wrist.WristIOTalonFX;
+import frc.robot.util.LoggedTunableNumber;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -118,6 +119,7 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController co_controller = new CommandXboxController(1);
   private final CommandXboxController characterizeController = new CommandXboxController(2);
+  private final CommandXboxController testcontroller = new CommandXboxController(3);
 
   private final AprilTagVision vision;
 
@@ -126,6 +128,12 @@ public class RobotContainer {
 
   private boolean m_TeleopInitialized = false;
 
+  final LoggedTunableNumber setElevatorDistance = new LoggedTunableNumber("RobotState/Elevator/setDistance", 58);
+  final LoggedTunableNumber setWristAngle = new LoggedTunableNumber("RobotState/Wrist/setAngle", 90);
+  final LoggedTunableNumber setToesiesVolts = new LoggedTunableNumber("RobotState/Toesies/setVolts", 2);
+  final LoggedTunableNumber setFingeysVolts = new LoggedTunableNumber("RobotState/Fingeys/setVolts", 2);
+  final LoggedTunableNumber setIntakeExtenderAngle = new LoggedTunableNumber("RobotState/IntakeExtender/setAngle", 90);
+  final LoggedTunableNumber setIntakeVolts = new LoggedTunableNumber("RobotState/Intake/setVolts", 2);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -158,7 +166,7 @@ public class RobotContainer {
 
         intakeExtender = new IntakeExtender( new IntakeExtenderIOTalonFX(16));
 
-        toesies = new Toesies( new ToesiesIOTalonFX(6));
+        toesies = new Toesies( new ToesiesIOTalonFX(5));
 
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 
@@ -232,6 +240,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    configureTestButtonBindings();
   }
 
   /**
@@ -307,14 +316,6 @@ public class RobotContainer {
                   SignalLogger.stop();
                   System.out.println("Stopped Logger");
                 }));
-    
-    controller.y().onTrue(elevator.getNewSetDistanceCommand(Meters.convertFrom(58, Inches))).onFalse(elevator.getNewSetDistanceCommand(0));
-    controller.leftBumper().onTrue(wrist.getNewWristTurnCommand(90)).onFalse(wrist.getNewWristTurnCommand(0));
-    controller.rightBumper().onTrue(toesies.getNewSetVoltsCommand(3)).onFalse(toesies.getNewSetVoltsCommand(0));
-    controller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(3)).onFalse(fingeys.getNewSetVoltsCommand(0));
-    controller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(3)).onFalse(intake.getNewSetVoltsCommand(0));
-    controller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(90)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
-
 
     controller.rightBumper()
     .onTrue(
@@ -342,6 +343,15 @@ public class RobotContainer {
     //               drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
     //             },
     //             drive));
+  }
+
+  public void configureTestButtonBindings (){
+    testcontroller.y().onTrue(elevator.getNewSetDistanceCommand(setElevatorDistance)).onFalse(elevator.getNewSetDistanceCommand(0));
+    testcontroller.leftBumper().onTrue(wrist.getNewWristTurnCommand(setWristAngle)).onFalse(wrist.getNewWristTurnCommand(0));
+    testcontroller.rightBumper().onTrue(toesies.getNewSetVoltsCommand(setToesiesVolts)).onFalse(toesies.getNewSetVoltsCommand(0));
+    testcontroller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(setFingeysVolts)).onFalse(fingeys.getNewSetVoltsCommand(0));
+    testcontroller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(setIntakeVolts)).onFalse(intake.getNewSetVoltsCommand(0));
+    testcontroller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(setIntakeExtenderAngle)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

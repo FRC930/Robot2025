@@ -1,6 +1,9 @@
 package frc.robot.subsystems.intakeextender;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -10,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.RobotState;
+import frc.robot.util.LoggedTunableNumber;
 
 public class IntakeExtender extends SubsystemBase {
   private IntakeExtenderIO m_intakeextenderIO;
@@ -32,19 +35,22 @@ public class IntakeExtender extends SubsystemBase {
 
   public void setAngle(Angle angle) {
     m_intakeextenderIO.setTarget(angle);
-      }
-    
-      private void setTarget(Angle angle) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTarget'");
-      }
-    
-      public Command getNewIntakeExtenderTurnCommand(double i) {
+  }
+  
+  public Command getNewIntakeExtenderTurnCommand(LoggedTunableNumber angle) {
     return new InstantCommand(
-        () -> {
-          setAngle(Degrees.of(i));
-        },
-        this);
+      () -> {
+        setAngle(Degrees.of((angle.get())));
+      },
+      this);
+  }
+
+  public Command getNewIntakeExtenderTurnCommand(double i) {
+    return new InstantCommand(
+      () -> {
+        setAngle(Degrees.of(i));
+      },
+      this);
   }
 
   public Trigger getNewAtAngleTrigger(Angle angle,Angle tolerance) {
