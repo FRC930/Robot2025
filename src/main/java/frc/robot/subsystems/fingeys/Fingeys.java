@@ -24,6 +24,7 @@ public class Fingeys extends SubsystemBase {
     loggedfingeys.supplyCurrent = Amps.mutable(0);
     loggedfingeys.torqueCurrent = Amps.mutable(0);
     loggedfingeys.voltageSetPoint = Volts.mutable(0);
+    loggedfingeys.voltage = Volts.mutable(0);
   }
   
   public void setTarget(Voltage target) {
