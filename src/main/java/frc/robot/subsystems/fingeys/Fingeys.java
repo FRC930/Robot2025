@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Fingeys extends SubsystemBase {
   private FingeysIO m_FingeysIO;
@@ -24,11 +25,17 @@ public class Fingeys extends SubsystemBase {
     loggedfingeys.torqueCurrent = Amps.mutable(0);
     loggedfingeys.voltageSetPoint = Volts.mutable(0);
   }
-
+  
   public void setTarget(Voltage target) {
     m_FingeysIO.setTarget(target);
   }
-
+  public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
+    return new InstantCommand(
+        () -> {
+          setTarget(Volts.of((volts.get())));
+        },
+        this);
+  }
   public Command getNewSetVoltsCommand(double i) {
     return new InstantCommand(
         () -> {
