@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.RobotState;
 
 public class IntakeExtender extends SubsystemBase {
   private IntakeExtenderIO m_intakeextenderIO;
@@ -31,6 +32,7 @@ public class IntakeExtender extends SubsystemBase {
     loggedintakeExtender.torqueCurrent = Amps.mutable(0);
     loggedintakeExtender.voltageSetPoint = Volts.mutable(0);
 
+    RobotState.instance().setIntakeExtenderSource(loggedintakeExtender.Angle);
   }
 
   public void setAngle(Angle angle) {
