@@ -9,14 +9,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
 import frc.robot.util.PhoenixUtil;
 
 public class FingeysIOTalonFX implements FingeysIO {
   public VoltageOut Request;
   public TalonFX Motor;
-
-  public ArmInputs inputs;
 
   public FingeysIOTalonFX(int id) {
     Motor = new TalonFX(id);
@@ -29,10 +26,12 @@ public class FingeysIOTalonFX implements FingeysIO {
   private void configureTalons() {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    cfg.CurrentLimits.StatorCurrentLimit = 0;
+    cfg.CurrentLimits.StatorCurrentLimit = 80.00;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-    cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    cfg.CurrentLimits.SupplyCurrentLimit = 40.00;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+    cfg.Voltage.PeakForwardVoltage = 16;
+    cfg.Voltage.PeakReverseVoltage = 16;
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
   }
 

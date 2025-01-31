@@ -1,16 +1,16 @@
+
 package frc.robot.subsystems.fingeys;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Fingeys extends SubsystemBase {
@@ -26,10 +26,11 @@ public class Fingeys extends SubsystemBase {
     loggedfingeys.voltageSetPoint = Volts.mutable(0);
     loggedfingeys.voltage = Volts.mutable(0);
   }
-  
+
   public void setTarget(Voltage target) {
     m_FingeysIO.setTarget(target);
   }
+
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
     return new InstantCommand(
         () -> {
