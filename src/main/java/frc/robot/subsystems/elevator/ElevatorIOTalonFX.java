@@ -28,8 +28,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   public ArmInputs inputs;
 
-  public ElevatorIOTalonFX(int Motor1Id) {
-    Motor = new TalonFX(Motor1Id);
+  public ElevatorIOTalonFX(int LeftMotorId, int RightMotorId) {
+    Motor = new TalonFX(LeftMotorId);
+    Motor = new TalonFX(RightMotorId);
     Request = new PositionVoltage(0);
 
     Motor.setControl(Request);

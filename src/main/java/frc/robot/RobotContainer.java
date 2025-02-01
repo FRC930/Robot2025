@@ -59,9 +59,12 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.fingeys.Fingeys;
+import frc.robot.subsystems.fingeys.FingeysConstants;
 import frc.robot.subsystems.fingeys.FingeysIOSim;
+import frc.robot.subsystems.fingeys.FingeysIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intakeextender.IntakeExtender;
 import frc.robot.subsystems.intakeextender.IntakeExtenderIOSim;
 import frc.robot.subsystems.intakeextender.IntakeExtenderIOTalonFX;
@@ -152,21 +155,21 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(limelightFrontName, drive::getRotation),
                 new VisionIOLimelight(limelightBackName, drive::getRotation));
-        wrist = new Wrist(new WristIOTalonFX(3));
 
-        elevator = new Elevator(new ElevatorIOTalonFX(4));
+        wrist = new Wrist(new WristIOTalonFX(11));
+
+        elevator = new Elevator(new ElevatorIOTalonFX(13, 14));
 
         shoulder = new ArmJoint( new ArmJointIOTalonFX(new ShoulderConstants()));
         elbow = new ArmJoint( new ArmJointIOTalonFX(new ElbowConstants()));
 
-        fingeys = null;
-
-        //You'll have to initialize this yourself, since there's no CAN range marked.
-        intake = null;
+        fingeys = new Fingeys( new FingeysIOTalonFX(12));
+        
+        intake = new Intake( new IntakeIOTalonFX(15, 17));
 
         intakeExtender = new IntakeExtender( new IntakeExtenderIOTalonFX(16));
 
-        toesies = new Toesies( new ToesiesIOTalonFX(5));
+        toesies = new Toesies( new ToesiesIOTalonFX(6));
 
         // arm = new ArmJoint(new ArmJointIOTalonFX(), null);
 

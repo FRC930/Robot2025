@@ -1,6 +1,6 @@
 package frc.robot.subsystems.fingeys;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -15,8 +15,8 @@ public class FingeysIOTalonFX implements FingeysIO {
   public VoltageOut Request;
   public TalonFX Motor;
 
-  public FingeysIOTalonFX(int id) {
-    Motor = new TalonFX(id);
+  public FingeysIOTalonFX(int MotorId) {
+    Motor = new TalonFX(MotorId);
     Request = new VoltageOut(0.0);
 
     Motor.setControl(Request);
