@@ -78,7 +78,7 @@ public class RobotState extends VirtualSubsystem {
     wristMechanismRoot = primaryMechanism2d.getRoot("2dWrist", 30, 20);
     wristMechanismRoot.append(wristMechanismLigament);
 
-    intakeExtenderMechanismRoot = primaryMechanism2d.getRoot("2dIntakeExtender", 50, 20);
+    intakeExtenderMechanismRoot = primaryMechanism2d.getRoot("2dIntakeExtender", 70, 20);
     intakeExtenderMechanismRoot.append(intakeExtenderMechanismLigament);
 
     robotBaseRoot = primaryMechanism2d.getRoot("2dBaseRoot", 225, 20);
@@ -209,7 +209,7 @@ public class RobotState extends VirtualSubsystem {
     shoulderLigament2d.setAngle(shoulderAngle.in(Degrees) + 180);
     elbowLigament2d.setAngle(elbowAngle.in(Degrees));
     wristMechanismLigament.setAngle(wristTwist.in(Degrees));
-    intakeExtenderMechanismLigament.setAngle(wristTwist.in(Degrees));
+    intakeExtenderMechanismLigament.setAngle(intakeExtenderAngle.in(Degrees));
 
     Logger.recordOutput("RobotState/Elevator/" + key, elevatorPose);
     Logger.recordOutput("RobotState/Shoulder/" + key, shoulderPose);

@@ -16,17 +16,17 @@ public class IntakeExtenderIOSim implements IntakeExtenderIO {
   private Voltage appliedVoltage = Volts.mutable(0.0);
 
   private final ProfiledPIDController controller =
-      new ProfiledPIDController(2.4, 0.0, 0.0, new Constraints(100000, 361));
+      new ProfiledPIDController(0.5, 0.0, 0.0, new Constraints(300, 361));
 
   private final FlywheelSim sim;
 
   public IntakeExtenderIOSim(int motorId) {
-    sim =  new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.0028616, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001});
+    sim =  new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.28616, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.00001});
   }
 
   @Override
   public void setTarget(Angle target) {
-    controller.setGoal(new State(target.in(Degrees), 0));
+    controller.setGoal(target.in(Degrees));
   }
 
   private void updateVoltageSetpoint() {

@@ -300,17 +300,18 @@ public class RobotContainer {
                   SignalLogger.stop();
                   System.out.println("Stopped Logger");
                 }));
-
+    
     controller.rightBumper()
     .onTrue(
       elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
       .andThen(new WaitUntilCommand(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger())))
-      .andThen(
-        elbow.getNewSetAngleCommand(70)
-        .until(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger()))
-      )
-    
     ).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
+    controller.leftBumper()
+    .onTrue(
+      wrist.getNewWristTurnCommand(90)
+    ).onFalse(
+      wrist.getNewWristTurnCommand(0)
+    );
 
     // Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")

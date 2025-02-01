@@ -16,17 +16,17 @@ public class WristIOSim implements WristIO {
   private Voltage appliedVoltage = Volts.mutable(0.0);
 
   private final ProfiledPIDController controller =
-      new ProfiledPIDController(2.4, 0.0, 0.0, new Constraints(100000, 361));
+      new ProfiledPIDController(0.1, 0.0, 0.0, new Constraints(800, 361));
 
   private final FlywheelSim sim;
 
   public WristIOSim(int motorId) {
-    sim =  new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.0028616, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.001});
+    sim =  new FlywheelSim(LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), 0.18616, 1),DCMotor.getKrakenX60Foc(1),new double[] {0.0001});
   }
 
   @Override
   public void setTarget(Angle target) {
-    controller.setGoal(new State(target.in(Degrees), 0));
+    controller.setGoal(target.in(Degrees));
   }
 
   private void updateVoltageSetpoint() {
@@ -63,7 +63,7 @@ public class WristIOSim implements WristIO {
   }
 
   public void stop() {
-    Angle currentAngle = Radians.of(sim.getOutput(0));
+    Angle currentAngle = Degrees.of(sim.getOutput(0));
     controller.reset(currentAngle.in(Degrees));
     runVolts(Volts.of(0));
   }
