@@ -13,6 +13,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.LoggedTunableNumber;
 
+/**
+ * <h1>Coral end effector</h1>
+ * <h3>(fingeys)</h3>
+ * <p>Controls the rollers on the end of our coral end effector</p>
+ * <ul>
+ * <li>Voltage control</li>
+ * </ul>
+ */
 public class Fingeys extends SubsystemBase {
   private FingeysIO m_FingeysIO;
 

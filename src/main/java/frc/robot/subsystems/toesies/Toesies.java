@@ -14,6 +14,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.toesies.ToesiesInputsAutoLogged;
 import frc.robot.util.LoggedTunableNumber;
 
+/**
+ * <h1>Algae end effector</h1>
+ * <h3>(toesies)</h3>
+ * <p>Controls the rollers on the end of our algae end effector</p>
+ * <ul>
+ * <li>Voltage control</li>
+ * </ul>
+ */
 public class Toesies extends SubsystemBase {
   private ToesiesIO m_ToesiesIO;
 

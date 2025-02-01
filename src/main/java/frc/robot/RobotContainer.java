@@ -138,8 +138,39 @@ public class RobotContainer {
   final LoggedTunableNumber setIntakeExtenderAngle = new LoggedTunableNumber("RobotState/IntakeExtender/setAngle", 90);
   final LoggedTunableNumber setIntakeVolts = new LoggedTunableNumber("RobotState/Intake/setVolts", 2);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  public RobotContainer(){
     switch (Constants.currentMode) {
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIOSim(TunerConstants.FrontLeft),
+                new ModuleIOSim(TunerConstants.FrontRight),
+                new ModuleIOSim(TunerConstants.BackLeft),
+                new ModuleIOSim(TunerConstants.BackRight));
+
+        vision =
+            new AprilTagVision(
+                drive::setPose,
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
+                new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
+
+        wrist = new Wrist(new WristIOSim(3));
+        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)));
+
+        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
+        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
+        fingeys = new Fingeys(new FingeysIOSim(121));
+        intake = new Intake(new IntakeIOSim(15));
+        toesies = new Toesies(new ToesiesIOSim(12));
+        intakeExtender = new IntakeExtender( new IntakeExtenderIOSim(16));
+        
+      break;
+      
+      //real is default because it is safer
+      default:
       case REAL:
         drive =
             new Drive(
@@ -184,59 +215,31 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         break;
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+      // default:
+      //   drive =
+      //       new Drive(
+      //           new GyroIO() {},
+      //           new ModuleIO() {},
+      //           new ModuleIO() {},
+      //           new ModuleIO() {},
+      //           new ModuleIO() {});
 
-        vision =
-            new AprilTagVision(
-                drive::setPose,
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose),
-                new VisionIOPhotonVisionSim(limelightBackName, robotToCameraBack, drive::getPose));
+      //   // Replayed robot, disable IO implementations
+      //   // (Use same number of dummy implementations as the real robot)
+      //   vision =
+      //       new AprilTagVision(
+      //           drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        wrist = new Wrist(new WristIOSim(3));
-        elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)));
+      //   wrist = null;
+      //   elevator = null;
+      //   shoulder = null;
+      //   elbow = null;
+      //   fingeys = null;
+      //   intake = null;
+      //   toesies = null;
+      //   intakeExtender = null;
 
-        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
-        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
-        fingeys = new Fingeys(new FingeysIOSim(121));
-        intake = new Intake(new IntakeIOSim(15));
-        toesies = new Toesies(new ToesiesIOSim(12));
-        intakeExtender = new IntakeExtender( new IntakeExtenderIOSim(16));
-        
-        break;
-
-      default:
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-
-        // Replayed robot, disable IO implementations
-        // (Use same number of dummy implementations as the real robot)
-        vision =
-            new AprilTagVision(
-                drive::setPose, drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
-        wrist = null;
-        elevator = null;
-        shoulder = null;
-        elbow = null;
-        fingeys = null;
-        intake = null;
-        toesies = null;
-        intakeExtender = null;
-        break;
+      //   throw new Exception("The robot is in neither sim nor real. Something has gone seriously wrong");
     }
 
     autoCommandManager = new AutoCommandManager(drive);
