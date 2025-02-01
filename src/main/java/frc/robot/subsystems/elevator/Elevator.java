@@ -23,6 +23,7 @@ public class Elevator extends SubsystemBase {
 
   ElevatorInputsAutoLogged loggedelevator = new ElevatorInputsAutoLogged();
 
+  /**creates the base logged numbers so these are there for backup seprate from the logged tunable numbers*/
   public Elevator(ElevatorIO elevatorIO) {
     m_ElevatorIO = elevatorIO;
     loggedelevator.distance = Meters.mutable(0);
@@ -34,11 +35,12 @@ public class Elevator extends SubsystemBase {
 
     RobotState.instance().setElevatorSource(loggedelevator.distance);
   }
-
+  
   public void setDistance(Distance target) {
     m_ElevatorIO.setTarget(target);
   }
 
+  /** this line of code makes a new command that sets the distance when ran */
   public Command getNewSetDistanceCommand(LoggedTunableNumber distance) {
     return new InstantCommand(
         () -> {
@@ -56,7 +58,7 @@ public class Elevator extends SubsystemBase {
         },
         this);
   }
-
+  
   public Trigger getNewAtAngleTrigger(Distance dist, Distance tolerance) {
     return new Trigger(() -> {
       return MathUtil.isNear(dist.baseUnitMagnitude(), loggedelevator.distance.baseUnitMagnitude(), tolerance.baseUnitMagnitude());

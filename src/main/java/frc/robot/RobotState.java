@@ -224,7 +224,7 @@ public class RobotState extends VirtualSubsystem {
     shoulderLigament2d.setAngle(shoulderAngle.in(Degrees) + 180);
     elbowLigament2d.setAngle(elbowAngle.in(Degrees));
     wristMechanismLigament.setAngle(wristTwist.in(Degrees));
-    intakeExtenderMechanismLigament.setAngle(wristTwist.in(Degrees));
+    intakeExtenderMechanismLigament.setAngle(intakeExtenderAngle.in(Degrees));
 
     Logger.recordOutput("RobotState/Elevator/" + key, elevatorPose);
     Logger.recordOutput("RobotState/Shoulder/" + key, shoulderPose);

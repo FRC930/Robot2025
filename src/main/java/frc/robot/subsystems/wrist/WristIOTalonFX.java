@@ -5,7 +5,9 @@ import static edu.wpi.first.units.Units.Rotations;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -15,9 +17,14 @@ public class WristIOTalonFX implements WristIO {
   public PositionVoltage Request;
   public TalonFX Motor;
 
+  private CANcoder cancoder;
+    
+  
+
   public WristIOTalonFX(int MotorId) {
     Motor= new TalonFX(MotorId);
     Request = new PositionVoltage(0);
+    cancoder = new CANcoder(17);
 
     Motor.setControl(Request);
     configureTalons();
@@ -32,6 +39,8 @@ public class WristIOTalonFX implements WristIO {
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
     cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+    cfg.Feedback.FeedbackRemoteSensorID = cancoder.getDeviceID();
+    cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
     cfg.Slot0.kP = 1.0;
 
