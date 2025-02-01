@@ -320,7 +320,7 @@ public class RobotContainer {
                   SignalLogger.stop();
                   System.out.println("Stopped Logger");
                 }));
-
+    
     controller.rightBumper()
     .onTrue(
       elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
@@ -356,7 +356,17 @@ public class RobotContainer {
     testcontroller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(setFingeysVolts)).onFalse(fingeys.getNewSetVoltsCommand(0));
     testcontroller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(setIntakeVolts)).onFalse(intake.getNewSetVoltsCommand(0));
     testcontroller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(setIntakeExtenderAngle)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
+    
   }
+
+  
+  // TESTING PR COMMIT
+  
+  // TESTING PR COMMIT
+
+  
+  // TESTING PR COMMIT
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
