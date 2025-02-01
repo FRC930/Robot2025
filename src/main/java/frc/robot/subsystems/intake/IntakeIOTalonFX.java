@@ -13,7 +13,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
 import frc.robot.util.PhoenixUtil;
 
 public class IntakeIOTalonFX implements IntakeIO {
@@ -34,9 +33,9 @@ public class IntakeIOTalonFX implements IntakeIO {
   private void configureTalons() {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    cfg.CurrentLimits.StatorCurrentLimit = 0;
+    cfg.CurrentLimits.StatorCurrentLimit = 80;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-    cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
   }

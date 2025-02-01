@@ -59,7 +59,6 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.fingeys.Fingeys;
-import frc.robot.subsystems.fingeys.FingeysConstants;
 import frc.robot.subsystems.fingeys.FingeysIOSim;
 import frc.robot.subsystems.fingeys.FingeysIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
@@ -324,16 +323,16 @@ public class RobotContainer {
                   System.out.println("Stopped Logger");
                 }));
     
-    controller.rightBumper()
-    .onTrue(
-      elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
-      .andThen(new WaitUntilCommand(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger())))
-      .andThen(
-        elbow.getNewSetAngleCommand(70)
-        .until(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger()))
-      )
+    // controller.rightBumper()
+    // .onTrue(
+    //   elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
+    //   .andThen(new WaitUntilCommand(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger())))
+    //   .andThen(
+    //     elbow.getNewSetAngleCommand(70)
+    //     .until(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger()))
+    //   )
     
-    ).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
+    // ).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
 
     // Auto aim command example FOR DIFFERENTIAL DRIVE
     // @SuppressWarnings("resource")

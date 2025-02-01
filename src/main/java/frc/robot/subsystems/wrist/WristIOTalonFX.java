@@ -28,9 +28,9 @@ public class WristIOTalonFX implements WristIO {
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     cfg.Voltage.PeakForwardVoltage = 7;
     cfg.Voltage.PeakReverseVoltage = 7;
-    cfg.CurrentLimits.StatorCurrentLimit = 0;
+    cfg.CurrentLimits.StatorCurrentLimit = 80;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-    cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     cfg.Slot0.kP = 1.0;

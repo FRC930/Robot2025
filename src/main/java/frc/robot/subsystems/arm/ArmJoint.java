@@ -39,7 +39,7 @@ public class ArmJoint extends SubsystemBase {
   public void setAngle(Angle angle) {
     m_armJointIO.setTarget(angle);
   }
-
+  /**Degrees*/
   public Command getNewSetAngleCommand(double i) {
     return new InstantCommand(
         () -> {

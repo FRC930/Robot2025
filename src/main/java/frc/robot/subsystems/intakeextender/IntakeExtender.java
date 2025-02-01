@@ -21,8 +21,6 @@ public class IntakeExtender extends SubsystemBase {
 
   IntakeExtenderInputsAutoLogged loggedintakeExtender = new IntakeExtenderInputsAutoLogged();
 
-  //WRIST WEIGHT
-  //2.173 lbs
   public IntakeExtender(IntakeExtenderIO intakeExtenderIO) {
     m_intakeextenderIO = intakeExtenderIO;
     loggedintakeExtender.Angle = Degrees.mutable(0);

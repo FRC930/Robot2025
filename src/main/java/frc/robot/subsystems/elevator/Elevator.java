@@ -42,15 +42,17 @@ public class Elevator extends SubsystemBase {
   public Command getNewSetDistanceCommand(LoggedTunableNumber distance) {
     return new InstantCommand(
         () -> {
-          setDistance(Meter.of((Meters.convertFrom(distance.get(), Inches))));
+          setDistance(Inches.of(distance.get()));
         },
         this);
   }
-
+  /**
+   * @param i Inches
+   * */
   public Command getNewSetDistanceCommand(double i) {
     return new InstantCommand(
         () -> {
-          setDistance(Meter.of((Meters.convertFrom(i, Inches))));
+          setDistance(Inches.of(i));
         },
         this);
   }

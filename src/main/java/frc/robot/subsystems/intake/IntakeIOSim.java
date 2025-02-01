@@ -15,12 +15,6 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.util.LoggedTunableNumber;
 
 public class IntakeIOSim implements IntakeIO {
-  /** J3_KP makes the joint motor know what speed to run at */
-  public final double J3_KP = 1.0;
-
-  public final double J3_KD = 1.0;
-  public final double J3_GEARING = 1.0;
-
   private Voltage appliedVoltage = Volts.of(0.0);
 
   private final DCMotorSim sim;
@@ -35,7 +29,7 @@ public class IntakeIOSim implements IntakeIO {
   private LoggedTunableNumber intakeSensorSim;
   private MutDistance intakeSensorDistance;
 
-  public IntakeIOSim(int motor3Id) {
+  public IntakeIOSim(int motorId) {
     sim = new DCMotorSim(m_flywheelPlant, DRIVE_GEARBOX, 0.1, 0.1);
     intakeSensorDistance = Meters.mutable(1);
     intakeSensorSim = new LoggedTunableNumber("RobotState/Intake/SensorInput", 1);
