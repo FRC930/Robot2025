@@ -60,6 +60,19 @@ public class IntakeExtender extends SubsystemBase {
       return MathUtil.isNear(angle.baseUnitMagnitude(), loggedintakeExtender.Angle.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
     });
   }
+  
+  public Trigger getNewGreaterThanAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return loggedintakeExtender.Angle.baseUnitMagnitude() > tolerance.baseUnitMagnitude();
+    });
+  }
+
+  public Trigger getNewLessThanAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return loggedintakeExtender.Angle.baseUnitMagnitude() < tolerance.baseUnitMagnitude();
+    });
+  }
+
 
   @Override
   public void periodic() {

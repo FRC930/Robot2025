@@ -61,6 +61,18 @@ public class Wrist extends SubsystemBase {
     });
   }
 
+  public Trigger getNewGreaterThanAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return loggedwrist.wristAngle.baseUnitMagnitude() > tolerance.baseUnitMagnitude();
+    });
+  }
+
+  public Trigger getNewLessThanAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return loggedwrist.wristAngle.baseUnitMagnitude() < tolerance.baseUnitMagnitude();
+    });
+  }
+
   @Override
   public void periodic() {
     m_WristIO.updateInputs(loggedwrist);

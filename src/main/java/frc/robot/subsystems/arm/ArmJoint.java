@@ -47,10 +47,21 @@ public class ArmJoint extends SubsystemBase {
         },
         this);
   }
-
-  public Trigger getNewAtAngleTrigger(Angle angle,Angle tolerance) {
+  public Trigger getNewAngleTrigger(Angle angle,Angle tolerance) {
     return new Trigger(() -> {
       return MathUtil.isNear(angle.baseUnitMagnitude(), m_loggedArm.angle.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
+    });
+  }
+
+  public Trigger getNewGreaterThanAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return m_loggedArm.angle.baseUnitMagnitude() > tolerance.baseUnitMagnitude();
+    });
+  }
+
+  public Trigger getNewLessThanAngleTrigger(Angle angle,Angle tolerance) {
+    return new Trigger(() -> {
+      return m_loggedArm.angle.baseUnitMagnitude() < tolerance.baseUnitMagnitude();
     });
   }
 
