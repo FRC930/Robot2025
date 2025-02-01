@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.littletonrobotics.junction.Logger;
@@ -19,7 +20,7 @@ import org.littletonrobotics.junction.Logger;
 public class AprilTagVision extends Vision {
 
   // Allow robot to turn off updating odometry
-  private boolean m_updateOdometryBaseOnApriltags = false;
+  private boolean m_updateOdometryBaseOnApriltags = true;
   private Consumer<Pose2d> m_ResetPose;
 
   private boolean m_HasRunAutonomous = false;
@@ -44,9 +45,17 @@ public class AprilTagVision extends Vision {
 
   @Override
   public boolean rejectPose(PoseObservation observation) {
-    // If we should reject all apriltags fro being used
+    // If we should reject all apriltags from being used
     if (!m_updateOdometryBaseOnApriltags) {
       return true;
+    }
+
+    // Can disable specific type of observation
+    if (observation.type() == PoseObservationType.MEGATAG_1) {
+      //if the driverstation is in auto or teleop then reject megatag 1
+      if (DriverStation.isAutonomousEnabled() || DriverStation.isTeleopEnabled()) {
+        return true;
+      }
     }
     return super.rejectPose(observation);
   }
