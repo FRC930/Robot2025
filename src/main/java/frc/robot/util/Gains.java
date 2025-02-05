@@ -9,11 +9,11 @@ public class Gains {
   public final double kV;
   public final double kA;
 
-  private final double kMMV;
-  private final double kMMA;
-  private final double kMMJ;
-  private final double kMMEV;
-  private final double kMMEA;
+  public final double kMMV;
+  public final double kMMA;
+  public final double kMMJ;
+  public final double kMMEV;
+  public final double kMMEA;
 
   private Gains(double kP, double kI, double kD, double kS, double kG, double kV, double kA,double kMMV, double kMMA, double kMMJ, double kMMEV, double kMMEA) {
     if (kP < 0 || kI < 0 || kD < 0 || kS < 0 || kV < 0 || kA < 0 || kG < 0 || kMMV < 0 || kMMA < 0 || kMMJ < 0 || kMMEV < 0 || kMMEA < 0) {
