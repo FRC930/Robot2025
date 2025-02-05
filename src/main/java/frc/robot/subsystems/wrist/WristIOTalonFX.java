@@ -1,6 +1,7 @@
 package frc.robot.subsystems.wrist;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -89,5 +90,13 @@ public class WristIOTalonFX implements WristIO {
     slot0Configs.kV = gains.kV;
     slot0Configs.kA = gains.kA;
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(slot0Configs));
+
+    MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+    motionMagicConfigs.MotionMagicCruiseVelocity = gains.kMMV;
+    motionMagicConfigs.MotionMagicAcceleration = gains.kMMA;
+    motionMagicConfigs.MotionMagicJerk = gains.kMMJ;
+    motionMagicConfigs.MotionMagicExpo_kV = gains.kMMEV;
+    motionMagicConfigs.MotionMagicExpo_kA = gains.kMMEA;
+    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(motionMagicConfigs));
   }
 }
