@@ -57,4 +57,5 @@ public class ToesiesIOTalonFX implements ToesiesIO {
   public void stop() {
     Motor.setControl(new StaticBrake());
   }
+  
 }

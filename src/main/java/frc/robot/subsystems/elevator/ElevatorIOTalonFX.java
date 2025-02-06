@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -54,7 +55,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     cfg.Feedback.SensorToMechanismRatio = 3.0;
 
-    cfg.Slot0.kP = 1.0;
     PhoenixUtil.tryUntilOk(5, () -> leaderMotor.getConfigurator().apply(cfg));
 
     TalonFXConfiguration cfg2 = new TalonFXConfiguration();
@@ -106,5 +106,13 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     slot0Configs.kV = gains.kV;
     slot0Configs.kA = gains.kA;
     PhoenixUtil.tryUntilOk(5, () -> leaderMotor.getConfigurator().apply(slot0Configs));
+
+    MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+    motionMagicConfigs.MotionMagicCruiseVelocity = gains.kMMV;
+    motionMagicConfigs.MotionMagicAcceleration = gains.kMMA;
+    motionMagicConfigs.MotionMagicJerk = gains.kMMJ;
+    motionMagicConfigs.MotionMagicExpo_kV = gains.kMMEV;
+    motionMagicConfigs.MotionMagicExpo_kA = gains.kMMEA;
+    PhoenixUtil.tryUntilOk(5, () -> leaderMotor.getConfigurator().apply(motionMagicConfigs));
   }
 }
