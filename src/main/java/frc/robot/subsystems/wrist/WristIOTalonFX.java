@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.util.CanDef;
@@ -71,9 +72,9 @@ public class WristIOTalonFX implements WristIO {
   public void updateInputs(WristInputs inputs) {
     inputs.wristAngle.mut_replace(Motor.getPosition().getValue());
     inputs.wristAngularVelocity.mut_replace(Motor.getVelocity().getValue());
-    // inputs.wristSetPoint.mut_replace(
-    //     Angle.ofRelativeUnits(
-    //         ((PositionVoltage) Motor.getAppliedControl()).Position, Rotations));
+    inputs.wristSetPoint.mut_replace(
+        Angle.ofRelativeUnits(
+            PhoenixUtil.getPositionFromController(Motor, 0.0), Rotations));
     inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
     inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
   }

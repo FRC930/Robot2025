@@ -16,6 +16,8 @@ package frc.robot.util;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.wpilibj.DriverStation;
+
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -35,6 +37,24 @@ public class PhoenixUtil {
     }
     return error;
   }
+
+      /**
+     * Get position from controller so dont have to explicitly cast applied controller (could have had runtime casting error when switch controllers)
+     * @param motor
+     * @param defaultPosition
+     * @return
+     */
+  public static double getPositionFromController(ParentDevice motor, double defaultPosition) {
+    // Position configuration may not be available yet, so allow for Position not being available yet
+    Map<String, String> map = motor.getAppliedControl().getControlInfo();
+    String positionString = map.get("Position");
+    double position= defaultPosition; // If controller is not available delayed configurations
+    if(positionString != null) {
+        position = Double.valueOf(positionString);
+    }
+    return position;
+      
+    }
 
   public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
     tryUntilOk(maxAttempts, command, Optional.empty());

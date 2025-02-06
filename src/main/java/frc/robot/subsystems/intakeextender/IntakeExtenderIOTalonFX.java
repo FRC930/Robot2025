@@ -49,9 +49,9 @@ public class IntakeExtenderIOTalonFX implements IntakeExtenderIO {
   public void updateInputs(IntakeExtenderInputs inputs) {
     inputs.Angle.mut_replace(Motor.getPosition().getValue());
     inputs.IntakeExtenderAngularVelocity.mut_replace(Motor.getVelocity().getValue());
-    // inputs.IntakeExtenderSetPoint.mut_replace(
-    //     Angle.ofRelativeUnits(
-    //         ((PositionVoltage) Motor.getAppliedControl()).Position, Rotations));
+    inputs.IntakeExtenderSetPoint.mut_replace(
+        Angle.ofRelativeUnits(
+          PhoenixUtil.getPositionFromController(Motor, 0.0), Rotations));
     inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
   }
 

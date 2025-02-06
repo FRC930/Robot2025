@@ -78,9 +78,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   public void updateInputs(ElevatorInputs inputs) {
     inputs.distance.mut_replace(Meters.of(leaderMotor.getPosition().getValue().in(Degrees) * 2 * Math.PI * SPOOL_RADIUS ));
     inputs.velocity.mut_replace(MetersPerSecond.of(leaderMotor.getVelocity().getValue().in(DegreesPerSecond) * 2 * Math.PI * SPOOL_RADIUS));
-    // inputs.setPoint.mut_replace(
-    //     Distance.ofRelativeUnits(
-    //         ((PositionVoltage) leaderMotor.getAppliedControl()).Position, Meters));
+    inputs.setPoint.mut_replace(
+        Distance.ofRelativeUnits(
+          PhoenixUtil.getPositionFromController(leaderMotor, 0.0), Meters));
     inputs.supplyCurrent.mut_replace(leaderMotor.getStatorCurrent().getValue());
   }
 
