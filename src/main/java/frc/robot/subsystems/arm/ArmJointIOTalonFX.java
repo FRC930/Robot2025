@@ -52,6 +52,7 @@ public class ArmJointIOTalonFX implements ArmJointIO {
   public void updateInputs(ArmInputs inputs) {
     inputs.angle.mut_replace(Motor.getPosition().getValue());
     inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
+    inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
     inputs.setPoint.mut_replace(
         Angle.ofRelativeUnits(
           PhoenixUtil.getPositionFromController(Motor, 0.0), Rotations));

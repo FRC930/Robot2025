@@ -17,6 +17,7 @@ public interface ArmJointIO {
     public MutAngle angle;
     public MutAngularVelocity angularVelocity;
     public MutAngle setPoint;
+    public MutVoltage voltage;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;

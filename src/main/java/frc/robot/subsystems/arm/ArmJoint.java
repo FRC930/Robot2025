@@ -31,6 +31,7 @@ public class ArmJoint extends SubsystemBase {
     m_loggedArm.supplyCurrent = Amps.mutable(0);
     m_loggedArm.torqueCurrent = Amps.mutable(0);
     m_loggedArm.voltageSetPoint = Volts.mutable(0);
+    m_loggedArm.voltage = Volts.mutable(0);
 
     // The weirdest hackiest part of this constants setup.
     // Since we don't have an instance of this class in the IO, but we do have an instance of the IO in this class, we have 

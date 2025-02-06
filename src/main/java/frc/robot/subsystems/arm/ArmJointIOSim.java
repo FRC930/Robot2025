@@ -82,6 +82,7 @@ public class ArmJointIOSim implements ArmJointIO {
     input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
     input.torqueCurrent.mut_replace(input.supplyCurrent.in(Amps), Amps);
     input.voltageSetPoint.mut_replace(m_appliedVoltage);
+    input.voltage.mut_replace(m_appliedVoltage);
 
     // Periodic
     updateVoltageSetpoint();
