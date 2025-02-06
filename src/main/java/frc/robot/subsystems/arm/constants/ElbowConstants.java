@@ -22,7 +22,7 @@ public class ElbowConstants extends ArmJointConstants {
                 .kP(0.1).kI(0.0).kD(0.0).build();
 
         this.TalonFXGains =
-            Gains.builder().kS(0.0).kG(0.0).kV(0.0).kA(0.0).kP(0.0).kI(0.0).kD(0.0).build();
+            Gains.builder().kS(0.0).kG(0.28).kV(0.0).kA(0.0).kP(50.0).kI(0.0).kD(0.0).build();
 
         this.MaxVelocity = DegreesPerSecond.of(360);
         this.MaxAcceleration = DegreesPerSecondPerSecond.of(360);
