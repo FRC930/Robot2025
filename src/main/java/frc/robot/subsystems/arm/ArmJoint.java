@@ -1,6 +1,11 @@
 package frc.robot.subsystems.arm;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
@@ -10,8 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.LoggedTunableGainsBuilder;
-
-import org.littletonrobotics.junction.Logger;
+import frc.robot.util.LoggedTunableNumber;
 
 public class ArmJoint extends SubsystemBase {
 
@@ -43,6 +47,13 @@ public class ArmJoint extends SubsystemBase {
 
   public void setAngle(Angle angle) {
     m_armJointIO.setTarget(angle);
+  }
+  public Command getNewSetAngleCommand(LoggedTunableNumber degrees) {
+    return new InstantCommand(
+        () -> {
+          setAngle(Degrees.of((degrees.get())));
+        },
+        this);
   }
   /**Degrees*/
   public Command getNewSetAngleCommand(double i) {
