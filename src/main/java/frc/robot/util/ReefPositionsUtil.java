@@ -17,8 +17,22 @@ public class ReefPositionsUtil {
     }
 
     // Defaults
-    private static ScoreLevel selectedScoreLevel = ScoreLevel.L1;
-    private static DeAlgaeLevel selectedDeAlgaeLevel = DeAlgaeLevel.Low;
+    private ScoreLevel selectedScoreLevel = ScoreLevel.L1;
+    private DeAlgaeLevel selectedDeAlgaeLevel = DeAlgaeLevel.Low;
+
+    private static ReefPositionsUtil instance;
+
+    public static ReefPositionsUtil getInstance() {
+        if (instance == null) {
+            instance = new ReefPositionsUtil();
+        }
+        return instance;
+    }
+
+    private ReefPositionsUtil() {
+        selectedScoreLevel = ScoreLevel.L1;
+        selectedDeAlgaeLevel = DeAlgaeLevel.Low;
+    }
 
     /**
      * Sets selected level variable to given ScoreLevel value. 
@@ -26,7 +40,7 @@ public class ReefPositionsUtil {
      * 
      * @param level the desired level to select (L1 is Trough)
      */
-    public static void setScoreLevel(ScoreLevel level) {
+    public void setScoreLevel(ScoreLevel level) {
         selectedScoreLevel = level;
     }
 
@@ -37,7 +51,7 @@ public class ReefPositionsUtil {
      * @param level the desired level to select (L1 is Trough)
      * @return an instant command that runs the set method
      */
-    public static InstantCommand getNewSetScoreLevelCommand(ScoreLevel level) {
+    public InstantCommand getNewSetScoreLevelCommand(ScoreLevel level) {
         return new InstantCommand(() -> setScoreLevel(level));
     }
 
@@ -47,7 +61,7 @@ public class ReefPositionsUtil {
      * 
      * @return the currently selected scoring level
      */
-    public static ScoreLevel getScoreLevel() {
+    public ScoreLevel getScoreLevel() {
         return selectedScoreLevel;
     }
 
@@ -60,7 +74,7 @@ public class ReefPositionsUtil {
      * @param level the score level to check
      * @return whether the selected scoring level is the same as the <b>level</b> parameter
      */
-    public static boolean isSelected(ScoreLevel level) {
+    public boolean isSelected(ScoreLevel level) {
         return (level.equals(selectedScoreLevel));
     }
 
@@ -70,7 +84,7 @@ public class ReefPositionsUtil {
      * 
      * @param level the desired level to select (Top is between L3 and L4; Bottom is between L2 and L3)
      */
-    public static void setDeAlgaeLevel(DeAlgaeLevel level) {
+    public void setDeAlgaeLevel(DeAlgaeLevel level) {
         selectedDeAlgaeLevel = level;
     }
 
@@ -81,7 +95,7 @@ public class ReefPositionsUtil {
      * @param level the desired level to select (Top is between L3 and L4; Bottom is between L2 and L3)
      * @return an instant command that runs the set method
      */
-    public static InstantCommand getNewSetDeAlgaeLevel(DeAlgaeLevel level) {
+    public InstantCommand getNewSetDeAlgaeLevel(DeAlgaeLevel level) {
         return new InstantCommand(() -> setDeAlgaeLevel(level));
     }
 
@@ -91,7 +105,7 @@ public class ReefPositionsUtil {
      * 
      * @return the currently selected dealgaefy level
      */
-    public static DeAlgaeLevel getDeAlgaeLevel() {
+    public DeAlgaeLevel getDeAlgaeLevel() {
         return selectedDeAlgaeLevel;
     }
 
@@ -104,7 +118,7 @@ public class ReefPositionsUtil {
      * @param level the dealgae level to check
      * @return whether the selected dealgaefy level is the same as the <b>level</b> parameter
      */
-    public static boolean isSelected(DeAlgaeLevel level) {
+    public boolean isSelected(DeAlgaeLevel level) {
         return (level.equals(selectedDeAlgaeLevel));
     }
 }

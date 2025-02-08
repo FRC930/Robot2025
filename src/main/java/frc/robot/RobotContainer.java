@@ -116,6 +116,7 @@ public class RobotContainer {
 
   private AutoCommandManager autoCommandManager;
   private RobotState robotState;
+  private ReefPositionsUtil reefPositions;
 
   private boolean m_TeleopInitialized = false;
 
@@ -235,6 +236,7 @@ public class RobotContainer {
     }
 
     autoCommandManager = new AutoCommandManager(drive);
+    reefPositions = ReefPositionsUtil.getInstance();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -282,14 +284,14 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Reef scoring position sets    
-    co_controller.y().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L4));
-    co_controller.x().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L3));
-    co_controller.b().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L2));
-    co_controller.a().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L1)); // Trough
+    co_controller.y().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L4));
+    co_controller.x().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L3));
+    co_controller.b().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L2));
+    co_controller.a().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L1)); // Trough
 
     // Reef DeAlgaefy scoring position sets
-    co_controller.rightBumper().onTrue(ReefPositionsUtil.getNewSetDeAlgaeLevel(DeAlgaeLevel.Top)); // L3/4
-    co_controller.rightTrigger().onTrue(ReefPositionsUtil.getNewSetDeAlgaeLevel(DeAlgaeLevel.Low)); // L2/3
+    co_controller.rightBumper().onTrue(reefPositions.getNewSetDeAlgaeLevel(DeAlgaeLevel.Top)); // L3/4
+    co_controller.rightTrigger().onTrue(reefPositions.getNewSetDeAlgaeLevel(DeAlgaeLevel.Low)); // L2/3
 
     // TODO: Implement climbing controls (L Bumper climb and (maybe) L Trigger unclimb)
 
