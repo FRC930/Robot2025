@@ -29,10 +29,10 @@ public class VisionConstants {
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
-  public static Transform3d robotToCameraFront =
-      new Transform3d(0.236, 0.391, 0.21, new Rotation3d(0.0, -0.4, 0.0));
-  public static Transform3d robotToCameraBack =
-      new Transform3d(-0.236, 0.391, 0.21, new Rotation3d(0.0, -0.4, Math.PI));
+  public static Transform3d robotToCameraBackLeft =
+      new Transform3d(-0.391, 0.236, 0.21, new Rotation3d(0.0, 0.0, Math.toRadians(200.0)));
+  public static Transform3d robotToCameraBackRight =
+      new Transform3d(-0.391, -0.236, 0.21, new Rotation3d(0.0, 0.0, Math.toRadians(160.0)));
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;

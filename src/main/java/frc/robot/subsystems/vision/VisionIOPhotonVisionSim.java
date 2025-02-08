@@ -16,7 +16,9 @@ package frc.robot.subsystems.vision;
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
@@ -44,11 +46,29 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
     if (visionSim == null) {
       visionSim = new VisionSystemSim("main");
       visionSim.addAprilTags(aprilTagLayout);
+      // https://docs.photonvision.org/en/v2025.1.1/docs/simulation/simulation-java.html
+      SmartDashboard.putData("cameraField", visionSim.getDebugField());
     }
 
     // Add sim camera
     var cameraProperties = new SimCameraProperties();
+    // A 640 x 480 camera with a 100 degree diagonal FOV.
+    cameraProperties.setCalibration(640, 480, Rotation2d.fromDegrees(80));
+    // Approximate detection noise with average and standard deviation error in pixels.
+    cameraProperties.setCalibError(0.25, 0.08);
+    // Set the camera image capture framerate (Note: this is limited by robot loop rate).
+    cameraProperties.setFPS(120);
+    // The average and standard deviation in milliseconds of image data latency.
+    cameraProperties.setAvgLatencyMs(35);
+    cameraProperties.setLatencyStdDevMs(5);
     cameraSim = new PhotonCameraSim(camera, cameraProperties);
+    // Enable the raw and processed streams. These are enabled by default.
+    cameraSim.enableRawStream(true);
+    cameraSim.enableProcessedStream(true);
+
+    // Enable drawing a wireframe visualization of the field to the camera streams.
+    // This is extremely resource-intensive and is disabled by default.
+    cameraSim.enableDrawWireframe(true);
     visionSim.addCamera(cameraSim, robotToCamera);
   }
 
