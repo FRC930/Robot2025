@@ -75,6 +75,9 @@ import frc.robot.subsystems.wrist.WristIOTalonFX;
 import frc.robot.util.CanDef;
 import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.ReefPositionsUtil;
+import frc.robot.util.ReefPositionsUtil.DeAlgaeLevel;
+import frc.robot.util.ReefPositionsUtil.ScoreLevel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -277,6 +280,18 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    // Reef scoring position sets    
+    co_controller.y().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L4));
+    co_controller.x().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L3));
+    co_controller.b().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L2));
+    co_controller.a().onTrue(ReefPositionsUtil.getNewSetScoreLevelCommand(ScoreLevel.L1)); // Trough
+
+    // Reef DeAlgaefy scoring position sets
+    co_controller.rightBumper().onTrue(ReefPositionsUtil.getNewSetDeAlgaeLevel(DeAlgaeLevel.Top)); // L3/4
+    co_controller.rightTrigger().onTrue(ReefPositionsUtil.getNewSetDeAlgaeLevel(DeAlgaeLevel.Low)); // L2/3
+
+    // TODO: Implement climbing controls (L Bumper climb and (maybe) L Trigger unclimb)
 
     characterizeController
         .back()
