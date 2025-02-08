@@ -21,8 +21,8 @@ package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.limelightBackLeftName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightBackRightName;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBackLeft;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBackRight;
 
 import java.util.Optional;
 
@@ -192,9 +192,9 @@ public class RobotContainer {
                 drive::setPose,
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(
-                    limelightBackLeftName, robotToCameraFront, drive::getPose),
+                    limelightBackLeftName, robotToCameraBackLeft, drive::getPose),
                 new VisionIOPhotonVisionSim(
-                    limelightBackRightName, robotToCameraBack, drive::getPose));
+                    limelightBackRightName, robotToCameraBackRight, drive::getPose));
 
         wrist = new Wrist(new WristIOSim(3));
         elevator = new Elevator(
