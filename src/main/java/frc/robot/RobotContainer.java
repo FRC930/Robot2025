@@ -86,10 +86,6 @@ import frc.robot.subsystems.intakeextender.IntakeExtender;
 import frc.robot.subsystems.intakeextender.IntakeExtenderIOSim;
 import frc.robot.subsystems.intakeextender.IntakeExtenderIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
-import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
-import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.Wrist;
@@ -158,25 +154,6 @@ public class RobotContainer {
     CanDef.Builder rioCanBuilder = CanDef.builder().bus(CanBus.Rio);
 
     switch (Constants.currentMode) {
-      case REAL:
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-
-        vision =
-            new AprilTagVision(
-                drive::setPose,
-                drive::addVisionMeasurement,
-                new VisionIOLimelight(limelightBackRightName, drive::getRotation),
-                new VisionIOLimelight(limelightBackLeftName, drive::getRotation));
-
-        // Real robot, instantiate hardware IO implementations
-        break;
-
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive =
@@ -227,21 +204,22 @@ public class RobotContainer {
       
       //real is default because it is safer
       default:
+      //TODO: add back in dummy drive for replay and add REAL case back
       case REAL:
         drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+        new Drive(
+          new GyroIOPigeon2(),
+          new ModuleIOTalonFX(TunerConstants.FrontLeft),
+          new ModuleIOTalonFX(TunerConstants.FrontRight),
+          new ModuleIOTalonFX(TunerConstants.BackLeft),
+          new ModuleIOTalonFX(TunerConstants.BackRight));
 
         vision =
-            new AprilTagVision(
-                drive::setPose,
-                drive::addVisionMeasurement,
-                new VisionIOLimelight(limelightFrontName, drive::getRotation),
-                new VisionIOLimelight(limelightBackName, drive::getRotation));
+        new AprilTagVision(
+          drive::setPose,
+          drive::addVisionMeasurement,
+          new VisionIOLimelight(limelightBackRightName, drive::getRotation),
+          new VisionIOLimelight(limelightBackLeftName, drive::getRotation));
 
         wrist = new Wrist(new WristIOTalonFX(canivoreCanBuilder.id(11).build(),canivoreCanBuilder.id(15).build()));
 
