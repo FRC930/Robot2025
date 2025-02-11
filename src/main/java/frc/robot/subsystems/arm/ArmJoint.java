@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.Optional;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -28,8 +30,9 @@ public class ArmJoint extends SubsystemBase {
   ArmInputsAutoLogged m_loggedArm = new ArmInputsAutoLogged();
 
   public LoggedTunableGainsBuilder tunableGains;
+  private Supplier<Angle> previousJointAngleSupplier;
 
-  public ArmJoint(ArmJointIO armJointIO) {
+  public ArmJoint(ArmJointIO armJointIO, Optional<ArmJoint> previousJoint) {
     m_armJointIO = armJointIO;
     m_loggedArm.angle = Degrees.mutable(0);
     m_loggedArm.angularVelocity = DegreesPerSecond.mutable(0);
@@ -38,6 +41,9 @@ public class ArmJoint extends SubsystemBase {
     m_loggedArm.torqueCurrent = Amps.mutable(0);
     m_loggedArm.voltageSetPoint = Volts.mutable(0);
     m_loggedArm.voltage = Volts.mutable(0);
+    
+    previousJointAngleSupplier = () -> Degrees.zero();
+    previousJoint.ifPresent((j)->{previousJointAngleSupplier = j.getAngleSupplier();});
 
     // The weirdest hackiest part of this constants setup.
     // Since we don't have an instance of this class in the IO, but we do have an instance of the IO in this class, we have 
@@ -48,14 +54,18 @@ public class ArmJoint extends SubsystemBase {
     m_loggedArm.angle.mut_replace(m_constants.StartingAngle);
   }
 
+  protected Supplier<Angle> getAngleSupplier() {
+    return ()->m_loggedArm.angle;
+  }
+
   public void setAngle(Angle angle) {
     m_armJointIO.setTarget(angle);
   }
   
-  public Command getNewSetAngleCommand(LoggedTunableNumber degrees) {
+  public Command getNewSetAngleCommand(DoubleSupplier degrees) {
     return new InstantCommand(
         () -> {
-          setAngle(Degrees.of((degrees.get())));
+          setAngle(Degrees.of((degrees.getAsDouble())));
         },
         this);
   }
@@ -89,9 +99,9 @@ public class ArmJoint extends SubsystemBase {
    * @param angle
    * @return
    */
-  public Trigger getNewGreaterThanAngleTrigger(Supplier<Double> angle) {
+  public Trigger getNewGreaterThanAngleTrigger(DoubleSupplier angle) {
     return new Trigger(() -> {
-      return m_loggedArm.angle.in(Degrees) > angle.get();
+      return m_loggedArm.angle.in(Degrees) > angle.getAsDouble();
     });
   }
 
@@ -109,9 +119,9 @@ public class ArmJoint extends SubsystemBase {
    * @param angle
    * @return
    */
-  public Trigger getNewLessThanAngleTrigger(Supplier<Double> angle) {
+  public Trigger getNewLessThanAngleTrigger(DoubleSupplier angle) {
     return new Trigger(() -> {
-      return m_loggedArm.angle.in(Degrees) < angle.get();
+      return m_loggedArm.angle.in(Degrees) < angle.getAsDouble();
     });
   }
 

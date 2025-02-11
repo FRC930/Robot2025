@@ -1,6 +1,8 @@
 package frc.robot.subsystems.arm.constants;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;

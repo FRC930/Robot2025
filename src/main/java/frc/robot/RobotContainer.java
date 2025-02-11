@@ -27,9 +27,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,6 +39,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.GroundIntakeToStow;
+import frc.robot.commands.StowToGroundIntake;
 import frc.robot.commands.StowToL2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.ArmJoint;
@@ -69,6 +73,9 @@ import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBack;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
+
+import java.util.Optional;
+
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.Wrist;
@@ -153,8 +160,8 @@ public class RobotContainer {
         wrist = new Wrist(new WristIOSim(3));
         elevator = new Elevator(new ElevatorIOSim(4,new ElevatorSim(0.5, 0.2, DCMotor.getKrakenX60Foc(1), Meters.convertFrom(40.75, Inches), Meters.convertFrom(68.25, Inches), false, Meters.convertFrom(40.75, Inches), 0.001, 0.001)));
 
-        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()));
-        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()));
+        shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()),Optional.empty());
+        elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()),Optional.of(shoulder));
         fingeys = new Fingeys(new FingeysIOSim(121));
         intake = new Intake(new IntakeIOSim(15));
         toesies = new Toesies(new ToesiesIOSim(12));
@@ -184,14 +191,14 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIOTalonFX(canivoreCanBuilder.id(13).build(),canivoreCanBuilder.id(14).build()));
 
-        shoulder = new ArmJoint(new ArmJointIOTalonFX(new ShoulderConstants(), InvertedValue.CounterClockwise_Positive));
-        elbow = new ArmJoint(new ArmJointIOTalonFX(new ElbowConstants(), InvertedValue.CounterClockwise_Positive));
+        shoulder = new ArmJoint(new ArmJointIOTalonFX(new ShoulderConstants(), InvertedValue.CounterClockwise_Positive), Optional.empty());
+        elbow = new ArmJoint(new ArmJointIOTalonFX(new ElbowConstants(), InvertedValue.CounterClockwise_Positive), Optional.of(shoulder));
 
         fingeys = new Fingeys(new FingeysIOTalonFX(canivoreCanBuilder.id(12).build()));
         
         intake = new Intake(new IntakeIOTalonFX(canivoreCanBuilder.id(18).build(),canivoreCanBuilder.id(17).build()));
 
-        intakeExtender = new IntakeExtender(new IntakeExtenderIOTalonFX(canivoreCanBuilder.id(16).build()));
+        intakeExtender = new IntakeExtender(new IntakeExtenderIOTalonFX(rioCanBuilder.id(16).build()));
 
         toesies = new Toesies(new ToesiesIOTalonFX(canivoreCanBuilder.id(15).build()));
 
@@ -353,12 +360,15 @@ public class RobotContainer {
     // testcontroller.rightBumper().onTrue(toesies.getNewSetVoltsCommand(setToesiesVolts)).onFalse(toesies.getNewSetVoltsCommand(0));
     // testcontroller.leftTrigger().onTrue(fingeys.getNewSetVoltsCommand(setFingeysVolts)).onFalse(fingeys.getNewSetVoltsCommand(0));
     // testcontroller.rightTrigger().onTrue(intake.getNewSetVoltsCommand(setIntakeVolts)).onFalse(intake.getNewSetVoltsCommand(0));
-    // testcontroller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(setIntakeExtenderAngle)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
+    testcontroller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(setIntakeExtenderAngle)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
     // testcontroller.a().onTrue(shoulder.getNewSetAngleCommand(setShoulderAngle)).onFalse(shoulder.getNewSetAngleCommand(0));
     // testcontroller.b().onTrue(elbow.getNewSetAngleCommand(setElbowAngle)).onFalse(elbow.getNewSetAngleCommand(0));
     controller.rightBumper().whileTrue(new StowToL2(shoulder, elbow, wrist, fingeys)).onFalse(new StowToL2(shoulder, elbow, wrist, fingeys)).onFalse(TEMPgetStowCommand());
     controller.a().whileTrue(elbow.getNewSetAngleCommand(10).alongWith(new WaitCommand(0.5)).andThen(fingeys.getNewSetVoltsCommand(-4))).onFalse(fingeys.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
     controller.leftTrigger().whileTrue(wrist.getNewWristTurnCommand(-90).alongWith(elbow.getNewSetAngleCommand(33)).andThen(fingeys.getNewSetVoltsCommand(6)).alongWith(shoulder.getNewSetAngleCommand(55))).onFalse(fingeys.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
+
+    SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, fingeys));
+    SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, fingeys));
   }
   
   /**

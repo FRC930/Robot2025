@@ -31,8 +31,8 @@ public class ArmJointIOSim implements ArmJointIO {
                       constants.MotorToSensorGearing * constants.SensorToMechanismGearing,
                       SingleJointedArmSim.estimateMOI(constants.Length.in(Meters), constants.Weight.in(Kilograms)),
                       constants.Length.in(Meters),
-                      constants.MinimumAngle.in(Radians),
-                      constants.MaximumAngle.in(Radians),
+                      -9999,
+                      9999,
                       false, //TODO: Tune FFs to allow this to be true
                       constants.StartingAngle.in(Radians),
                       0.001,

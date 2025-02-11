@@ -198,7 +198,7 @@ public class RobotState extends VirtualSubsystem {
                 new Transform3d(
                     new Translation3d(),
                     new Rotation3d(
-                        this.shoulderAngle, Degrees.zero(), Degrees.zero())))
+                        this.shoulderAngle.plus(Degrees.of(180)), Degrees.zero(), Degrees.zero())))
             .transformBy(SHOULDER_PIVOT_OFFSET.inverse());
 
     Pose3d elbowPose =
@@ -208,7 +208,7 @@ public class RobotState extends VirtualSubsystem {
                 new Transform3d(
                     new Translation3d(),
                     new Rotation3d(
-                        this.shoulderAngle.minus(this.elbowAngle), Degrees.zero(), Degrees.zero())))
+                        Degrees.of(0).minus(this.elbowAngle).minus(this.shoulderAngle).plus(Degrees.of(0)), Degrees.zero(), Degrees.zero())))
             .transformBy(ELBOW_PIVOT_OFFSET.inverse());
 
     testStuff.mut_replace(testStuff.plus(Degrees.of(.25)));
@@ -223,7 +223,7 @@ public class RobotState extends VirtualSubsystem {
                         Degrees.of(0), wristTwist, Degrees.zero())))
             .transformBy(WRIST_PIVOT_OFFSET.inverse());
 
-    double tempShoulderAngle = 90+shoulderAngle.in(Degrees);
+    double tempShoulderAngle = 90 + shoulderAngle.in(Degrees);
     double tempElbowAngle = 90 - elbowAngle.in(Degrees) - tempShoulderAngle;
 
     elevatorLigament2d.setLength(elevatorHeight.in(Centimeters) + 103.5);
@@ -256,7 +256,7 @@ public class RobotState extends VirtualSubsystem {
   private static final Transform3d ELBOW_PIVOT_OFFSET =
       new Transform3d(
           new Translation3d(Inches.of(0.0), Inches.of(0.0), Inches.of(0)),
-          new Rotation3d(Degrees.of(0), Degrees.of(0), Degrees.of(0)));
+          new Rotation3d(Degrees.of(0), Degrees.of(0.0), Degrees.of(0)));
 
   private static final Transform3d ELBOW_ATTACH_OFFSET =
       new Transform3d(
