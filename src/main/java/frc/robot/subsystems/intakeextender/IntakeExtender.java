@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -39,6 +41,10 @@ public class IntakeExtender extends SubsystemBase {
     loggedintakeExtender.voltageSetPoint = Volts.mutable(0);
 
     RobotState.instance().setIntakeExtenderSource(loggedintakeExtender.Angle);
+  }
+
+  public Supplier<Angle> getAngleSupplier() {
+    return ()->loggedintakeExtender.Angle;
   }
 
   public void setAngle(Angle angle) {

@@ -54,7 +54,7 @@ public class ArmJoint extends SubsystemBase {
     m_loggedArm.angle.mut_replace(m_constants.StartingAngle);
   }
 
-  protected Supplier<Angle> getAngleSupplier() {
+  public Supplier<Angle> getAngleSupplier() {
     return ()->m_loggedArm.angle;
   }
 

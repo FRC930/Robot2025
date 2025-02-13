@@ -36,6 +36,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.intakeextender.IntakeExtender;
 import frc.robot.util.VirtualSubsystem;
+import frc.robot.util.safezones.SafeZones;
+
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.Logger;
 
@@ -118,6 +120,7 @@ public class RobotState extends VirtualSubsystem {
   @Override
   public void periodic() {
     visualize();
+    SafeZones.logSafeZones();
   }
 
   public Distance getElevatorHeight() {
@@ -224,7 +227,7 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(WRIST_PIVOT_OFFSET.inverse());
 
     double tempShoulderAngle = 90 + shoulderAngle.in(Degrees);
-    double tempElbowAngle = 90 - elbowAngle.in(Degrees) - tempShoulderAngle;
+    double tempElbowAngle = elbowAngle.in(Degrees);
 
     elevatorLigament2d.setLength(elevatorHeight.in(Centimeters) + 103.5);
     shoulderLigament2d.setAngle(tempShoulderAngle);

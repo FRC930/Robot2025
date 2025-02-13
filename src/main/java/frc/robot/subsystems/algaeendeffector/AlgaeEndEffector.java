@@ -2,6 +2,8 @@ package frc.robot.subsystems.algaeendeffector;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -37,6 +39,18 @@ public class AlgaeEndEffector extends SubsystemBase {
     logged.voltage = Volts.mutable(0);
     logged.voltageSetPoint = Volts.mutable(0);
   }
+
+  /**
+   * PLACEHOLDER
+   * gets if the end effector is currently holding a coral
+   * Please replace with an actual method, and change all usages to reflect
+   * TODO: Replace
+   * @return
+   */
+  public BooleanSupplier placeholderGetHasAlgaeSupplier() {
+    return () -> false;
+  }
+
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
     return new InstantCommand(
         () -> {
@@ -44,6 +58,7 @@ public class AlgaeEndEffector extends SubsystemBase {
         },
         this);
   }
+
   public void setTarget(Voltage target) {
     m_IO.setTarget(target);
   }

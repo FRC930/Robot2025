@@ -2,6 +2,8 @@ package frc.robot.subsystems.elevator;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -39,6 +41,10 @@ public class Elevator extends SubsystemBase {
     loggedelevator.voltageSetPoint = Volts.mutable(0);
 
     RobotState.instance().setElevatorSource(loggedelevator.distance);
+  }
+
+  public Supplier<Distance> getDistanceExtendedSupplier() {
+    return () -> loggedelevator.distance;
   }
 
   public void setDistance(Distance target) {

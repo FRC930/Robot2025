@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +51,10 @@ public class Wrist extends SubsystemBase {
     this.m_WristIO.setGains(tunableGains.build());
 
     RobotState.instance().setWristSource(loggedwrist.wristAngle);
+  }
+
+  public Supplier<Angle> getAngleSupplier() {
+    return ()->loggedwrist.wristAngle;
   }
 
   public void setAngle(Angle angle) {
