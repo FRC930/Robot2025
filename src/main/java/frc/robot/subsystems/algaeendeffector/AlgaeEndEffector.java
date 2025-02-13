@@ -1,4 +1,4 @@
-package frc.robot.subsystems.toesies;
+package frc.robot.subsystems.algaeendeffector;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.toesies.ToesiesInputsAutoLogged;
+import frc.robot.subsystems.algaeendeffector.ToesiesInputsAutoLogged;
 import frc.robot.util.LoggedTunableGainsBuilder;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -23,19 +23,19 @@ import frc.robot.util.LoggedTunableNumber;
  * <li>Voltage control</li>
  * </ul>
  */
-public class Toesies extends SubsystemBase {
-  private ToesiesIO m_ToesiesIO;
+public class AlgaeEndEffector extends SubsystemBase {
+  private AlgaeEndEffectorIO m_IO;
 
-  ToesiesInputsAutoLogged loggedtoesies = new ToesiesInputsAutoLogged();
+  ToesiesInputsAutoLogged logged = new ToesiesInputsAutoLogged();
 
 
-  public Toesies(ToesiesIO toesiesIO) {
-    m_ToesiesIO = toesiesIO;
-    loggedtoesies.angularVelocity = DegreesPerSecond.mutable(0);
-    loggedtoesies.supplyCurrent = Amps.mutable(0);
-    loggedtoesies.torqueCurrent = Amps.mutable(0);
-    loggedtoesies.voltage = Volts.mutable(0);
-    loggedtoesies.voltageSetPoint = Volts.mutable(0);
+  public AlgaeEndEffector(AlgaeEndEffectorIO toesiesIO) {
+    m_IO = toesiesIO;
+    logged.angularVelocity = DegreesPerSecond.mutable(0);
+    logged.supplyCurrent = Amps.mutable(0);
+    logged.torqueCurrent = Amps.mutable(0);
+    logged.voltage = Volts.mutable(0);
+    logged.voltageSetPoint = Volts.mutable(0);
   }
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
     return new InstantCommand(
@@ -45,7 +45,7 @@ public class Toesies extends SubsystemBase {
         this);
   }
   public void setTarget(Voltage target) {
-    m_ToesiesIO.setTarget(target);
+    m_IO.setTarget(target);
   }
 
   public Command getNewSetVoltsCommand(double i) {
@@ -58,7 +58,7 @@ public class Toesies extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_ToesiesIO.updateInputs(loggedtoesies);
-    Logger.processInputs("RobotState/Toesies", loggedtoesies);
+    m_IO.updateInputs(logged);
+    Logger.processInputs("RobotState/Toesies", logged);
   }
 }

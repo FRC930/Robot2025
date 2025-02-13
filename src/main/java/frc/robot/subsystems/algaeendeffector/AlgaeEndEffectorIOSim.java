@@ -1,4 +1,4 @@
-package frc.robot.subsystems.fingeys;
+package frc.robot.subsystems.algaeendeffector;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -10,13 +10,13 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
-public class FingeysIOSim implements FingeysIO {
+public class AlgaeEndEffectorIOSim implements AlgaeEndEffectorIO {
 
   private Voltage appliedVoltage = Volts.mutable(0.0);
 
   private final FlywheelSim sim;
 
-  public FingeysIOSim(int motorId) {
+  public AlgaeEndEffectorIOSim(int motorId) {
     sim = new FlywheelSim(
       LinearSystemId.createFlywheelSystem(
         DCMotor.getKrakenX60Foc(1), 
@@ -36,7 +36,7 @@ public class FingeysIOSim implements FingeysIO {
   }
 
   @Override
-  public void updateInputs(FingeysInputs input) {
+  public void updateInputs(ToesiesInputs input) {
     input.angularVelocity.mut_replace(
         DegreesPerSecond.convertFrom(sim.getAngularVelocityRadPerSec(), RadiansPerSecond),
         DegreesPerSecond);
@@ -53,5 +53,4 @@ public class FingeysIOSim implements FingeysIO {
   public void stop() {
     setTarget(Volts.of(0.0));
   }
-  
 }

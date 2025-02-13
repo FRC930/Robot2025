@@ -9,7 +9,7 @@ import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.arm.ArmJoint;
-import frc.robot.subsystems.fingeys.Fingeys;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -72,7 +72,7 @@ public class GroundIntakeToStow extends SequentialCommandGroup {
         }
     }
 
-    public GroundIntakeToStow(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, Fingeys fingeys) {
+    public GroundIntakeToStow(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
         super(
             //STEP 1:
             wrist.getNewWristTurnCommand(WristPositions.Stow.position), // Start wrist turn

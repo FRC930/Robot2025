@@ -6,9 +6,9 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.toesies.Toesies;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -71,7 +71,7 @@ public class TakeAlgaeL2 extends SequentialCommandGroup {
         }
     }
 
-    public TakeAlgaeL2(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, Toesies toesies, Elevator elevator) {
+    public TakeAlgaeL2(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, AlgaeEndEffector toesies, Elevator elevator) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.angle().in(Degrees))
             .alongWith(elbow.getNewSetAngleCommand(ElbowPositions.Final.angle().in(Degrees))),

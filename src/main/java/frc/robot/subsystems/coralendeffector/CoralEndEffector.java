@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.fingeys;
+package frc.robot.subsystems.coralendeffector;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -21,22 +21,22 @@ import frc.robot.util.LoggedTunableNumber;
  * <li>Voltage control</li>
  * </ul>
  */
-public class Fingeys extends SubsystemBase {
-  private FingeysIO m_FingeysIO;
+public class CoralEndEffector extends SubsystemBase {
+  private CoralEndEffectorIO m_IO;
 
-  FingeysInputsAutoLogged loggedfingeys = new FingeysInputsAutoLogged();
+  FingeysInputsAutoLogged logged = new FingeysInputsAutoLogged();
 
-  public Fingeys(FingeysIO fingeysIO) {
-    m_FingeysIO = fingeysIO;
-    loggedfingeys.angularVelocity = DegreesPerSecond.mutable(0);
-    loggedfingeys.supplyCurrent = Amps.mutable(0);
-    loggedfingeys.torqueCurrent = Amps.mutable(0);
-    loggedfingeys.voltageSetPoint = Volts.mutable(0);
-    loggedfingeys.voltage = Volts.mutable(0);
+  public CoralEndEffector(CoralEndEffectorIO fingeysIO) {
+    m_IO = fingeysIO;
+    logged.angularVelocity = DegreesPerSecond.mutable(0);
+    logged.supplyCurrent = Amps.mutable(0);
+    logged.torqueCurrent = Amps.mutable(0);
+    logged.voltageSetPoint = Volts.mutable(0);
+    logged.voltage = Volts.mutable(0);
   }
 
   public void setTarget(Voltage target) {
-    m_FingeysIO.setTarget(target);
+    m_IO.setTarget(target);
   }
 
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
@@ -56,7 +56,7 @@ public class Fingeys extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_FingeysIO.updateInputs(loggedfingeys);
-    Logger.processInputs("RobotState/Fingeys", loggedfingeys);
+    m_IO.updateInputs(logged);
+    Logger.processInputs("RobotState/Fingeys", logged);
   }
 }

@@ -2,11 +2,11 @@ package frc.robot.util.commandUtils;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.fingeys.Fingeys;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.toesies.Toesies;
 import frc.robot.subsystems.wrist.Wrist;
 
 /** 
@@ -37,16 +37,16 @@ public class RobotSystems {
     private static Elevator i_elevator;
     private static Wrist    i_wrist;
     private static Intake   i_intake;
-    private static Fingeys  i_fingeys;
-    private static Toesies  i_toesies;
+    private static CoralEndEffector  i_fingeys;
+    private static AlgaeEndEffector  i_toesies;
 
     public final ArmJoint shoulder;
     public final ArmJoint elbow;
     public final Elevator elevator;
     public final Wrist    wrist;
     public final Intake   intake;
-    public final Fingeys  fingeys;
-    public final Toesies  toesies;
+    public final CoralEndEffector  fingeys;
+    public final AlgaeEndEffector  toesies;
 
     private RobotSystems() {
         this.shoulder = i_shoulder;
@@ -77,7 +77,7 @@ public class RobotSystems {
      * @param toesies
      */
     public static void setSubsystems(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, Intake intake,
-    Fingeys fingeys, Toesies toesies) {
+    CoralEndEffector fingeys, AlgaeEndEffector toesies) {
         i_shoulder = shoulder;
         i_elbow = elbow;
         i_elevator = elevator;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.toesies;
+package frc.robot.subsystems.coralendeffector;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -10,13 +10,13 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
-public class ToesiesIOSim implements ToesiesIO {
+public class CoralEndEffectorIOSim implements CoralEndEffectorIO {
 
   private Voltage appliedVoltage = Volts.mutable(0.0);
 
   private final FlywheelSim sim;
 
-  public ToesiesIOSim(int motorId) {
+  public CoralEndEffectorIOSim(int motorId) {
     sim = new FlywheelSim(
       LinearSystemId.createFlywheelSystem(
         DCMotor.getKrakenX60Foc(1), 
@@ -36,7 +36,7 @@ public class ToesiesIOSim implements ToesiesIO {
   }
 
   @Override
-  public void updateInputs(ToesiesInputs input) {
+  public void updateInputs(FingeysInputs input) {
     input.angularVelocity.mut_replace(
         DegreesPerSecond.convertFrom(sim.getAngularVelocityRadPerSec(), RadiansPerSecond),
         DegreesPerSecond);
@@ -53,4 +53,5 @@ public class ToesiesIOSim implements ToesiesIO {
   public void stop() {
     setTarget(Volts.of(0.0));
   }
+  
 }

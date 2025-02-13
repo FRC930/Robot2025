@@ -7,7 +7,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.ArmJoint;
-import frc.robot.subsystems.fingeys.Fingeys;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -70,7 +70,7 @@ public class StowToL1 extends SequentialCommandGroup {
         }
     }
 
-    public StowToL1(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, Fingeys fingeys) {
+    public StowToL1(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.angle().in(Degrees)),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))

@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.arm.ArmJoint;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.fingeys.Fingeys;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -76,7 +76,7 @@ public class L2Outtake extends SequentialCommandGroup {
     }
 
     public L2Outtake(
-        ArmJoint shoulder, ArmJoint elbow, Wrist wrist, Fingeys fingeys) {
+        ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
         super(
             elbow.getNewSetAngleCommand(10)
                 .alongWith(new WaitCommand(0.5))

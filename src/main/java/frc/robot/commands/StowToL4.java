@@ -11,8 +11,8 @@ import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.arm.ArmJoint;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.fingeys.Fingeys;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -21,7 +21,7 @@ public class StowToL4 extends SequentialCommandGroup {
     public ArmJoint elbow;
     public Elevator elevator;
     public Wrist wrist;
-    public Fingeys fingeys;
+    public CoralEndEffector fingeys;
 
     private enum ShoulderPositions {
         Starting(new LoggedTunableNumber("MoveToL4Command/shoulder/StartingDegrees", 0)),
@@ -98,7 +98,7 @@ public class StowToL4 extends SequentialCommandGroup {
         }
     }
 
-    public StowToL4(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, Fingeys fingeys) {
+    public StowToL4(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector fingeys) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.angle().in(Degrees)),
             shoulder.getNewSetAngleCommand(ShoulderPositions.MidPoint.angle().in(Degrees))

@@ -45,11 +45,19 @@ import frc.robot.commands.StowToGroundIntake;
 import frc.robot.commands.StowToL1;
 import frc.robot.commands.StowToL3;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOSim;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOTalonFX;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.arm.ArmJointIOSim;
 import frc.robot.subsystems.arm.ArmJointIOTalonFX;
 import frc.robot.subsystems.arm.constants.ElbowConstants;
 import frc.robot.subsystems.arm.constants.ShoulderConstants;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
+import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOSim;
+import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOTalonFX;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -58,18 +66,12 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
-import frc.robot.subsystems.fingeys.Fingeys;
-import frc.robot.subsystems.fingeys.FingeysIOSim;
-import frc.robot.subsystems.fingeys.FingeysIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intakeextender.IntakeExtender;
 import frc.robot.subsystems.intakeextender.IntakeExtenderIOSim;
 import frc.robot.subsystems.intakeextender.IntakeExtenderIOTalonFX;
-import frc.robot.subsystems.toesies.Toesies;
-import frc.robot.subsystems.toesies.ToesiesIOSim;
-import frc.robot.subsystems.toesies.ToesiesIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
 import static frc.robot.subsystems.vision.VisionConstants.limelightBackName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
@@ -103,11 +105,11 @@ public class RobotContainer {
 
   private final Elevator elevator;
 
-  private final Fingeys fingeys;
+  private final CoralEndEffector coralEndEffector;
 
   private final Intake intake;
 
-  private final Toesies toesies;
+  private final AlgaeEndEffector algaeEndEffector;
 
   private final IntakeExtender intakeExtender;
 
@@ -161,9 +163,9 @@ public class RobotContainer {
 
         shoulder = new ArmJoint(new ArmJointIOSim(new ShoulderConstants()),Optional.empty());
         elbow = new ArmJoint(new ArmJointIOSim(new ElbowConstants()),Optional.of(shoulder));
-        fingeys = new Fingeys(new FingeysIOSim(121));
+        coralEndEffector = new CoralEndEffector(new CoralEndEffectorIOSim(121));
         intake = new Intake(new IntakeIOSim(15));
-        toesies = new Toesies(new ToesiesIOSim(12));
+        algaeEndEffector = new AlgaeEndEffector(new AlgaeEndEffectorIOSim(12));
         intakeExtender = new IntakeExtender( new IntakeExtenderIOSim(16));
         
       break;
@@ -193,13 +195,13 @@ public class RobotContainer {
         shoulder = new ArmJoint(new ArmJointIOTalonFX(new ShoulderConstants(), InvertedValue.CounterClockwise_Positive), Optional.empty());
         elbow = new ArmJoint(new ArmJointIOTalonFX(new ElbowConstants(), InvertedValue.CounterClockwise_Positive), Optional.of(shoulder));
 
-        fingeys = new Fingeys(new FingeysIOTalonFX(canivoreCanBuilder.id(12).build()));
+        coralEndEffector = new CoralEndEffector(new CoralEndEffectorIOTalonFX(canivoreCanBuilder.id(12).build()));
         
         intake = new Intake(new IntakeIOTalonFX(canivoreCanBuilder.id(18).build(),canivoreCanBuilder.id(17).build()));
 
         intakeExtender = new IntakeExtender(new IntakeExtenderIOTalonFX(rioCanBuilder.id(16).build()));
 
-        toesies = new Toesies(new ToesiesIOTalonFX(canivoreCanBuilder.id(15).build()));
+        algaeEndEffector = new AlgaeEndEffector(new AlgaeEndEffectorIOTalonFX(canivoreCanBuilder.id(15).build()));
 
         // vision =
         //     new Vision(
@@ -233,7 +235,7 @@ public class RobotContainer {
       //   elbow = null;
       //   fingeys = null;
       //   intake = null;
-      //   toesies = null;
+      //   algaeEndEffector = null;
       //   intakeExtender = null;
 
       //   throw new Exception("The robot is in neither sim nor real. Something has gone seriously wrong");
@@ -362,16 +364,16 @@ public class RobotContainer {
     testcontroller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(setIntakeExtenderAngle)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
     // testcontroller.a().onTrue(shoulder.getNewSetAngleCommand(setShoulderAngle)).onFalse(shoulder.getNewSetAngleCommand(0));
     // testcontroller.b().onTrue(elbow.getNewSetAngleCommand(setElbowAngle)).onFalse(elbow.getNewSetAngleCommand(0));
-    controller.rightBumper().onTrue(new StowToL2(shoulder, elbow, wrist, fingeys));
-    controller.a().whileTrue(elbow.getNewSetAngleCommand(10).alongWith(new WaitCommand(0.5)).andThen(fingeys.getNewSetVoltsCommand(-4))).onFalse(fingeys.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
+    controller.rightBumper().onTrue(new StowToL2(shoulder, elbow, wrist, coralEndEffector));
+    controller.a().whileTrue(elbow.getNewSetAngleCommand(10).alongWith(new WaitCommand(0.5)).andThen(coralEndEffector.getNewSetVoltsCommand(-4))).onFalse(coralEndEffector.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
     // controller.leftTrigger().whileTrue(wrist.getNewWristTurnCommand(-90).alongWith(elbow.getNewSetAngleCommand(33)).andThen(fingeys.getNewSetVoltsCommand(6)).alongWith(shoulder.getNewSetAngleCommand(55))).onFalse(fingeys.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
-    controller.leftBumper().onTrue(new StowToL3(shoulder, elbow, wrist, fingeys, elevator)).onFalse(elevator.getNewSetDistanceCommand(0));
-    controller.rightTrigger().onTrue(new StowToL1(shoulder, elbow, wrist, fingeys));
-    controller.leftTrigger().onTrue(new TakeAlgaeL2(shoulder, elbow, wrist, toesies, elevator)).onFalse(toesies.getNewSetVoltsCommand(0).alongWith(elevator.getNewSetDistanceCommand(0)));
-    SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, fingeys));
-    SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, fingeys));
-    SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, wrist, fingeys));
-    SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, toesies, elevator));
+    controller.leftBumper().onTrue(new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator)).onFalse(elevator.getNewSetDistanceCommand(0));
+    controller.rightTrigger().onTrue(new StowToL1(shoulder, elbow, wrist, coralEndEffector));
+    controller.leftTrigger().onTrue(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator)).onFalse(algaeEndEffector.getNewSetVoltsCommand(0).alongWith(elevator.getNewSetDistanceCommand(0)));
+    SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, coralEndEffector));
+    SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector));
+    SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, wrist, coralEndEffector));
+    SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
   }
   
   /**

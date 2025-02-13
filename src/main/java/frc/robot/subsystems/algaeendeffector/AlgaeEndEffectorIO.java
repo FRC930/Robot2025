@@ -1,4 +1,4 @@
-package frc.robot.subsystems.fingeys;
+package frc.robot.subsystems.algaeendeffector;
 
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutCurrent;
@@ -8,10 +8,10 @@ import frc.robot.util.Gains;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface FingeysIO {
+public interface AlgaeEndEffectorIO {
 
   @AutoLog
-  public static class FingeysInputs {
+  public static class ToesiesInputs {
     public MutAngularVelocity angularVelocity;
     public MutVoltage voltage;
     public MutVoltage voltageSetPoint;
@@ -27,7 +27,7 @@ public interface FingeysIO {
    *
    * <p>
    */
-  public void updateInputs(FingeysInputs input);
+  public void updateInputs(ToesiesInputs input);
 
   public void stop();
 }

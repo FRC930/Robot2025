@@ -88,6 +88,7 @@ public class ArmJoint extends SubsystemBase {
    * @deprecated lmao don't use it. GREG HAS SPOKEN!
    * @return
    */
+  @Deprecated
   public Trigger getNewAtSetpointTrigger() {
     return new Trigger(() -> {
       return MathUtil.isNear(m_loggedArm.setPoint.baseUnitMagnitude(), m_loggedArm.angle.baseUnitMagnitude(), Degrees.of(0.25).baseUnitMagnitude());
