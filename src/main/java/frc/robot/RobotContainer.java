@@ -40,6 +40,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GroundIntakeToStow;
 import frc.robot.commands.L2.StowToL2;
 import frc.robot.commands.L2.TakeAlgaeL2;
+import frc.robot.commands.StowCommand;
 import frc.robot.commands.StowToAlgaeStow;
 import frc.robot.commands.StowToGroundIntake;
 import frc.robot.commands.StowToL1;
@@ -56,8 +57,6 @@ import frc.robot.subsystems.arm.constants.ShoulderConstants;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOSim;
 import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOTalonFX;
-import frc.robot.subsystems.coralendeffector.CoralEndEffector;
-import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -370,10 +369,12 @@ public class RobotContainer {
     controller.leftBumper().onTrue(new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator)).onFalse(elevator.getNewSetDistanceCommand(0));
     controller.rightTrigger().onTrue(new StowToL1(shoulder, elbow, wrist, coralEndEffector));
     controller.leftTrigger().onTrue(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator)).onFalse(algaeEndEffector.getNewSetVoltsCommand(0).alongWith(elevator.getNewSetDistanceCommand(0)));
+    controller.b().onTrue(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
     SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
+    SmartDashboard.putData(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
   }
   
   /**
