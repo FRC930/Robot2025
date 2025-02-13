@@ -84,6 +84,9 @@ import frc.robot.subsystems.wrist.WristIOTalonFX;
 import frc.robot.util.CanDef;
 import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.ReefPositionsUtil;
+import frc.robot.util.ReefPositionsUtil.DeAlgaeLevel;
+import frc.robot.util.ReefPositionsUtil.ScoreLevel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -122,6 +125,7 @@ public class RobotContainer {
 
   private AutoCommandManager autoCommandManager;
   private RobotState robotState;
+  private ReefPositionsUtil reefPositions;
 
   private boolean m_TeleopInitialized = false;
 
@@ -241,6 +245,7 @@ public class RobotContainer {
     }
 
     autoCommandManager = new AutoCommandManager(drive);
+    reefPositions = ReefPositionsUtil.getInstance();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -262,6 +267,17 @@ public class RobotContainer {
             () -> -controller.getLeftX() * DRIVE_SPEED,
             () -> -controller.getRightX() * ANGULAR_SPEED)
           );
+        // Reef scoring position sets    
+    co_controller.y().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L4));
+    co_controller.x().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L3));
+    co_controller.b().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L2));
+    co_controller.a().onTrue(reefPositions.getNewSetScoreLevelCommand(ScoreLevel.L1)); // Trough
+
+    // Reef DeAlgaefy scoring position sets
+    co_controller.rightBumper().onTrue(reefPositions.getNewSetDeAlgaeLevel(DeAlgaeLevel.Top)); // L3/4
+    co_controller.rightTrigger().onTrue(reefPositions.getNewSetDeAlgaeLevel(DeAlgaeLevel.Low)); // L2/3
+
+    // TODO: Implement climbing controls (L Bumper climb and (maybe) L Trigger unclimb)
 
     // // Lock to 0° when A button is held
     // controller
