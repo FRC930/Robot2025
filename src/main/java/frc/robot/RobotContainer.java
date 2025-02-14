@@ -45,6 +45,7 @@ import frc.robot.commands.StowToAlgaeStow;
 import frc.robot.commands.StowToGroundIntake;
 import frc.robot.commands.StowToL1;
 import frc.robot.commands.StowToL3;
+import frc.robot.commands.StowToL4;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOSim;
@@ -389,6 +390,7 @@ public class RobotContainer {
     SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, wrist, coralEndEffector));
+    SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector));
     SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
     SmartDashboard.putData(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
   }
