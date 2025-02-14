@@ -191,7 +191,7 @@ public class RobotState extends VirtualSubsystem {
             .transformBy(
                 new Transform3d(
                     new Translation3d(
-                        Meters.zero(), Meters.zero(), this.elevatorHeight),
+                        0, 0, this.elevatorHeight.in(Centimeters)),
                     new Rotation3d()));
 
     Pose3d shoulderPose =
