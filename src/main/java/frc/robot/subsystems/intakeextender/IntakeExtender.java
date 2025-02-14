@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.RobotState;
 import frc.robot.util.LoggedTunableGainsBuilder;
 import frc.robot.util.LoggedTunableNumber;
-import frc.robot.RobotState;
 
 public class IntakeExtender extends SubsystemBase {
   private IntakeExtenderIO m_intakeextenderIO;
@@ -26,9 +26,9 @@ public class IntakeExtender extends SubsystemBase {
 
   public LoggedTunableGainsBuilder tunableGains = new LoggedTunableGainsBuilder(
     "IntakeExtender", 
-    0, 0, 0, 
+    120.0, 0, 0, 
     0, 0, 0, 0, 
-    0, 0, 0, 0, 0
+    2.0, 1.0, 0, 0, 0
   );
   
   public IntakeExtender(IntakeExtenderIO intakeExtenderIO) {
@@ -39,6 +39,7 @@ public class IntakeExtender extends SubsystemBase {
     loggedintakeExtender.supplyCurrent = Amps.mutable(0);
     loggedintakeExtender.torqueCurrent = Amps.mutable(0);
     loggedintakeExtender.voltageSetPoint = Volts.mutable(0);
+    loggedintakeExtender.voltage = Volts.mutable(0);
 
     RobotState.instance().setIntakeExtenderSource(loggedintakeExtender.Angle);
   }

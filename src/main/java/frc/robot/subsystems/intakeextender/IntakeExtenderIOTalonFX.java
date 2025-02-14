@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intakeextender;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -8,7 +10,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.util.CanDef;
 import frc.robot.util.Gains;
@@ -37,13 +38,13 @@ public class IntakeExtenderIOTalonFX implements IntakeExtenderIO {
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
     cfg.Voltage.PeakReverseVoltage = 7;
     cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
+    cfg.Feedback.SensorToMechanismRatio = 37.5;
     PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
   }
 
   @Override
   public void setTarget(Angle target) {
-    Request = Request.withPosition(target);
+    Request = Request.withPosition(target).withSlot(0);
     Motor.setControl(Request);
     m_setPoint = target;
   }
@@ -53,7 +54,8 @@ public class IntakeExtenderIOTalonFX implements IntakeExtenderIO {
     inputs.Angle.mut_replace(Motor.getPosition().getValue());
     inputs.IntakeExtenderAngularVelocity.mut_replace(Motor.getVelocity().getValue());
     inputs.IntakeExtenderSetPoint.mut_replace(m_setPoint);
-    inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
+    inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
+    inputs.supplyCurrent.mut_replace(Motor.getSupplyCurrent().getValue());
   }
 
     @Override

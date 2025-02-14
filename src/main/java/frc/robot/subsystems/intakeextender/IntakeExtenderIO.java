@@ -16,6 +16,7 @@ public interface IntakeExtenderIO {
     public MutAngle Angle;
     public MutAngularVelocity IntakeExtenderAngularVelocity;
     public MutAngle IntakeExtenderSetPoint;
+    public MutVoltage voltage;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;

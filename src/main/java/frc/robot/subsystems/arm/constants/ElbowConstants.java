@@ -30,7 +30,8 @@ public class ElbowConstants extends ArmJointConstants {
                 .kV(0.0)
                 .kA(0.0)
                 .kP(0.1).kI(0.0).kD(0.0).build();
-
+        
+        this.LoggedName = "Elbow";
         this.TalonFXGains = new LoggedTunableGainsBuilder("ArmJoint"+LoggedName, 30.0, 0, 0, 0, 0, 0, 0, 5.0, 10.0, 0, 0, 0);
 
         this.MaxVelocity = RotationsPerSecond.of(1);
@@ -55,8 +56,6 @@ public class ElbowConstants extends ArmJointConstants {
         this.YPosition = Inches.of(0);
         this.ZPosition = Meters.of(0.377);
         this.CanCoderOffset = Degrees.of(-54.6);
-
-        this.LoggedName = "Elbow";
 
         /**
          * This callback defines where we will put our mut_angle on initialize for the purpose of mechanism simulation

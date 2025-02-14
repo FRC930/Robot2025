@@ -23,7 +23,7 @@ public class WristIOTalonFX implements WristIO {
   public MotionMagicVoltage Request;
   public TalonFX Motor;
   public CANcoder canCoder;
-  public Angle canCoderOffset = Degrees.of(-163);
+  public Angle canCoderOffset = Degrees.of(-181);
   private Angle m_setPoint = Angle.ofRelativeUnits(0, Rotations);
 
   public WristIOTalonFX(CanDef canbus,CanDef canCoderDef) {
@@ -42,7 +42,6 @@ public class WristIOTalonFX implements WristIO {
     cfg.CurrentLimits.StatorCurrentLimit = 80;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
     cfg.CurrentLimits.SupplyCurrentLimit = 40;
-    cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static; //Not arm because gravity should not take effect
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     cfg.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
@@ -75,7 +74,7 @@ public class WristIOTalonFX implements WristIO {
     inputs.wristAngularVelocity.mut_replace(Motor.getVelocity().getValue());
     inputs.wristSetPoint.mut_replace(m_setPoint);
     inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
-    inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
+    inputs.supplyCurrent.mut_replace(Motor.getSupplyCurrent().getValue());
   }
 
   @Override

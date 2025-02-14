@@ -16,9 +16,15 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inch;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
 import frc.robot.util.CanDef;
@@ -54,10 +60,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
     cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
-    cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    cfg.Feedback.SensorToMechanismRatio = Elevator.INCHES_PER_ROT;
+    cfg.Feedback.SensorToMechanismRatio = Elevator.REDUCTION;
 
     PhoenixUtil.tryUntilOk(5, () -> leaderMotor.getConfigurator().apply(cfg));
 
@@ -70,7 +75,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     cfg2.CurrentLimits.SupplyCurrentLimit = 40;
     cfg2.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    cfg2.Feedback.SensorToMechanismRatio = Elevator.INCHES_PER_ROT;
+    cfg2.Feedback.SensorToMechanismRatio = Elevator.REDUCTION;
 
     PhoenixUtil.tryUntilOk(5, ()->followerMotor.getConfigurator().apply(cfg2));
 
@@ -80,17 +85,23 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void updateInputs(ElevatorInputs inputs) {
-    inputs.distance.mut_replace(Meters.of(leaderMotor.getPosition().getValue().in(Degrees) ));
-    inputs.velocity.mut_replace(MetersPerSecond.of(leaderMotor.getVelocity().getValue().in(DegreesPerSecond)));
+    double rotations=leaderMotor.getPosition().getValue().in(Rotations);
+    // SmartDashboard.putNumber("ElevatorrotorPos", leaderMotor.getRotorPosition().getValue().in(Rotations));
+    // SmartDashboard.putNumber("ElevatorPos", inches);
+    inputs.distance.mut_replace(Inches.of(rotations * Elevator.INCHES_PER_ROT));
+    // inputs.distance.mut_replace(Inches.of(leaderMotor.getRotorPosition().getValue().in(Rotations)*Elevator.INCHES_PER_ROT));
+    inputs.velocity.mut_replace(InchesPerSecond.of(leaderMotor.getVelocity().getValue().in(RotationsPerSecond)));
     inputs.setPoint.mut_replace(m_setPoint);
-    inputs.supplyCurrent.mut_replace(leaderMotor.getStatorCurrent().getValue());
+    inputs.supplyCurrent.mut_replace(leaderMotor.getSupplyCurrent().getValue());
+    inputs.voltage.mut_replace(leaderMotor.getMotorVoltage().getValue());
   }
 
   @Override
   public void setTarget(Distance target) {
-    Request = Request.withPosition(target.in(Inches));
+    Request = Request.withPosition(target.in(Inches)/Elevator.INCHES_PER_ROT).withSlot(0);
     leaderMotor.setControl(Request);
     m_setPoint = target;
+    
   }
 
   @Override

@@ -16,6 +16,7 @@ public interface ElevatorIO {
     public MutDistance distance;
     public MutLinearVelocity velocity;
     public MutDistance setPoint;
+    public MutVoltage voltage;
     public MutVoltage voltageSetPoint;
     public MutCurrent supplyCurrent;
     public MutCurrent torqueCurrent;

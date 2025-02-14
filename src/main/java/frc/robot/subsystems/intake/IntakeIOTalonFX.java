@@ -47,7 +47,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
     inputs.voltageSetPoint.mut_replace(m_setPoint);
     inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
-    inputs.supplyCurrent.mut_replace(Motor.getStatorCurrent().getValue());
+    inputs.supplyCurrent.mut_replace(Motor.getSupplyCurrent().getValue());
     inputs.sensorDistance.mut_replace(rangeSensor.getDistance().getValue());
   }
 
