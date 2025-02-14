@@ -100,17 +100,17 @@ public class StowToL4 extends SequentialCommandGroup {
 
     public StowToL4(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector fingeys) {
         super(
-            wrist.getNewWristTurnCommand(WristPositions.Final.angle().in(Degrees)),
-            shoulder.getNewSetAngleCommand(ShoulderPositions.MidPoint.angle().in(Degrees))
+            wrist.getNewWristTurnCommand(WristPositions.Final.position),
+            shoulder.getNewSetAngleCommand(ShoulderPositions.MidPoint.position)
                 .raceWith(
-                    new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.SafeToSwingElbow.angle().in(Degrees)))
+                    new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.SafeToSwingElbow.position))
                         .andThen(
-                            elbow.getNewSetAngleCommand(ElbowPositions.Final.angle().in(Degrees))
-                                .raceWith(new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.ShoulderSafeSwing.angle().in(Degrees)))
+                            elbow.getNewSetAngleCommand(ElbowPositions.Final.position)
+                                .raceWith(new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.ShoulderSafeSwing.position))
                         )
                     )
                 ),
-            shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
+            shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
                 .alongWith(elevator.getNewSetDistanceCommand(ElevatorPositions.Final.distance().in(Inches)))  
         );
         addRequirements(shoulder, elbow, wrist, elevator);
