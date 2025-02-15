@@ -44,6 +44,9 @@ import frc.robot.subsystems.arm.ArmJointIOSim;
 import frc.robot.subsystems.arm.ArmJointIOTalonFX;
 import frc.robot.subsystems.arm.constants.ElbowConstants;
 import frc.robot.subsystems.arm.constants.ShoulderConstants;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.climber.ClimberIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -105,6 +108,8 @@ public class RobotContainer {
 
   private final IntakeExtender intakeExtender;
 
+  private final Climber climber;
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController co_controller = new CommandXboxController(1);
@@ -126,6 +131,7 @@ public class RobotContainer {
   final LoggedTunableNumber setIntakeVolts = new LoggedTunableNumber("RobotState/Intake/setVolts", 4);
   final LoggedTunableNumber setShoulderAngle = new LoggedTunableNumber("RobotState/Shoulder/setAngle", 0);
   final LoggedTunableNumber setElbowAngle = new LoggedTunableNumber("RobotState/Elbow/setAngle", 0);
+  final LoggedTunableNumber setClimberVolts = new LoggedTunableNumber("dashboardKey:RobotState/Climber/setVolts", 0);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(){
 
@@ -158,7 +164,8 @@ public class RobotContainer {
         fingeys = new Fingeys(new FingeysIOSim(121));
         intake = new Intake(new IntakeIOSim(15));
         toesies = new Toesies(new ToesiesIOSim(12));
-        intakeExtender = new IntakeExtender( new IntakeExtenderIOSim(16));
+        intakeExtender = new IntakeExtender(new IntakeExtenderIOSim(16));
+        climber = new Climber(new ClimberIOSim(19));
         
       break;
       
@@ -194,6 +201,8 @@ public class RobotContainer {
         intakeExtender = new IntakeExtender(new IntakeExtenderIOTalonFX(rioCanBuilder.id(16).build()));
 
         toesies = new Toesies(new ToesiesIOTalonFX(canivoreCanBuilder.id(15).build()));
+
+        climber = new Climber(new ClimberIOTalonFX(canivoreCanBuilder.id(19).build()));
 
         // vision =
         //     new Vision(
@@ -356,6 +365,7 @@ public class RobotContainer {
     // testcontroller.x().onTrue(intakeExtender.getNewIntakeExtenderTurnCommand(setIntakeExtenderAngle)).onFalse(intakeExtender.getNewIntakeExtenderTurnCommand(0));
     // testcontroller.a().onTrue(shoulder.getNewSetAngleCommand(setShoulderAngle)).onFalse(shoulder.getNewSetAngleCommand(0));
     // testcontroller.b().onTrue(elbow.getNewSetAngleCommand(setElbowAngle)).onFalse(elbow.getNewSetAngleCommand(0));
+    // testcontroller.y().onTrue(climber.getNewSetVoltsCommand(setClimberVolts)).onFalse(climber.getNewSetVoltsCommand(0));
     // controller.rightBumper().whileTrue(new StowToL2(shoulder, elbow, wrist, fingeys)).onFalse(new StowToL2(shoulder, elbow, wrist, fingeys)).onFalse(TEMPgetStowCommand());
     // controller.a().whileTrue(elbow.getNewSetAngleCommand(10).alongWith(new WaitCommand(0.5)).andThen(fingeys.getNewSetVoltsCommand(-4))).onFalse(fingeys.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
     // controller.leftTrigger().whileTrue(wrist.getNewWristTurnCommand(-90).alongWith(elbow.getNewSetAngleCommand(33)).andThen(fingeys.getNewSetVoltsCommand(6)).alongWith(shoulder.getNewSetAngleCommand(55))).onFalse(fingeys.getNewSetVoltsCommand(0)).onFalse(TEMPgetStowCommand());
