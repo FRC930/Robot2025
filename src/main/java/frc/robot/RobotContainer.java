@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -93,9 +94,11 @@ import frc.robot.subsystems.wrist.WristIOTalonFX;
 import frc.robot.util.CanDef;
 import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.LoggedTunableNumber;
-import frc.robot.util.ReefPositionsUtil;
-import frc.robot.util.ReefPositionsUtil.DeAlgaeLevel;
-import frc.robot.util.ReefPositionsUtil.ScoreLevel;
+import frc.robot.util.MultiConditionalCommand;
+import frc.robot.util.ScoringModesUtil;
+import frc.robot.util.ScoringModesUtil.DeAlgaeLevel;
+import frc.robot.util.ScoringModesUtil.ScoringMode;
+import frc.robot.util.ScoringModesUtil.CoralLevel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -134,7 +137,7 @@ public class RobotContainer {
 
   private AutoCommandManager autoCommandManager;
   private RobotState robotState;
-  private ReefPositionsUtil reefPositions;
+  private ScoringModesUtil scoringModes;
 
   private boolean m_TeleopInitialized = false;
 
@@ -272,7 +275,7 @@ public class RobotContainer {
 
 
     autoCommandManager = new AutoCommandManager(drive);
-    reefPositions = ReefPositionsUtil.getInstance();
+    scoringModes = ScoringModesUtil.getInstance();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -344,6 +347,37 @@ public class RobotContainer {
       .onTrue(new TakeCoral(shoulder, elbow, elevator, wrist, coralEndEffector))
       .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
+    controller.rightBumper().onTrue(
+      new MultiConditionalCommand<CoralLevel>(
+        new PrintCommand("NO REEF POSITION SELECTED!"), 
+        () -> scoringModes.getCoralLevel(), 
+        CoralLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector),
+        CoralLevel.L2, new StowToL2(shoulder, elbow, elevator, wrist),
+        CoralLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator),
+        CoralLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector)
+      ).alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Coral))
+    ).onFalse(
+      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
+        .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Stow))
+    );
+
+    controller.rightTrigger().onTrue(
+      new MultiConditionalCommand<ScoringMode>(
+        new PrintCommand("NO SCORING MODE SELECTED!"), 
+        () -> scoringModes.getScoringMode(), 
+        ScoringMode.Coral, new MultiConditionalCommand<CoralLevel>(
+                                new PrintCommand("NO REEF POSITION SELECTED!"),
+                                () -> scoringModes.getCoralLevel(),
+                                CoralLevel.L1, new PrintCommand("L1 CONFIRM NOT IMPLEMENTED"),
+                                CoralLevel.L2, new PrintCommand("L2 CONFIRM NOT IMPLEMENTED"),
+                                CoralLevel.L3, new PrintCommand("L3 CONFIRM NOT IMPLEMENTED"),
+                                CoralLevel.L4, new PrintCommand("L4 CONFIRM NOT IMPLEMENTED")
+                                ),
+        ScoringMode.Net, new PrintCommand("NET CONFIRM NOT IMPLEMENTED"),
+        ScoringMode.Processor, new PrintCommand("PROCESSOR CONFIRM NOT IMPLEMENTED")
+      ).andThen(scoringModes.getNewSetScoringModeCommand(ScoringMode.Stow))
+    );
+
     // Reef DeAlgaefy scoring position sets
     // co_controller.rightBumper().onTrue(reefPositions.getNewSetDeAlgaeLevel(DeAlgaeLevel.Top)); // L3/4
     // co_controller.rightTrigger().onTrue(reefPositions.getNewSetDeAlgaeLevel(DeAlgaeLevel.Low)); // L2/3
@@ -361,26 +395,6 @@ public class RobotContainer {
     co_controller.leftTrigger().onTrue(new OutakeAlgae(algaeEndEffector)).onFalse(algaeEndEffector.getNewSetVoltsCommand(0));
 
     // TODO: Implement climbing controls (L Bumper climb and (maybe) L Trigger unclimb)
-
-    // // Lock to 0° when A button is held
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         DriveCommands.joystickDriveAtAngle(
-    //             drive,
-    //             () -> -controller.getLeftY(),
-    //             () -> -controller.getLeftX(),
-    //             () -> new Rotation2d()));
-    // // Reset gyro to 0° when B button is pressed
-    // controller
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
 
     characterizeController
         .back()
@@ -416,33 +430,6 @@ public class RobotContainer {
                   SignalLogger.stop();
                   System.out.println("Stopped Logger");
                 }));
-    
-    // // controller.rightBumper()
-    // // .onTrue(
-    // //   elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
-    // //   .andThen(new WaitUntilCommand(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger())))
-    // //   .andThen(
-    // //     elbow.getNewSetAngleCommand(70)
-    // //     .until(elbow.getNewAtSetpointTrigger().and(shoulder.getNewAtSetpointTrigger()))
-    // //   )
-    
-    // // ).onFalse(elbow.getNewSetAngleCommand(0).alongWith(shoulder.getNewSetAngleCommand(0)));
-
-    // // Auto aim command example FOR DIFFERENTIAL DRIVE
-    // // @SuppressWarnings("resource")
-    // // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
-    // // aimController.enableContinuousInput(-Math.PI, Math.PI);
-    // // keyboard
-    // //     .button(1)
-    // //     .whileTrue(
-    // //         Commands.startRun(
-    // //             () -> {
-    // //               aimController.reset();
-    // //             },
-    // //             () -> {
-    // //               drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
-    // //             },
-    // //             drive));
   }
 
   public Command TEMPgetStowCommand() {
