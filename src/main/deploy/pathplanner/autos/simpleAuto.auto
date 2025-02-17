@@ -13,13 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
+            "name": "StopDrivetrain"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "CoralOuttake"
           }
         },
         {
@@ -37,13 +37,13 @@
         {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
+            "name": "StopDrivetrain"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "CoralOuttake"
           }
         },
         {
@@ -61,31 +61,13 @@
         {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
+            "name": "StopDrivetrain"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "simplePath.3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopDrivetrain"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2Score"
+            "name": "CoralOuttake"
           }
         }
       ]
