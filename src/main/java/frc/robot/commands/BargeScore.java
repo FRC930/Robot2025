@@ -27,7 +27,7 @@ public class BargeScore extends SequentialCommandGroup {
         Starting(new LoggedTunableNumber("BargeScoreCommand/shoulder/StartingDegrees", 0)),
         MidPoint(new LoggedTunableNumber("BargeScoreCommand/shoulder/MidPointDegrees", 0)),
         SafeToSwingElbow(new LoggedTunableNumber("BargeScoreCommand/shoulder/SafeToSwingElbowDegrees", 40)),
-        Final(new LoggedTunableNumber("BargeScoreCommand/shoulder/FinalDegrees", -70));
+        Final(new LoggedTunableNumber("BargeScoreCommand/shoulder/FinalDegrees", -80));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -82,7 +82,7 @@ public class BargeScore extends SequentialCommandGroup {
 
     private enum ElevatorPositions {
         Starting(new LoggedTunableNumber("BargeScoreCommand/elevator/StartingInches", 0)),
-        Final(new LoggedTunableNumber("BargeScoreCommand/elevator/FinalInches", 28));
+        Final(new LoggedTunableNumber("BargeScoreCommand/elevator/FinalInches", 26.0));
 
         DoubleSupplier position;
         MutDistance distance;

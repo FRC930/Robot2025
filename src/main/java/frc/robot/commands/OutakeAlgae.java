@@ -6,7 +6,8 @@ import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 public class OutakeAlgae extends SequentialCommandGroup {
     public OutakeAlgae(AlgaeEndEffector toesies) {
         super(
-            toesies.getNewSetVoltsCommand(-6)
+            //TODO processing outtake is -6, barge is -12
+            toesies.getNewSetVoltsCommand(-12)
         );
         addRequirements(toesies);
     }
