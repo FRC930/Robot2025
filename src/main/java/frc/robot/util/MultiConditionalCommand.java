@@ -26,7 +26,7 @@ public class MultiConditionalCommand<K> extends Command {
     private boolean m_runsWhenDisabled;
     private InterruptionBehavior m_interruptionBehavior;
 
-    public class ConditionCommandEntry<K> implements Map.Entry<K, Command>{
+    public static class ConditionCommandEntry<K> implements Map.Entry<K, Command>{
 
         final K condition;
         Command command;
@@ -83,10 +83,10 @@ public class MultiConditionalCommand<K> extends Command {
         }
     }
 
-    public MultiConditionalCommand(Command defaultCommand, Supplier<K> condition, ConditionCommandEntry<K>... conditionCommandEntries) {
+    public MultiConditionalCommand(Command defaultCommand, Supplier<K> condition, ConditionCommandEntry<K>[] conditionCommandEntries) {
         m_selectedCommand = defaultCommand;
 
-        m_conditionMap = new HashMap<K, Command>();
+        m_conditionMap = new HashMap<>();
 
         for (ConditionCommandEntry<K> entry : conditionCommandEntries) {
             m_conditionMap.put(entry.getKey(), entry.getValue());
@@ -95,14 +95,14 @@ public class MultiConditionalCommand<K> extends Command {
         }
     }
     
-    public MultiConditionalCommand<K> withConditon(K key, Command command) {
+    public MultiConditionalCommand<K> withCondition(K key, Command command) {
         m_conditionMap.put(key, command);
         addRequirements(command.getRequirements());
 
         return this;
     }
     
-    public MultiConditionalCommand<K> withConditon(ConditionCommandEntry<K> entry) {
+    public MultiConditionalCommand<K> withCondition(ConditionCommandEntry<K> entry) {
         m_conditionMap.put(entry.getKey(), entry.getValue());
         addRequirements(entry.getValue().getRequirements());
 

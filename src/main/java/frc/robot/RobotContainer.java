@@ -37,7 +37,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.BargeScore;
@@ -53,8 +52,6 @@ import frc.robot.commands.StowToGroundIntake;
 import frc.robot.commands.StowToL1;
 import frc.robot.commands.StowToL3;
 import frc.robot.commands.StowToL4;
-import frc.robot.commands.TakeAlgaeL3;
-import frc.robot.commands.TakeCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOSim;
@@ -95,10 +92,11 @@ import frc.robot.util.CanDef;
 import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.MultiConditionalCommand;
+import frc.robot.util.MultiConditionalCommand.ConditionCommandEntry;
 import frc.robot.util.ScoringModesUtil;
+import frc.robot.util.ScoringModesUtil.CoralLevel;
 import frc.robot.util.ScoringModesUtil.DeAlgaeLevel;
 import frc.robot.util.ScoringModesUtil.ScoringMode;
-import frc.robot.util.ScoringModesUtil.CoralLevel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -348,7 +346,7 @@ public class RobotContainer {
       .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
     controller.rightBumper().onTrue(
-      new MultiConditionalCommand<CoralLevel>(
+      new MultiConditionalCommand<>(
         new PrintCommand("NO REEF POSITION SELECTED!"), 
         () -> scoringModes.getCoralLevel(), 
         CoralLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector),
@@ -361,6 +359,48 @@ public class RobotContainer {
         .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Stow))
     );
 
+    controller.rightBumper().onTrue(
+      new MultiConditionalCommand<>(
+        new PrintCommand("NO REEF POSITION SELECTED!"), 
+        () -> scoringModes.getCoralLevel(), 
+        new ConditionCommandEntry<>(CoralLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector)),
+        new ConditionCommandEntry<>(CoralLevel.L2, new StowToL2(shoulder, elbow, elevator, wrist)),
+        new ConditionCommandEntry<>(CoralLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator)),
+        new ConditionCommandEntry<>(CoralLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector))
+      ).alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Coral))
+    ).onFalse(
+      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
+        .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Stow))
+    );
+
+    controller.rightBumper().onTrue(
+      new MultiConditionalCommand<>(
+        new PrintCommand("NO REEF POSITION SELECTED!"), 
+        () -> scoringModes.getCoralLevel())
+        .withCondition(new ConditionCommandEntry<>(CoralLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector)))
+        .withCondition(new ConditionCommandEntry<>(CoralLevel.L2, new StowToL2(shoulder, elbow, elevator, wrist)))
+        .withCondition(new ConditionCommandEntry<>(CoralLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator)))
+        .withCondition(new ConditionCommandEntry<>(CoralLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector)))
+      .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Coral))
+    ).onFalse(
+      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
+        .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Stow))
+    );
+
+    controller.rightBumper().onTrue(
+      new MultiConditionalCommand<>(
+        new PrintCommand("NO REEF POSITION SELECTED!"), 
+        () -> scoringModes.getCoralLevel())
+        .withCondition(CoralLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector))
+        .withCondition(CoralLevel.L2, new StowToL2(shoulder, elbow, elevator, wrist))
+        .withCondition(CoralLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator))
+        .withCondition(CoralLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector))
+      .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Coral))
+    ).onFalse(
+      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
+        .alongWith(scoringModes.getNewSetScoringModeCommand(ScoringMode.Stow))
+    );
+    
     controller.rightTrigger().onTrue(
       new MultiConditionalCommand<ScoringMode>(
         new PrintCommand("NO SCORING MODE SELECTED!"), 
