@@ -181,7 +181,7 @@ public class Vision extends SubsystemBase {
         "Vision/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
   }
-
+// accepts the poses, timestamp, and vision measurements deviations.
   @FunctionalInterface
   public static interface VisionConsumer {
     public void accept(
@@ -189,11 +189,11 @@ public class Vision extends SubsystemBase {
         double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
-
+ // accepts the observation
   public boolean rejectPose(PoseObservation observation) {
     return false;
   }
-
+  // accepts the vision measurements
   public void addVisionMeasurement(Pose2d pose, double timestamp, Vector<N3> fill) {
     consumer.accept(pose, timestamp, fill);
   }

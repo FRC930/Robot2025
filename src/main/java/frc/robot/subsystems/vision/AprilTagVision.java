@@ -29,7 +29,7 @@ public class AprilTagVision extends Vision {
   private Trigger m_checkIfAllianceChangedTrigger = null;
 
   private boolean m_isFirstTime = true;
-
+// resets the aprilTag vision to nothing
   public AprilTagVision(Consumer<Pose2d> resetPose, VisionConsumer consumer, VisionIO... io) {
     super(consumer, io);
     m_ResetPose = resetPose;

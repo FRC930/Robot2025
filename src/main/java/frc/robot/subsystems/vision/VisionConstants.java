@@ -24,6 +24,7 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
   // Camera names, must match names configured on coprocessor
+  // gives the cameras variable names.
   public static String limelightBackLeftName = "limelight-backl";
   public static String limelightBackRightName = "limelight-backr";
 
