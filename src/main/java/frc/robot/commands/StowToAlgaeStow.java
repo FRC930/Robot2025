@@ -10,6 +10,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.elevator.Elevator;
@@ -22,7 +24,9 @@ public class StowToAlgaeStow extends SequentialCommandGroup {
         Starting(new LoggedTunableNumber("StowToAlgaeStow/shoulder/StartingDegrees", 10)),
         // MidPoint(new LoggedTunableNumber("StowToL3Command/shoulder/MidPointDegrees", 110)),
         // SafeToSwingElbow(new LoggedTunableNumber("StowToL3Command/shoulder/SafeToSwingElbowDegrees", 100)),
-        Final(new LoggedTunableNumber("StowToAlgaeStow/shoulder/FinalDegrees", 35));
+        Final(new LoggedTunableNumber("StowToAlgaeStow/shoulder/FinalDegrees", 35)), 
+        SafeToSwingElbow(new LoggedTunableNumber("StowToAlgaeStow/shoulder/SafeToSwingElbow", 35)), 
+        MidPoint(new LoggedTunableNumber("StowToAlgaeStow/shoulder/MidPoint", 35));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -41,7 +45,8 @@ public class StowToAlgaeStow extends SequentialCommandGroup {
     private enum ElbowPositions {
         Starting(new LoggedTunableNumber("StowToAlgaeStow/elbow/StartingDegrees", 10)),
         // ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 45)),
-        Final(new LoggedTunableNumber("StowToAlgaeStow/elbow/FinalDegrees", -160));
+        Final(new LoggedTunableNumber("StowToAlgaeStow/elbow/FinalDegrees", -160)), 
+        ShoulderSafeSwing(new LoggedTunableNumber("StowToAlgaeStow/elbow/lmao", -160));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -93,12 +98,21 @@ public class StowToAlgaeStow extends SequentialCommandGroup {
         }
     }
 
-    public StowToAlgaeStow(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector fingeys) {
+    public StowToAlgaeStow(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, AlgaeEndEffector algaeEE) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
-            elevator.getNewSetDistanceCommand(ElevatorPositions.Final.position),
+            shoulder.getNewSetAngleCommand(ShoulderPositions.MidPoint.position)
+                .raceWith(
+                    new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.SafeToSwingElbow.position))
+                )
+                .andThen(
+                    elbow.getNewSetAngleCommand(ElbowPositions.Final.position)
+                        .raceWith(new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.ShoulderSafeSwing.position))                    
+                    )
+                ),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
-            .alongWith(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
+                .alongWith(elevator.getNewSetDistanceCommand(ElevatorPositions.Final.distance().in(Inches))),
+            algaeEE.getNewSetVoltsCommand(0)
 
             // LOGIC NEEDED FOR INTAKE TO STOW
             // .alongWith(
@@ -111,6 +125,6 @@ public class StowToAlgaeStow extends SequentialCommandGroup {
             // ),
             // shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
         );
-        addRequirements(shoulder, elbow, wrist, fingeys);
+        addRequirements(shoulder, elbow,  elevator, wrist, algaeEE);
     }
 }

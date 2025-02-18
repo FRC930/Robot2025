@@ -471,7 +471,7 @@ public class RobotContainer {
     
     SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector));
-    SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, elevator, wrist, coralEndEffector));
+    SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, elevator, wrist, algaeEndEffector));
     SmartDashboard.putData(new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator));
     SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector));
     SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
