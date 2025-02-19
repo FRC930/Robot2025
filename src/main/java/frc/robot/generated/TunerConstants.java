@@ -69,7 +69,7 @@ public class TunerConstants {
       new Slot0Configs()
           .withKP(0.2204171275)
           .withKI(0)
-          .withKD(0.02204171275) // Help reduce roughness of drive PID
+          .withKD(0.0)
           .withKS(0.155625)
           .withKV(0.7290475)
           .withKA(0.08876375);
@@ -96,7 +96,7 @@ public class TunerConstants {
     // This needs to be tuned to your individual robot
 
   // Needs further testing without bumpers
-  private static final Current kSlipCurrent = Amps.of(31.5);
+  private static final Current kSlipCurrent = Amps.of(82.0);
 
     // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
     // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
