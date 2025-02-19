@@ -39,7 +39,7 @@ public class AutoCommandManager {
     PathPlannerAuto Circle = new PathPlannerAuto("Circle");
     PathPlannerAuto Straight = new PathPlannerAuto("Straight");
     PathPlannerAuto Diagonal = new PathPlannerAuto("Diagonal");
-    PathPlannerAuto simpleAuto = new PathPlannerAuto("simpleAuto");
+    PathPlannerAuto simpleAuto = new PathPlannerAuto("simpleAutoPlanner"); // CHOREO VERSION: "simpleAuto");
     PathPlannerAuto advancedPath = new PathPlannerAuto("advancedPath");
     PathPlannerAuto exitZone = new PathPlannerAuto("exitZone");
 
