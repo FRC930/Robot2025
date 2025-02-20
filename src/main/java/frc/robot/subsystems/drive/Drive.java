@@ -18,6 +18,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.ApplyChassisSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -25,10 +26,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -112,6 +116,9 @@ public class Drive extends SubsystemBase {
 
   private final Field2d ppField2d = new Field2d();
   private final Field2d robotField2d = new Field2d();
+  
+  PIDController posPID = new PIDController(5.0, 0.0, 0.0);
+  PIDController rotPID = new PIDController(5.0,0.0,0.0);
 
   public Drive(
       GyroIO gyroIO,
@@ -124,6 +131,8 @@ public class Drive extends SubsystemBase {
     modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
     modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
     modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
+
+
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -140,7 +149,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(posPID.getP(),posPID.getI(),posPID.getD()), new PIDConstants(rotPID.getP(),rotPID.getI(),rotPID.getD())),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -170,6 +179,21 @@ public class Drive extends SubsystemBase {
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
   }
+
+  public void followTrajectory(SwerveSample sample) {
+        // Get the current pose of the robot
+        Pose2d pose = getPose();
+
+        // Generate the next speeds for the robot
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            sample.vx +  posPID.calculate(pose.getX(), sample.x),
+            sample.vy + posPID.calculate(pose.getY(), sample.y),
+            sample.omega + rotPID.calculate(pose.getRotation().getRadians(), sample.heading)
+        );
+
+        // Apply the generated speeds
+        this.runVelocity(speeds);
+    }
 
   @Override
   public void periodic() {

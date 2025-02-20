@@ -22,8 +22,8 @@ import frc.robot.util.LoggedTunableNumber;
 public class L2Outtake extends SequentialCommandGroup {
     
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowToCoralIntakeCommand/shoulder/StartingDegrees", 10)),
-        Final(new LoggedTunableNumber("StowToCoralIntakeCommand/shoulder/FinalDegrees", 55));
+        Ready(new LoggedTunableNumber("L2Outtake/shoulder/ReadyDegrees",55)),
+        Final(new LoggedTunableNumber("L2Outtake/shoulder/FinalDegrees", 55));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -38,10 +38,9 @@ public class L2Outtake extends SequentialCommandGroup {
             return this.distance;
         }
     }
-
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToCoralIntakeCommand/elbow/StartingDegrees", 10)),
-        Final(new LoggedTunableNumber("StowToCoralIntakeCommand/elbow/FinalDegrees", 50));
+        Starting(new LoggedTunableNumber("L2Outtake/elbow/FinalDegrees",50)),
+        Final(new LoggedTunableNumber("L2Outtake/elbow/FinalDegrees", 130));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -58,8 +57,7 @@ public class L2Outtake extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToCoralIntakeCommand/wrist/StartingDegrees", 0)),
-        Final(new LoggedTunableNumber("StowToCoralIntakeCommand/wrist/FinalDegrees", 0));
+        Final(new LoggedTunableNumber("L2Outtake/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -78,10 +76,19 @@ public class L2Outtake extends SequentialCommandGroup {
     public L2Outtake(
         ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
         super(
-            elbow.getNewSetAngleCommand(10)
+            elbow.getNewSetAngleCommand(ElbowPositions.Final.position)
+            .alongWith(shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position))
                 .alongWith(new WaitCommand(0.5))
             .andThen(fingeys.getNewSetVoltsCommand(-4))
         );
         addRequirements(elbow, wrist, fingeys);
+    }
+
+    public static Command getResetCommand(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
+        return new SequentialCommandGroup(
+            elbow.getNewSetAngleCommand(ElbowPositions.Starting.position)
+            .alongWith(shoulder.getNewSetAngleCommand(ShoulderPositions.Ready.position))
+            .alongWith(fingeys.getNewSetVoltsCommand(1))
+        );
     }
 }
