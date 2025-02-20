@@ -46,6 +46,7 @@ import frc.robot.commands.L2.StowToL2;
 import frc.robot.commands.L2.TakeAlgaeL2;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.OutakeCoral;
+import frc.robot.commands.RoughAlignToReef;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.StowToAlgaeStow;
 import frc.robot.commands.StowToGroundIntake;
@@ -294,6 +295,9 @@ public class RobotContainer {
             () -> -controller.getLeftX() * DRIVE_SPEED,
             () -> -controller.getRightX() * ANGULAR_SPEED)
           );
+
+    //Auto Align
+    // controller.leftStick().onTrue(new RoughAlignToReef(drive,false));
 
     //Scoring
       //Constants

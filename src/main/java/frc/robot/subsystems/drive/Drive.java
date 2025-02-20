@@ -29,6 +29,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -112,7 +113,9 @@ public class Drive extends SubsystemBase {
 
   private final Field2d ppField2d = new Field2d();
   private final Field2d robotField2d = new Field2d();
-
+  
+  PIDController posPID = new PIDController(5.0, 0.0, 0.0);
+  PIDController rotPID = new PIDController(5.0,0.0,0.0);  
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
@@ -140,7 +143,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(posPID.getP(),posPID.getI(),posPID.getD()), new PIDConstants(rotPID.getP(),rotPID.getI(),rotPID.getD())),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
