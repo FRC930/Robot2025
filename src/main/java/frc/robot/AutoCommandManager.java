@@ -36,12 +36,6 @@ public class AutoCommandManager {
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    PathPlannerAuto Circle = new PathPlannerAuto("Circle");
-    PathPlannerAuto Straight = new PathPlannerAuto("Straight");
-    PathPlannerAuto Diagonal = new PathPlannerAuto("Diagonal");
-    PathPlannerAuto simpleAuto = new PathPlannerAuto("simpleAutoPlanner"); // CHOREO VERSION: "simpleAuto");
-    PathPlannerAuto advancedPath = new PathPlannerAuto("advancedPath");
-    PathPlannerAuto exitZone = new PathPlannerAuto("exitZone");
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -58,12 +52,6 @@ public class AutoCommandManager {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption("Circle", Circle);
-    autoChooser.addOption("Straight", Straight);
-    autoChooser.addOption("Diagonal", Diagonal);
-    autoChooser.addOption("simpleAuto", simpleAuto);
-    autoChooser.addOption("advancedPath", advancedPath);
-    autoChooser.addOption("exitZone", exitZone);
 
 
     // Add Choreo Paths

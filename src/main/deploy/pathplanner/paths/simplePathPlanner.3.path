@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.98180650685391,
-        "y": 5.332234589039701
+        "x": 3.9682500000000003,
+        "y": 5.253499999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.395804794523412,
-        "y": 5.798030821918052
+        "x": 3.382248287669502,
+        "y": 5.719296232878349
       },
       "isLocked": false,
       "linkedName": "simplePathPlanner.2"
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": 116.56505117662057
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
