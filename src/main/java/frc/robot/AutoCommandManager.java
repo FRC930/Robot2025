@@ -5,20 +5,31 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.OutakeCoral;
 import frc.robot.commands.StopDrivetrainCommand;
+import frc.robot.commands.StowCommand;
+import frc.robot.commands.StowToL1;
+import frc.robot.commands.StowToL4;
+import frc.robot.commands.TakeCoral;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
+import frc.robot.subsystems.arm.ArmJoint;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.wrist.Wrist;
 
 public class AutoCommandManager {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  public AutoCommandManager(Drive drive) {
-    configureNamedCommands(drive);
+  public AutoCommandManager(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
+    configureNamedCommands(drive, shoulder, elbow, elevator, wrist, coralEE, algaeEE);
     
 
     PathPlannerAuto CharacterizationTest = new PathPlannerAuto("CharacterizeAuto");

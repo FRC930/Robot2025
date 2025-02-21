@@ -271,7 +271,7 @@ public class RobotContainer {
     }
 
 
-    autoCommandManager = new AutoCommandManager(drive);
+    autoCommandManager = new AutoCommandManager(drive, elbow, elbow, elevator, wrist, coralEndEffector, algaeEndEffector);
     reefPositions = ReefPositionsUtil.getInstance();
 
     // Configure the button bindings
