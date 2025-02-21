@@ -48,4 +48,8 @@ public interface VisionIO {
   }
 
   public default void updateInputs(VisionIOInputs inputs) {}
+
+  public double get_tx();
+  public double get_ty();
+  public double get_ta();
 }

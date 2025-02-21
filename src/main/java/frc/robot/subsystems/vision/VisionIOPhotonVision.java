@@ -18,6 +18,8 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.robot.util.LimelightHelpers;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,5 +133,15 @@ public class VisionIOPhotonVision implements VisionIO {
     for (int id : tagIds) {
       inputs.tagIds[i++] = id;
     }
+  }
+
+  public double get_tx(){
+    camera.getCameraMatrix().get().
+  }
+  public double get_ty(){
+    return LimelightHelpers.getTY();
+  }
+  public double get_ta(){
+
   }
 }
