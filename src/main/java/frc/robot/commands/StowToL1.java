@@ -5,7 +5,9 @@ import java.util.function.DoubleSupplier;
 import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.wrist.Wrist;
@@ -84,6 +86,11 @@ public class StowToL1 extends SequentialCommandGroup {
             // ),
             // shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
         );
-        addRequirements(shoulder, elbow, wrist, fingeys);
+    }
+    public static Command getNewScoreCommand(CoralEndEffector coralEndEffector) {
+        return(coralEndEffector.getNewSetVoltsCommand(-4));
+    }
+    public static Command getNewStopScoreCommand(CoralEndEffector coralEndEffector){
+        return(coralEndEffector.getNewSetVoltsCommand(0));
     }
 }

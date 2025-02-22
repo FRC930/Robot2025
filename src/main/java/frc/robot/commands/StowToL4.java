@@ -8,7 +8,9 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
@@ -115,4 +117,17 @@ public class StowToL4 extends SequentialCommandGroup {
         );
         addRequirements(shoulder, elbow, wrist, elevator);
     }
+
+    public static Command getNewScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
+        return(elbow.getNewSetAngleCommand(-180)
+        .alongWith(wrist.getNewApplyCoastModeCommand())
+        .alongWith(new WaitCommand(0.5)).andThen(coralEndEffector.getNewSetVoltsCommand(-4)));
+    }
+
+    public static Command getNewStopScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
+        return(coralEndEffector.getNewSetVoltsCommand(1)
+        .alongWith(elbow.getNewSetAngleCommand(-180))
+        .alongWith(new WaitCommand(0.2)).andThen(wrist.getNewWristTurnCommand(0)));
+    }
+
 }

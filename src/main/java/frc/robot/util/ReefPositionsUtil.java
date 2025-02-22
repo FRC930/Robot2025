@@ -1,6 +1,10 @@
 package frc.robot.util;
 
+import java.util.Map;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 
 public class ReefPositionsUtil {
 
@@ -95,7 +99,7 @@ public class ReefPositionsUtil {
      * @param level the desired level to select (Top is between L3 and L4; Bottom is between L2 and L3)
      * @return an instant command that runs the set method
      */
-    public InstantCommand getNewSetDeAlgaeLevel(DeAlgaeLevel level) {
+    public InstantCommand getNewSetDeAlgaeLevelCommand(DeAlgaeLevel level) {
         return new InstantCommand(() -> setDeAlgaeLevel(level));
     }
 
@@ -120,5 +124,9 @@ public class ReefPositionsUtil {
      */
     public boolean isSelected(DeAlgaeLevel level) {
         return (level.equals(selectedDeAlgaeLevel));
+    }
+
+    public Command getCoralLevelSelector(Map<ScoreLevel,Command> bindings) {
+        return new SelectCommand<>(bindings, this::getScoreLevel);
     }
 }

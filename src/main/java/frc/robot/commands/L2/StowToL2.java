@@ -5,7 +5,9 @@ import java.util.function.DoubleSupplier;
 import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.elevator.Elevator;
@@ -71,7 +73,7 @@ public class StowToL2 extends SequentialCommandGroup {
         }
     }
 
-    public StowToL2(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist) {
+    public StowToL2(Elevator elevator2, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
@@ -90,4 +92,21 @@ public class StowToL2 extends SequentialCommandGroup {
         );
         addRequirements(shoulder, elbow, elevator, wrist);
     }
+
+    public StowToL2(ArmJoint shoulder, Elevator elevator, ArmJoint elbow, Wrist wrist,
+            CoralEndEffector coralEndEffector) {
+        //TODO Auto-generated constructor stub
+    }
+
+    public static Command getNewScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
+        return(elbow.getNewSetAngleCommand(-30)
+        .alongWith(wrist.getNewApplyCoastModeCommand())
+        .alongWith(new WaitCommand(0.5)).andThen(coralEndEffector.getNewSetVoltsCommand(-4)));
+    }
+    public static Command getNewStopScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
+        return(coralEndEffector.getNewSetVoltsCommand(1)
+        .alongWith(elbow.getNewSetAngleCommand(-30))
+        .alongWith(new WaitCommand(0.2)).andThen(wrist.getNewWristTurnCommand(0)));
+    }
+
 }
