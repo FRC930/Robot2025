@@ -15,6 +15,7 @@ import frc.robot.commands.StowCommand;
 import frc.robot.commands.StowToL1;
 import frc.robot.commands.StowToL4;
 import frc.robot.commands.TakeCoral;
+import frc.robot.commands.TakeCoralFromFront;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
@@ -65,11 +66,13 @@ public class AutoCommandManager {
 
   private void configureNamedCommands(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
       NamedCommands.registerCommand("Stow", new StowCommand(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
+      NamedCommands.registerCommand("StartFrontIntake", new TakeCoralFromFront(shoulder, elbow, elevator, wrist, coralEE));
       NamedCommands.registerCommand("StartIntake", new TakeCoral(shoulder, elbow, elevator, wrist, coralEE));
       NamedCommands.registerCommand("L4Score", new StowToL4(shoulder, elbow, elevator, wrist, coralEE));
       NamedCommands.registerCommand("L1Score", new StowToL1(shoulder, elbow, wrist, coralEE));
       NamedCommands.registerCommand("CoralOuttake", new OutakeCoral(coralEE));
       NamedCommands.registerCommand("L2Score", new PrintCommand("***************Scoring L2 sir!"));
       NamedCommands.registerCommand("StopDrivetrain", new StopDrivetrainCommand(drive));
+    
   }
 }

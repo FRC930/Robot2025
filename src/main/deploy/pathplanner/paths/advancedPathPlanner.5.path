@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1102499999999997,
-        "y": 5.67275
+        "x": 3.0505485945564663,
+        "y": 5.5872007419533425
       },
       "isLocked": false,
       "linkedName": "advancedPathPlanner.4"
@@ -20,8 +20,8 @@
         "y": 7.028
       },
       "prevControl": {
-        "x": 1.8232500000000003,
-        "y": 6.599
+        "x": 1.765283710470434,
+        "y": 6.675741544552166
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.462322208025604
+    "rotation": 122.38674480284304
   },
   "reversed": false,
   "folder": null,
