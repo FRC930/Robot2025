@@ -73,7 +73,7 @@ public class StowToL3 extends SequentialCommandGroup {
         }
     }
 
-    public StowToL3(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector, Elevator elevator) {
+    public StowToL3(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, Elevator elevator) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
@@ -91,7 +91,7 @@ public class StowToL3 extends SequentialCommandGroup {
             // ),
             // shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
         );
-        addRequirements(shoulder, elbow, wrist, coralEndEffector, elevator);
+        addRequirements(shoulder, elbow, wrist, elevator);
     }
 
     public static Command getNewScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {

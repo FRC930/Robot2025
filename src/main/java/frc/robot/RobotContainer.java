@@ -307,22 +307,22 @@ public class RobotContainer {
       .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
     HashMap<ReefPositionsUtil.ScoreLevel,Command> coralLevelCommands = new HashMap<>();
-    coralLevelCommands.put(ScoreLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector));
-    coralLevelCommands.put(ScoreLevel.L2, new StowToL2(elevator, shoulder, elbow, elevator, wrist));
-    coralLevelCommands.put(ScoreLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator));
-    coralLevelCommands.put(ScoreLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector));
+    coralLevelCommands.put(ScoreLevel.L1, new StowToL1(shoulder, elbow, wrist));
+    coralLevelCommands.put(ScoreLevel.L2, new StowToL2(shoulder, elbow, elevator, wrist));
+    coralLevelCommands.put(ScoreLevel.L3, new StowToL3(shoulder, elbow, wrist, elevator));
+    coralLevelCommands.put(ScoreLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist));
 
     HashMap<ReefPositionsUtil.ScoreLevel,Command> scoreCoralLevelCommands = new HashMap<>();
-    scoreCoralLevelCommands.put(ScoreLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector));
-    scoreCoralLevelCommands.put(ScoreLevel.L2, new StowToL2(shoulder, elevator, elbow, wrist, coralEndEffector));
-    scoreCoralLevelCommands.put(ScoreLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator));
-    scoreCoralLevelCommands.put(ScoreLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L1, StowToL1.getNewScoreCommand(coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewScoreCommand(elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewScoreCommand(elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewScoreCommand(elbow, wrist, coralEndEffector));
     
     HashMap<ReefPositionsUtil.ScoreLevel,Command> stopCoralLevelCommands = new HashMap<>();
-    stopCoralLevelCommands.put(ScoreLevel.L1, new StowToL1(shoulder, elbow, wrist, coralEndEffector));
-    stopCoralLevelCommands.put(ScoreLevel.L2, new StowToL2(shoulder, elevator, elbow, wrist, coralEndEffector));
-    stopCoralLevelCommands.put(ScoreLevel.L3, new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator));
-    stopCoralLevelCommands.put(ScoreLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L1, StowToL1.getNewStopScoreCommand(coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
     
     controller.rightBumper()
     .onTrue(ReefPositionsUtil.getInstance().getCoralLevelSelector(coralLevelCommands))
@@ -491,8 +491,8 @@ public class RobotContainer {
     SmartDashboard.putData(new GroundIntakeToStow(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new StowToAlgaeStow(shoulder, elbow, wrist, coralEndEffector));
-    SmartDashboard.putData(new StowToL3(shoulder, elbow, wrist, coralEndEffector, elevator));
-    SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist, coralEndEffector));
+    SmartDashboard.putData(new StowToL3(shoulder, elbow, wrist, elevator));
+    SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist));
     SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
     SmartDashboard.putData(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
   }

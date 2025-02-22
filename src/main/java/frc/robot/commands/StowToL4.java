@@ -19,11 +19,6 @@ import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
 public class StowToL4 extends SequentialCommandGroup {
-    public ArmJoint shoulder;
-    public ArmJoint elbow;
-    public Elevator elevator;
-    public Wrist wrist;
-    public CoralEndEffector fingeys;
 
     private enum ShoulderPositions {
         Starting(new LoggedTunableNumber("MoveToL4Command/shoulder/StartingDegrees", 0)),
@@ -100,7 +95,7 @@ public class StowToL4 extends SequentialCommandGroup {
         }
     }
 
-    public StowToL4(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector fingeys) {
+    public StowToL4(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
             shoulder.getNewSetAngleCommand(ShoulderPositions.MidPoint.position)

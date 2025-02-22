@@ -69,7 +69,7 @@ public class StowToL1 extends SequentialCommandGroup {
         }
     }
 
-    public StowToL1(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
+    public StowToL1(ArmJoint shoulder, ArmJoint elbow, Wrist wrist) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
