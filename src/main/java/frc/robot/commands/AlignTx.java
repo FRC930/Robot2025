@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.lang.ModuleLayer.Controller;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -9,12 +10,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.vision.Vision;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class AlignTx extends Command {
     private Drive m_drive;
     private Vision m_limeLight;
     private int m_cameraIndex;
-    private Controller co_controller;
+    // private Controller co_controller;
     private LinearFilter movingAverageFilter;
     private double m_strafe = 0.0;
     private double m_direction;
@@ -38,9 +40,9 @@ public class AlignTx extends Command {
     public void initialize() {
         m_direction = -1.0; //Currently camera in back of robot (go backwards) when camera in front use 1.0
         movingAverageFilter = LinearFilter.movingAverage(3);
-        if(co_controller != null) {
-           return;
-        }
+        // if(co_controller != null) {
+        //    return;
+        // }
         
         // highPassFilter = LinearFilter.highPass(HIGH_PASS_SECONDS, 0.02);
         
@@ -51,7 +53,7 @@ public class AlignTx extends Command {
         Rotation2d tx = m_limeLight.getTargetX(m_cameraIndex); // degrees left and right from crosshair
         Rotation2d ty = m_limeLight.getTargetY(m_cameraIndex); // degrees up and down from crosshair
 
-        double linearTX = movingAverageFilter.calculate(tx.getDegrees() <= -100.0 && ty.getDegrees() <= -100.0? 0.0 : (ty.getDegrees()/slope) - tx.getDegrees() + 2.0); //-100.0 is just a temporary value that cannot be reached
+        double linearTX = movingAverageFilter.calculate((tx.getDegrees() <= -100.0 && ty.getDegrees() <= -100.0) ? 0.0 : (ty.getDegrees()/slope) - tx.getDegrees() + 2.0); //-100.0 is just a temporary value that cannot be reached
 
         if (tx.getDegrees() == 0.0 || ty.getDegrees() == 0.0) {
             linearTX = 0.0;
@@ -70,6 +72,10 @@ public class AlignTx extends Command {
                 m_strafe,
                 0.0);
           m_drive.runVelocity(speeds);
+
+        Logger.recordOutput("AlignTx/TX", tx);
+        Logger.recordOutput("AlignTx/TY", ty);
+        Logger.recordOutput("AlignTx/adjustedTX", linearTX);
         
     }
 
