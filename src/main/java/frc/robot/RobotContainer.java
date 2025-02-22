@@ -296,6 +296,30 @@ public class RobotContainer {
             () -> -controller.getRightX() * ANGULAR_SPEED)
           );
 
+          double povSpeed = 1.0;
+          double REVERSE = -1.0;
+          controller
+              .povUp()
+              .whileTrue(
+                  DriveCommands.joystickForwardDrive(
+                      drive, () -> povSpeed * REVERSE, () -> 0.0, null));
+          controller
+              .povDown()
+              .whileTrue(
+                  DriveCommands.joystickForwardDrive(
+                      drive, () -> -(povSpeed * REVERSE), () -> 0.0, null));
+          controller
+              .povRight()
+              .whileTrue(
+                  DriveCommands.joystickForwardDrive(
+                      drive, () -> 0.0, () -> -(povSpeed * REVERSE), null));
+          controller
+              .povLeft()
+              .whileTrue(
+                  DriveCommands.joystickForwardDrive(
+                      drive, () -> 0.0, () -> (povSpeed * REVERSE), null));
+      
+      
     //Auto Align
     // controller.leftStick().onTrue(new RoughAlignToReef(drive,false));
 

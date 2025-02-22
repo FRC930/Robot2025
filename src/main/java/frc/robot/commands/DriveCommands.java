@@ -63,6 +63,30 @@ public class DriveCommands {
         .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
         .getTranslation();
   }
+  
+  /** Robot Centric drive command using two joysticks (controlling linear velocities). */
+  public static Command joystickForwardDrive(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier omegaSupplier) {
+    return Commands.run(
+        () -> {
+          // Get linear velocity
+          Translation2d linearVelocity =
+              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+          // Convert to field relative speeds & send command
+          ChassisSpeeds speeds =
+              new ChassisSpeeds(
+                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                  // omega * drive.getMaxAngularSpeedRadPerSec());
+                  0.0);
+          drive.runVelocity(speeds);
+        },
+        drive);
+  }
 
   /**
    * Field relative drive command using two joysticks (controlling linear and angular velocities).
