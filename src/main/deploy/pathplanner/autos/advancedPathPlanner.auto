@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "simplePath.0"
+            "pathName": "advancedPathPlanner.0"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
+            "name": "L4Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "advancedPathPlanner.1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StartIntake"
           }
         },
         {
@@ -29,21 +35,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "simplePath.1"
+            "pathName": "advancedPathPlanner.2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
+            "name": "L4Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "advancedPathPlanner.3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StartIntake"
           }
         },
         {
@@ -53,39 +71,57 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "simplePath.2"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2Score"
+            "name": "Stow"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "simplePath.3"
+            "pathName": "advancedPathPlanner.4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "stopDrivetrain"
+            "name": "L4Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "advancedPathPlanner.5"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StartIntake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "advancedPathPlanner.6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4Score"
           }
         }
       ]
@@ -93,5 +129,5 @@
   },
   "resetOdom": true,
   "folder": null,
-  "choreoAuto": true
+  "choreoAuto": false
 }

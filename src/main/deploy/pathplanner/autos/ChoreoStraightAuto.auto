@@ -9,12 +9,6 @@
           "data": {
             "pathName": "StraightPath"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopDrivetrain"
-          }
         }
       ]
     }

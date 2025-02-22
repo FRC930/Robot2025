@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "StopIntake"
+            "name": "Stow"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "CoralOuttake"
+            "name": "L1Score"
           }
         },
         {
@@ -29,9 +29,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "simplePathPlanner.1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartIntake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
           }
         },
         {
@@ -43,7 +67,7 @@
         {
           "type": "named",
           "data": {
-            "name": "CoralOuttake"
+            "name": "L1Score"
           }
         },
         {
@@ -53,9 +77,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "simplePathPlanner.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartIntake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
           }
         }
       ]
