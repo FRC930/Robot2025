@@ -389,8 +389,8 @@ public class RobotContainer {
       //Eject Algae
     co_controller.leftTrigger().onTrue(new OutakeAlgae(algaeEndEffector)).onFalse(algaeEndEffector.getNewSetVoltsCommand(0));
 
-    co_controller.povLeft().onTrue(new AlignTx(drive, vision, 0));
-    co_controller.povRight().onTrue(new AlignTx(drive, vision, 1));
+    co_controller.povLeft().whileTrue(new AlignTx(drive, vision, 0));
+    co_controller.povRight().whileTrue(new AlignTx(drive, vision, 1));
 
     // TODO: Implement climbing controls (L Bumper climb and (maybe) L Trigger unclimb)
 
