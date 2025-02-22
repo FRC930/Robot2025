@@ -135,13 +135,4 @@ public class VisionIOPhotonVision implements VisionIO {
     }
   }
 
-  public double get_tx(){
-    camera.getCameraMatrix().get().
-  }
-  public double get_ty(){
-    return LimelightHelpers.getTY();
-  }
-  public double get_ta(){
-
-  }
 }

@@ -170,15 +170,5 @@ public class VisionIOLimelight implements VisionIO {
             Units.degreesToRadians(rawLLArray[5])));
   }
 
-  public double get_tx() { //returns the amount of degrees off horizontally an object is from the crosshair of the camera
-        return LimelightHelpers.getTX(cameraName); 
-    }
-
-    public double get_ty() { //returns the amount of degrees off vertically an object is from the crosshair of the camera
-        return LimelightHelpers.getTY(cameraName);
-    }
-
-    public double get_ta() { //returns the percentage of the screen the object takes up
-        return LimelightHelpers.getTA(cameraName);
-    }
+  
 }
