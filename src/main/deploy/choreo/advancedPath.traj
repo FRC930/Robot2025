@@ -368,13 +368,13 @@
  },
  "events":[
    {"name":"L4Score", "from":{"target":1, "targetTimestamp":1.89513, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"L4Score"}}},
-   {"name":"StartFrontIntake", "from":{"target":3, "targetTimestamp":3.74246, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StartFrontIntake"}}},
+   {"name":"StationIntake", "from":{"target":3, "targetTimestamp":3.74246, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StationIntake"}}},
    {"name":"Stow", "from":{"target":4, "targetTimestamp":4.53065, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"Stow"}}},
    {"name":"L4Score", "from":{"target":5, "targetTimestamp":6.07234, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"L4Score"}}},
-   {"name":"Startntake", "from":{"target":6, "targetTimestamp":7.20524, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StartFrontIntake"}}},
+   {"name":"Startntake", "from":{"target":6, "targetTimestamp":7.20524, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StationIntake"}}},
    {"name":"Stow", "from":{"target":7, "targetTimestamp":8.00118, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"Stow"}}},
    {"name":"L4Score", "from":{"target":8, "targetTimestamp":9.58938, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"L4Score"}}},
-   {"name":"StartFrontIntake", "from":{"target":9, "targetTimestamp":10.74703, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StartFrontIntake"}}},
+   {"name":"StationIntake", "from":{"target":9, "targetTimestamp":10.74703, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StationIntake"}}},
    {"name":"Stow", "from":{"target":10, "targetTimestamp":11.62737, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"Stow"}}},
    {"name":"L4Score", "from":{"target":11, "targetTimestamp":13.65978, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"L4Score"}}}]
 }
