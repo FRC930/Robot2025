@@ -19,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StowToL2"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StowToL2"
           }
         },
         {
@@ -67,7 +67,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StowToL2"
           }
         },
         {
@@ -85,7 +85,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L2Score"
+            "name": "StowToL2"
           }
         }
       ]

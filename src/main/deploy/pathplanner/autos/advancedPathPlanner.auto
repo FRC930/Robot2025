@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4Score"
+            "name": "StowToL4"
           }
         },
         {
@@ -61,7 +61,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4Score"
+            "name": "StowToL4"
           }
         },
         {
@@ -109,7 +109,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4Score"
+            "name": "StowToL4"
           }
         },
         {
@@ -157,7 +157,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4Score"
+            "name": "StowToL4"
           }
         },
         {

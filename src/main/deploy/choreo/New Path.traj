@@ -156,8 +156,8 @@
   "splits":[0]
  },
  "events":[
-   {"name":"L1Score", "from":{"target":1, "targetTimestamp":0.65286, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"L1Score"}}},
+   {"name":"StowToL1", "from":{"target":1, "targetTimestamp":0.65286, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StowToL1"}}},
    {"name":"groundIntake", "from":{"target":2, "targetTimestamp":1.66194, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"groundIntake"}}},
-   {"name":"L1Score", "from":{"target":3, "targetTimestamp":2.29697, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"L1Score"}}},
+   {"name":"StowToL1", "from":{"target":3, "targetTimestamp":2.29697, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"StowToL1"}}},
    {"name":"groundIntake", "from":{"target":4, "targetTimestamp":2.90467, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"groundIntake"}}}]
 }
