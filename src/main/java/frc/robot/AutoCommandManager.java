@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.OutakeCoral;
@@ -17,6 +18,7 @@ import frc.robot.commands.StowToL2;
 import frc.robot.commands.StowToL3;
 import frc.robot.commands.StowToL4;
 import frc.robot.commands.StationIntakeReverseCommand;
+import frc.robot.commands.StationIntakeToStow;
 import frc.robot.commands.StationIntakeCommand;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
@@ -70,15 +72,27 @@ public class AutoCommandManager {
   private void configureNamedCommands(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
       NamedCommands.registerCommand("Stow", new StowCommand(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
       NamedCommands.registerCommand("StationIntake", new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE));
+      // Needed so not hit coral on elevator
+      NamedCommands.registerCommand("StationIntakeToStow", new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
       NamedCommands.registerCommand("StartIntake", new StationIntakeReverseCommand(shoulder, elbow, elevator, wrist, coralEE));
       NamedCommands.registerCommand("StowToL1", new StowToL1(shoulder, elbow, wrist));
       NamedCommands.registerCommand("StowToL2", new StowToL2(shoulder, elbow, elevator, wrist));
       NamedCommands.registerCommand("StowToL3", new StowToL3(shoulder, elbow, wrist, elevator));
       NamedCommands.registerCommand("StowToL4", new StowToL4(shoulder, elbow, elevator, wrist));
-      NamedCommands.registerCommand("ScoreL1",StowToL1.getNewScoreCommand(coralEE));
-      NamedCommands.registerCommand("ScoreL2",StowToL2.getNewScoreCommand(elbow, wrist, coralEE));
-      NamedCommands.registerCommand("ScoreL3",StowToL3.getNewScoreCommand(elbow, wrist, coralEE));
-      NamedCommands.registerCommand("ScoreL4",StowToL4.getNewScoreCommand(elbow, wrist, coralEE));
+      NamedCommands.registerCommand("ScoreL1",StowToL1.getNewScoreCommand(coralEE)
+        .andThen(new WaitCommand(0.02))
+        .andThen(StowToL1.getNewStopScoreCommand(coralEE)));
+      NamedCommands.registerCommand("ScoreL2",StowToL2.getNewScoreCommand(elbow, wrist, coralEE)
+        .andThen(new WaitCommand(0.02))
+        .andThen(StowToL2.getNewStopScoreCommand(elbow, wrist, coralEE)));
+      NamedCommands.registerCommand("ScoreL3",StowToL3.getNewScoreCommand(elbow, wrist, coralEE)
+        .andThen(new WaitCommand(0.02))
+        .andThen(StowToL3.getNewStopScoreCommand(elbow, wrist, coralEE)));
+      NamedCommands.registerCommand("ScoreL4",StowToL4.getNewScoreCommand(elbow, wrist, coralEE)
+        .andThen(new WaitCommand(0.02))
+        .andThen(StowToL4.getNewStopScoreCommand(elbow, wrist, coralEE)));
+
+      // MAY NOT use added Score Command
       NamedCommands.registerCommand("StopScoreL1",StowToL1.getNewStopScoreCommand(coralEE));
       NamedCommands.registerCommand("StopScoreL2",StowToL2.getNewStopScoreCommand(elbow, wrist, coralEE));
       NamedCommands.registerCommand("StopScoreL3",StowToL3.getNewStopScoreCommand(elbow, wrist, coralEE));
