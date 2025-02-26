@@ -430,6 +430,30 @@ public class RobotContainer {
     testcontroller.povRight().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(-1, 0, Rotation2d.kCW_90deg);}, drive));
     testcontroller.povUp().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(0, 0, Rotation2d.kZero);}, drive));
     testcontroller.povDown().whileTrue(new AutoAlignCommand((p)->Drive.getBargeScorePose(p), drive));
+
+    // Climb
+    co_controller.start()
+      .onTrue(
+        climber.getNewSetServoAngleCommand(0.0)
+        .andThen(new WaitCommand(0.1))
+        .andThen(climber.getNewSetVoltsCommand(6.0))
+      )
+      .onFalse(
+        climber.getNewSetVoltsCommand(0.0)
+        .andThen(climber.getNewSetServoAngleCommand(90.0))
+      );
+
+    // Reverse climber
+    co_controller.back()
+    .onTrue(
+      climber.getNewSetServoAngleCommand(0.0)
+      .andThen(new WaitCommand(0.1))
+      .andThen(climber.getNewSetVoltsCommand(-6.0))
+    )
+    .onFalse(
+      climber.getNewSetVoltsCommand(0.0)
+    );
+
   }
 
   /**

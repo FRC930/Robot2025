@@ -2,6 +2,7 @@
 package frc.robot.subsystems.climber;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -11,6 +12,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -55,6 +57,13 @@ public class Climber extends SubsystemBase {
     return new InstantCommand(
         () -> {
           setTarget(Volts.of(i));
+        },
+        this);
+  }
+  public Command getNewSetServoAngleCommand(double angle) {
+    return new InstantCommand(
+        () -> {
+          setServoTarget(Degrees.of(angle));
         },
         this);
   }
