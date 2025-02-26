@@ -30,7 +30,7 @@ public class AlgaeEndEffectorIOSim implements AlgaeEndEffectorIO {
         1
         ), 
       DCMotor.getKrakenX60Foc(1), 0.01);
-    intakeSensorDistance = new LoggedTunableNumber("RobotState/Toesies/setSensorInputInches", 1.0);
+    intakeSensorDistance = new LoggedTunableNumber("RobotState/Toesies/setSensorInputInches", 10.0);
   }
 
   @Override

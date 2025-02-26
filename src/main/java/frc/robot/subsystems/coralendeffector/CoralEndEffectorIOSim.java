@@ -30,7 +30,7 @@ public class CoralEndEffectorIOSim implements CoralEndEffectorIO {
         1
         ), 
       DCMotor.getKrakenX60Foc(1), 0.01);
-    intakeSensorDistance = new LoggedTunableNumber("RobotState/Fingeys/setSensorInputInches", 1.0);
+    intakeSensorDistance = new LoggedTunableNumber("RobotState/Fingeys/setSensorInputInches", 10.0);
   }
 
   @Override
