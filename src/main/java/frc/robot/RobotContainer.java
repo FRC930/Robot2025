@@ -436,7 +436,7 @@ public class RobotContainer {
       .onTrue(
         climber.getNewSetServoAngleCommand(0.0)
         .andThen(new WaitCommand(0.1))
-        .andThen(climber.getNewSetVoltsCommand(6.0))
+        .andThen(climber.getNewSetVoltsCommand(-3.0)) // negative was forward in test
       )
       .onFalse(
         climber.getNewSetVoltsCommand(0.0)
@@ -448,7 +448,7 @@ public class RobotContainer {
     .onTrue(
       climber.getNewSetServoAngleCommand(0.0)
       .andThen(new WaitCommand(0.1))
-      .andThen(climber.getNewSetVoltsCommand(-6.0))
+      .andThen(climber.getNewSetVoltsCommand(3.0))
     )
     .onFalse(
       climber.getNewSetVoltsCommand(0.0)
