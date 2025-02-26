@@ -80,9 +80,9 @@ public class AlgaeEndEffector extends SubsystemBase {
    * @param untilHas set to true to activate trigger when end effector obtains a gamepiece (intake), set to false to activate when end effector loses a gamepiece (score/outake)
    * @return a trigger that activates when the end effector either gets or loses a gamepiece
    */
-  public Trigger getHasGamepieceTrigger(boolean untilHas) {
+  public Trigger getHasGamepieceTrigger() {
     return new Trigger(
-      () -> untilHas ? getDistance().lte(SENSOR_TRIGGER_DISTANCE) : getDistance().gt(SENSOR_TRIGGER_DISTANCE)
+      () -> getDistance().lte(SENSOR_TRIGGER_DISTANCE)
     );
   }
 

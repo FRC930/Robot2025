@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.OutakeCoral;
@@ -71,6 +72,7 @@ public class AutoCommandManager {
       NamedCommands.registerCommand("L4Score", new StowToL4(shoulder, elbow, elevator, wrist));
       NamedCommands.registerCommand("L1Score", new StowToL1(shoulder, elbow, wrist));
       NamedCommands.registerCommand("CoralOuttake", new OutakeCoral(coralEE));
+      NamedCommands.registerCommand("WaitUntilCoral", new WaitUntilCommand(coralEE.getHasGamepieceTrigger()).withTimeout(0.5));
       NamedCommands.registerCommand("L2Score", new PrintCommand("***************Scoring L2 sir!"));
       NamedCommands.registerCommand("StopDrivetrain", new StopDrivetrainCommand(drive));
     

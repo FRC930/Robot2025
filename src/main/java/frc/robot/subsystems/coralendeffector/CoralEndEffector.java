@@ -11,8 +11,6 @@ import java.util.function.BooleanSupplier;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -85,9 +83,9 @@ public class CoralEndEffector extends SubsystemBase {
    * @param untilHas set to true to activate trigger when end effector obtains a gamepiece (intake), set to false to activate when end effector loses a gamepiece (score/outake)
    * @return a trigger that activates when the end effector either gets or loses a gamepiece
    */
-  public Trigger getHasGamepieceTrigger(boolean untilHas) {
+  public Trigger getHasGamepieceTrigger() {
     return new Trigger(
-      () -> untilHas ? getDistance().lte(SENSOR_TRIGGER_DISTANCE) : getDistance().gt(SENSOR_TRIGGER_DISTANCE)
+      () -> getDistance().lte(SENSOR_TRIGGER_DISTANCE)
     );
   }
 
