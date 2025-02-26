@@ -299,7 +299,7 @@ public class RobotContainer {
     );
     
     // Conditional DeAlgae
-    controller.leftTrigger()//.and(algaeEndEffector.getHasGamepieceTrigger().negate())
+    controller.leftTrigger().and(algaeEndEffector.getHasGamepieceTrigger().negate())
     .onTrue(new ConditionalCommand(
       new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator), 
       new TakeAlgaeL3(shoulder, elbow, wrist, algaeEndEffector, elevator), 
@@ -307,7 +307,7 @@ public class RobotContainer {
     .onFalse(new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector));
 
     // Coral Station Intake
-    controller.leftBumper()//.and(algaeEndEffector.getHasGamepieceTrigger().negate())
+    controller.leftBumper().and(algaeEndEffector.getHasGamepieceTrigger().negate())
       .onTrue(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEndEffector))
       .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
@@ -319,7 +319,7 @@ public class RobotContainer {
           // AlgaeStow instead of Stow in case Algae is not removed from Algae End Effector
           new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector),
           new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-          () -> {return true;} //algaeEndEffector.getHasGamepieceTrigger()
+          algaeEndEffector.getHasGamepieceTrigger()
         )
       );
 
@@ -344,12 +344,12 @@ public class RobotContainer {
     stopCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
     
     // Go to conditional coral level
-    controller.rightBumper()//.and(algaeEndEffector.getHasGamepieceTrigger().negate())
+    controller.rightBumper().and(algaeEndEffector.getHasGamepieceTrigger().negate())
     .onTrue(ReefPositionsUtil.getInstance().getCoralLevelSelector(coralLevelCommands))
     .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
     // Conditional Confirm Coral
-    controller.rightTrigger().and(controller.rightBumper())//.and(algaeEndEffector.getHasGamepieceTrigger().negate())
+    controller.rightTrigger().and(controller.rightBumper()).and(algaeEndEffector.getHasGamepieceTrigger().negate())
       .onTrue(ReefPositionsUtil.getInstance().getCoralLevelSelector(scoreCoralLevelCommands))
       .onFalse(ReefPositionsUtil.getInstance().getCoralLevelSelector(stopCoralLevelCommands));
 
@@ -389,7 +389,7 @@ public class RobotContainer {
       .onTrue(reefPositions.getNewSetDeAlgaeLevelCommand(DeAlgaeLevel.Low));
 
     // Back Coral Station Intake
-    co_controller.povLeft()//.and(algaeEndEffector.getHasGamepieceTrigger().negate())
+    co_controller.povLeft().and(algaeEndEffector.getHasGamepieceTrigger().negate())
       .onTrue(new StationIntakeReverseCommand(shoulder, elbow, elevator, wrist, coralEndEffector))
       .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
   }
