@@ -1,11 +1,10 @@
 package frc.robot.subsystems.climber;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutCurrent;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.util.Gains;
-
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimberIO {
@@ -20,6 +19,8 @@ public interface ClimberIO {
   }
 
   public void setTarget(Voltage target);
+
+  public void setServoTarget(Angle angle);
 
   /**
    * Takes a set of inputs, retrieves the current values of these inputs, then updates the given

@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,6 +38,10 @@ public class Climber extends SubsystemBase {
 
   public void setTarget(Voltage target) {
     m_ClimberIO.setTarget(target);
+  }
+
+  public void setServoTarget(Angle angle) {
+    m_ClimberIO.setServoTarget(angle);
   }
 
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {

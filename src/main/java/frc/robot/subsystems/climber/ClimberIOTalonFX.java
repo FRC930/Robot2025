@@ -7,20 +7,26 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
+
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Servo;
 import frc.robot.util.CanDef;
 import frc.robot.util.PhoenixUtil;
 
 public class ClimberIOTalonFX implements ClimberIO {
-  public VoltageOut Request;
-  public TalonFX Motor;
+  private VoltageOut Request;
+  private TalonFX Motor;
+  private Servo m_servo;
 
   private Voltage m_setPoint = Voltage.ofBaseUnits(0, Volts);
 
   public ClimberIOTalonFX(CanDef canbus) {
     Motor = new TalonFX(canbus.id(),canbus.bus());
     Request = new VoltageOut(0.0);
+    m_servo = new Servo(0);
     
     configureTalons();
   }
@@ -51,6 +57,11 @@ public class ClimberIOTalonFX implements ClimberIO {
     Request = Request.withOutput(target);
     Motor.setControl(Request);
     m_setPoint = target;
+  }
+
+  @Override
+  public void setServoTarget(Angle angle) {
+    m_servo.setAngle(angle.in(Degrees));
   }
 
   @Override
