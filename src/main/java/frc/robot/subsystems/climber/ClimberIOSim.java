@@ -1,12 +1,14 @@
 package frc.robot.subsystems.climber;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
@@ -29,6 +31,11 @@ public class ClimberIOSim implements ClimberIO {
   @Override
   public void setTarget(Voltage target) {
     runVolts(target);
+  }
+
+  @Override
+  public void setServoTarget(Angle angle) {
+    System.out.println("CLIMBER SERVO SERVING AT ANGLE " + angle.in(Degrees));
   }
 
   private void runVolts(Voltage volts) {
