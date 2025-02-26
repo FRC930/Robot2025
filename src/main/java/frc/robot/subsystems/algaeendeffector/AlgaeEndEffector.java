@@ -6,18 +6,12 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.algaeendeffector.ToesiesInputsAutoLogged;
-import frc.robot.util.LoggedTunableGainsBuilder;
-import frc.robot.util.LoggedTunableNumber;
 
 /**
  * <h1>Algae End Effector</h1>
@@ -28,6 +22,8 @@ import frc.robot.util.LoggedTunableNumber;
  * </ul>
  */
 public class AlgaeEndEffector extends SubsystemBase {
+  private static final Distance SENSOR_TRIGGER_DISTANCE = Inches.of(5.0);
+
   private AlgaeEndEffectorIO m_IO;
 
   ToesiesInputsAutoLogged logged = new ToesiesInputsAutoLogged();
@@ -76,6 +72,18 @@ public class AlgaeEndEffector extends SubsystemBase {
           setTarget(Volts.of(i));
         },
         this);
+  }
+
+  /**
+   * Generate trigger for waitUntils
+   * 
+   * @param untilHas set to true to activate trigger when end effector obtains a gamepiece (intake), set to false to activate when end effector loses a gamepiece (score/outake)
+   * @return a trigger that activates when the end effector either gets or loses a gamepiece
+   */
+  public Trigger getHasGamepieceTrigger(boolean untilHas) {
+    return new Trigger(
+      () -> untilHas ? getDistance().lte(SENSOR_TRIGGER_DISTANCE) : getDistance().gt(SENSOR_TRIGGER_DISTANCE)
+    );
   }
 
   @Override
