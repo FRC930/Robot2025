@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeStowCommand;
@@ -391,6 +392,30 @@ public class RobotContainer {
     co_controller.povLeft()
       .onTrue(new StationIntakeReverseCommand(shoulder, elbow, elevator, wrist, coralEndEffector))
       .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
+
+    // Climb
+    co_controller.start()
+      .onTrue(
+        climber.getNewSetServoAngleCommand(0.0)
+        .andThen(new WaitCommand(0.1))
+        .andThen(climber.getNewSetVoltsCommand(6.0))
+      )
+      .onFalse(
+        climber.getNewSetVoltsCommand(0.0)
+        .andThen(climber.getNewSetServoAngleCommand(90.0))
+      );
+
+    // Reverse climber
+    co_controller.back()
+    .onTrue(
+      climber.getNewSetServoAngleCommand(0.0)
+      .andThen(new WaitCommand(0.1))
+      .andThen(climber.getNewSetVoltsCommand(-6.0))
+    )
+    .onFalse(
+      climber.getNewSetVoltsCommand(0.0)
+    );
+
   }
 
   /**
