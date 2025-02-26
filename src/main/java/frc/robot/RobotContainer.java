@@ -391,6 +391,14 @@ public class RobotContainer {
     co_controller.povLeft()
       .onTrue(new StationIntakeReverseCommand(shoulder, elbow, elevator, wrist, coralEndEffector))
       .onFalse(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
+
+    co_controller.start()
+      .onTrue(climber.getNewSetVoltsCommand(6.0))
+      .onFalse(climber.getNewSetVoltsCommand(0.0));
+
+    co_controller.back()
+      .onTrue(climber.getNewSetVoltsCommand(-6.0))
+      .onFalse(climber.getNewSetVoltsCommand(0.0));
   }
 
   /**
