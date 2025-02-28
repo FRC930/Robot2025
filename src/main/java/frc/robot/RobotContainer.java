@@ -332,15 +332,15 @@ public class RobotContainer {
 
     HashMap<ReefPositionsUtil.ScoreLevel,Command> scoreCoralLevelCommands = new HashMap<>();
     scoreCoralLevelCommands.put(ScoreLevel.L1, StowToL1.getNewScoreCommand(coralEndEffector));
-    scoreCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewScoreCommand(elbow, wrist, coralEndEffector));
-    scoreCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewScoreCommand(elbow, wrist, coralEndEffector));
-    scoreCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewScoreCommand(elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewScoreCommand(shoulder, elbow, wrist, coralEndEffector));
     
     HashMap<ReefPositionsUtil.ScoreLevel,Command> stopCoralLevelCommands = new HashMap<>();
     stopCoralLevelCommands.put(ScoreLevel.L1, StowToL1.getNewStopScoreCommand(coralEndEffector));
-    stopCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
-    stopCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
-    stopCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewStopScoreCommand(elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewStopScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewStopScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewStopScoreCommand(shoulder, elbow, wrist, coralEndEffector));
     
     // Go to conditional coral level
     controller.rightBumper()
