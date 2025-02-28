@@ -92,13 +92,9 @@ public class StowToL2 extends SequentialCommandGroup {
         addRequirements(shoulder, elbow, elevator, wrist);
     }
 
-    public StowToL2(ArmJoint shoulder, Elevator elevator, ArmJoint elbow, Wrist wrist,
-            CoralEndEffector coralEndEffector) {
-        //TODO Auto-generated constructor stub
-    }
-
     public static Command getNewScoreCommand(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
-        return(elbow.getNewSetAngleCommand(ElbowPositions.Confirm.position)
+        return(elbow.getNewSetAngleCommand(-30)
+         .alongWith(shoulder.getNewSetAngleCommand(70))
         .alongWith(wrist.getNewApplyCoastModeCommand())
         .alongWith(
             new WaitCommand(0.25))
