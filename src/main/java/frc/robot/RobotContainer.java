@@ -363,43 +363,25 @@ public class RobotContainer {
 
     // Hashmaps for Coral level commands
 
-    Map<ReefPositionsUtil.ScoreLevel,Command> coralLevelCommands = SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist);
-    Map<ReefPositionsUtil.ScoreLevel,Command> scoreCoralLevelCommands = SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEndEffector);
-    Map<ReefPositionsUtil.ScoreLevel,Command> stopCoralLevelCommands = SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive);
+    HashMap<ReefPositionsUtil.ScoreLevel,Command> coralLevelCommands = new HashMap<>();
+    coralLevelCommands.put(ScoreLevel.L1, new StowToL1(shoulder, elbow, wrist));
+    coralLevelCommands.put(ScoreLevel.L2, new StowToL2(shoulder, elbow, elevator, wrist));
+    coralLevelCommands.put(ScoreLevel.L3, new StowToL3(shoulder, elbow, wrist, elevator));
+    coralLevelCommands.put(ScoreLevel.L4, new StowToL4(shoulder, elbow, elevator, wrist));
 
-    /*  1. Right bumper pressed and AutoAligning is disabled
-          - Goes to the score level of what is selected by the co-driver
-        2. Right bumper pressed and AutoAligning is enabled
-          - Nothing happens
-        3. Right bumper is released and AutoAligning is disabled
-          - If reefScoreL4
-            - Goes to Coral Stow
-          - Else
-            - Goes to Algae Stow
-    */
-
-    // Left side reef auto align
-    controller.rightBumper()
-    .and(
-      ()->reefPositions.getIsAutoAligning()
-    ).and(
-      () -> {return reefPositions.getAutoAlignSide() == AutoAlignSide.Left;}
-    ).whileTrue(
-      ReefScoreCommandFactory.getNewReefCoralScoreSequence(
-        ReefPosition.Left, 
-        true,
-        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
-        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEndEffector),
-        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
-        drive
-      )
-    ).onFalse(new ConditionalCommand(
-      new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-      () -> reefPositions.isSelected(ScoreLevel.L4)
-    ));
-
-    // Right side reef auto align
+    HashMap<ReefPositionsUtil.ScoreLevel,Command> scoreCoralLevelCommands = new HashMap<>();
+    scoreCoralLevelCommands.put(ScoreLevel.L1, StowToL1.getNewScoreCommand(coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    scoreCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    
+    HashMap<ReefPositionsUtil.ScoreLevel,Command> stopCoralLevelCommands = new HashMap<>();
+    stopCoralLevelCommands.put(ScoreLevel.L1, StowToL1.getNewStopScoreCommand(coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L2, StowToL2.getNewStopScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L3, StowToL3.getNewStopScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    stopCoralLevelCommands.put(ScoreLevel.L4, StowToL4.getNewStopScoreCommand(shoulder, elbow, wrist, coralEndEffector));
+    
+    // Go to conditional coral level
     controller.rightBumper()
     .and(
       ()->reefPositions.getIsAutoAligning()

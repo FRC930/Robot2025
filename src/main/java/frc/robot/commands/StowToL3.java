@@ -94,7 +94,8 @@ public class StowToL3 extends SequentialCommandGroup {
     }
 
     public static Command getNewScoreCommand(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
-        return(elbow.getNewSetAngleCommand(ElbowPositions.Confirm.position)
+        return(elbow.getNewSetAngleCommand(-30)
+        .alongWith(shoulder.getNewSetAngleCommand(105.0))
         .alongWith(wrist.getNewApplyCoastModeCommand())
         .alongWith(
             new WaitCommand(0.25))
@@ -104,13 +105,11 @@ public class StowToL3 extends SequentialCommandGroup {
         .andThen(new WaitCommand(0.25));
     }
 
-    public static Command getNewStopScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
-        return(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
-        .alongWith(
-            new WaitCommand(0.2)
-            .andThen(wrist.getNewWristTurnCommand(0))
-        )
-        .andThen(coralEndEffector.getNewSetVoltsCommand(1));
+    public static Command getNewStopScoreCommand(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
+        return(coralEndEffector.getNewSetVoltsCommand(1)
+        .alongWith(shoulder.getNewSetAngleCommand(55))
+        .alongWith(elbow.getNewSetAngleCommand(50))
+        .alongWith(new WaitCommand(0.2)).andThen(wrist.getNewWristTurnCommand(0)));
     }
 
 }

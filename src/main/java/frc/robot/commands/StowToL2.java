@@ -92,9 +92,14 @@ public class StowToL2 extends SequentialCommandGroup {
         addRequirements(shoulder, elbow, elevator, wrist);
     }
 
+    public StowToL2(ArmJoint shoulder, Elevator elevator, ArmJoint elbow, Wrist wrist,
+            CoralEndEffector coralEndEffector) {
+        //TODO Auto-generated constructor stub
+    }
+
     public static Command getNewScoreCommand(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
         return(elbow.getNewSetAngleCommand(-30)
-         .alongWith(shoulder.getNewSetAngleCommand(70))
+        .alongWith(shoulder.getNewSetAngleCommand(135.0))
         .alongWith(wrist.getNewApplyCoastModeCommand())
         .alongWith(
             new WaitCommand(0.25))
@@ -103,14 +108,11 @@ public class StowToL2 extends SequentialCommandGroup {
         .andThen(shoulder.getNewSetAngleCommand(ShoulderPositions.Confirm.position))
         .andThen(new WaitCommand(0.25));
     }
-
-    public static Command getNewStopScoreCommand(ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
-        return(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
-        .alongWith(
-            new WaitCommand(0.2)
-            .andThen(wrist.getNewWristTurnCommand(0))
-        )
-        .andThen(coralEndEffector.getNewSetVoltsCommand(1));
+    public static Command getNewStopScoreCommand(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEndEffector) {
+        return(coralEndEffector.getNewSetVoltsCommand(1)
+        .alongWith(shoulder.getNewSetAngleCommand(55))
+        .alongWith(elbow.getNewSetAngleCommand(50.0))
+        .alongWith(new WaitCommand(0.2)).andThen(wrist.getNewWristTurnCommand(0)));
     }
 
 }
