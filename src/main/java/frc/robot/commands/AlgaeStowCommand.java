@@ -21,6 +21,7 @@ import frc.robot.util.LoggedTunableNumber;
 public class AlgaeStowCommand extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
+        // Sets the degrees that the elevator can go to when needed
         Starting(new LoggedTunableNumber("StowToAlgaeStow/shoulder/StartingDegrees", 0.0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/shoulder/FinalDegrees", 20.0)), 
         SafeToLowerElevator(new LoggedTunableNumber("StowToAlgaeStow/shoulder/SafeToLowerElevator", -45.0));
@@ -28,6 +29,7 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
         DoubleSupplier position;
         MutAngle distance;
 
+        //sets position to be position receved
         ShoulderPositions(DoubleSupplier position) {
             this.position = position;
             this.distance = Degrees.mutable(0.0);
@@ -39,7 +41,9 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
         }
     }
 
+
     private enum ElbowPositions {
+        // Set elbow position possibilies
         Starting(new LoggedTunableNumber("StowToAlgaeStow/elbow/StartingDegrees", 0.0)),
         ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 70.0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/elbow/FinalDegrees", 70.0));
@@ -59,6 +63,7 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
+        // Set elevator position possibilies
         Starting(new LoggedTunableNumber("StowToAlgaeStow/elevator/StartingInches", 0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/elevator/FinalInches", 0));
 
@@ -96,6 +101,7 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
 
     public AlgaeStowCommand(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, AlgaeEndEffector algaeEE) {
         super(
+            //Sets the angles to what they were defined as
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
             elbow.getNewSetAngleCommand(ElbowPositions.Final.position),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position),

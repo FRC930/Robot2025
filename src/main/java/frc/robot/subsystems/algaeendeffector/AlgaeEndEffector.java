@@ -54,6 +54,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     return () -> false;
   }
 
+  //Creates methods that can be used in commands
   public Command getNewSetVoltsCommand(DoubleSupplier volts) {
     return new InstantCommand(
         () -> {
