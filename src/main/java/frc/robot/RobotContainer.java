@@ -31,6 +31,8 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCameraBackRight
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -570,5 +572,16 @@ public class RobotContainer {
       SignalLogger.setPath("/media/sda1/");
       SignalLogger.start();
     }
+  }
+
+  public void loggingPeriodic() {
+    Logger.recordOutput("ReefPositions/Selected Score Position", reefPositions.getScoreLevel());
+    Logger.recordOutput("ReefPositions/Selected DeAlgae Position", reefPositions.getDeAlgaeLevel());
+    Logger.recordOutput("ReefPositions/ScorePos/L1", reefPositions.isSelected(ScoreLevel.L1));
+    Logger.recordOutput("ReefPositions/ScorePos/L2", reefPositions.isSelected(ScoreLevel.L2));
+    Logger.recordOutput("ReefPositions/ScorePos/L3", reefPositions.isSelected(ScoreLevel.L3));
+    Logger.recordOutput("ReefPositions/ScorePos/L4", reefPositions.isSelected(ScoreLevel.L4));
+    Logger.recordOutput("ReefPositions/DeAlgaePos/Top", reefPositions.isSelected(DeAlgaeLevel.Top));
+    Logger.recordOutput("ReefPositions/DeAlgaePos/Low", reefPositions.isSelected(DeAlgaeLevel.Low));
   }
 }
