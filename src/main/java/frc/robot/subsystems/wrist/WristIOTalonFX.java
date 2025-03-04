@@ -48,7 +48,7 @@ public class WristIOTalonFX implements WristIO {
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     cfg.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
-    cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     cfg.Feedback.SensorToMechanismRatio = 1.0;
     cfg.Feedback.RotorToSensorRatio = 9.0;
     cfg.ClosedLoopGeneral.ContinuousWrap = true;
