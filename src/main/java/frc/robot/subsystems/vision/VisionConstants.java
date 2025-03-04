@@ -31,17 +31,23 @@ public class VisionConstants {
   // (Not used by Limelight, configure in web UI instead)
   public static Transform3d robotToCameraLeft =
   new Transform3d(
-    //back Left values on robot, LL Forward -0.315, LL Right -0.236, LL up 0.21, LL Roll 0, LL Pitch 25, LL Yaw -165.
-      -0.315,
-      0.236,
-      0.21,
+    //IP 10.9.30.16
+    //back Left values on robot, LL Forward -0.301(-11.844in), LL Right -0.269(-10.6in), LL up 0.216(8.497in), LL Roll 0, LL Pitch 25, LL Yaw -165.
+    //LL RIGHT IS +, IN CODE(y value) IT'S -
+      -0.301,
+      0.269,
+      0.216,
+      //LL PITCH IS +, IN CODE IT'S -
       new Rotation3d(0.0, Math.toRadians(-25), Math.toRadians(195.0)));
 public static Transform3d robotToCameraRight =
   new Transform3d(
-    //back right values on robot, LL Forward -0.315, LL Right 0.236, LL up 0.21, LL Roll 0, LL Pitch 25, LL Yaw 165.
-      -0.315,
-      -0.236,
-      0.21,
+    // 10.9.30.15
+    //back right values on robot, LL Forward -0.301(-11.844in), LL Right 0.269(10.6in), LL up 0.216(8.497in), LL Roll 0, LL Pitch 25, LL Yaw 165.
+    //LL RIGHT IS -, IN CODE(y value) IT'S +
+      -0.301,
+      -0.269,
+      0.216,
+      //LL PITCH IS +, IN CODE IT'S -
       new Rotation3d(0.0, Math.toRadians(-25), Math.toRadians(165.0)));
 
   // Basic filtering thresholds
