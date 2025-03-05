@@ -55,12 +55,25 @@ public class AutoAlignCommand extends Command {
     private PIDController spinPID = new PIDController(5.0, 0.0, 0.0);
 
     /**
+     * This command utilitzes the swerve drive while it isn't field relative.
+     * The swerve drive returns back to field relative after the command is used.
+     * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
+     * @param drivetrain The Drive class to get the current pose from.
+     * @param name The LoggedTunableNumber's (should be) exclusive name
+     */
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name) {
+        this.getTargetPoseFn = getTargetPoseFunction;
+        this.drivetrain = drivetrain;
+    }
+
+    /**
+     * This command utilitzes the swerve drive while it isn't field relative.
+     * The swerve drive returns back to field relative after the command is used.
      * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
      * @param drivetrain The Drive class to get the current pose from.
      */
     public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain) {
-        this.getTargetPoseFn = getTargetPoseFunction;
-        this.drivetrain = drivetrain;
+        this(getTargetPoseFunction, drivetrain, "AutoAlign");
     }
 
     /**
