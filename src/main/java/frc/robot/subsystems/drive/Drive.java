@@ -28,6 +28,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -231,6 +232,32 @@ public class Drive extends SubsystemBase {
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+  }
+
+  public static Pose2d getBargeScorePose(Pose2d robotPose) {
+    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
+
+    // Default bounds for upper side
+    double upperYBound = 0.0;
+    double lowerYBound = 0.0;
+    double xSetpoint = 0.0;
+    double rotation = 0.0;
+    switch (alliance) {
+      case Red:
+      // Bounds for lower side
+      upperYBound = 3.5;
+      lowerYBound = 0.5;
+      xSetpoint = 10.0;
+        break;
+      case Blue:  
+      // Bounds for upper side
+      upperYBound = 7.5;
+      lowerYBound = 4.5;
+      xSetpoint = 7.5;
+        break;
+    }
+
+    return new Pose2d(xSetpoint,MathUtil.clamp(robotPose.getY(), lowerYBound, upperYBound),new Rotation2d(rotation));
   }
 
   /**
