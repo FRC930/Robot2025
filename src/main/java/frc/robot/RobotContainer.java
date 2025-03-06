@@ -297,6 +297,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureDriverBindings();
     configureTestButtonBindings();
+    configureCharacterizationButtonBindings();
   }
 
   public void configureDriverBindings() {
@@ -533,41 +534,6 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
-    characterizeController
-        .back()
-        .and(characterizeController.y())
-        .whileTrue(drive.sysIdDynamic(Direction.kForward));
-    characterizeController
-        .back()
-        .and(characterizeController.x())
-        .whileTrue(drive.sysIdDynamic(Direction.kReverse));
-    characterizeController
-        .start()
-        .and(characterizeController.y())
-        .whileTrue(drive.sysIdQuasistatic(Direction.kForward));
-    characterizeController
-        .start()
-        .and(characterizeController.x())
-        .whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
-    characterizeController
-        .a()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  SignalLogger.setPath("/media/sda1/logs");
-                  // SignalLogger.enableAutoLogging(true);
-                  SignalLogger.start();
-                  System.out.println("Started Logger");
-                }));
-    characterizeController
-        .b()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  SignalLogger.stop();
-                  System.out.println("Stopped Logger");
-                }));
-    
     // // controller.rightBumper()
     // // .onTrue(
     // //   elbow.getNewSetAngleCommand(-30).alongWith(shoulder.getNewSetAngleCommand(75))
@@ -624,6 +590,49 @@ public class RobotContainer {
     SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist));
     SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
     SmartDashboard.putData(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
+  }
+
+  public void configureCharacterizationButtonBindings() {
+    characterizeController
+        .back()
+        .and(characterizeController.y())
+        .whileTrue(drive.sysIdDynamic(Direction.kForward));
+    characterizeController
+        .back()
+        .and(characterizeController.x())
+        .whileTrue(drive.sysIdDynamic(Direction.kReverse));
+    characterizeController
+        .start()
+        .and(characterizeController.y())
+        .whileTrue(drive.sysIdQuasistatic(Direction.kForward));
+    characterizeController
+        .start()
+        .and(characterizeController.x())
+        .whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
+
+    characterizeController.povUp()
+      .whileTrue(DriveCommands.wheelRadiusCharacterization(drive))
+      .onFalse(DriveCommands.brakeDrive(drive));
+
+    characterizeController
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  SignalLogger.setPath("/media/sda1/logs");
+                  // SignalLogger.enableAutoLogging(true);
+                  SignalLogger.start();
+                  System.out.println("Started Logger");
+                }));
+    characterizeController
+        .b()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  SignalLogger.stop();
+                  System.out.println("Stopped Logger");
+                }));
+    
   }
   
   /**
