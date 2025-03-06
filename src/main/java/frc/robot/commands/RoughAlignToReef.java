@@ -1,22 +1,7 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Meter;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
-import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-import frc.robot.util.LoggedTunableGainsBuilder;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -25,22 +10,17 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.Odometry;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
-import frc.robot.subsystems.vision.VisionConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.VisionConstants;
+import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
+import frc.robot.util.LoggedTunableGainsBuilder;
 import frc.robot.util.LoggedTunableNumber;
 
 public class RoughAlignToReef extends Command {
@@ -96,11 +76,11 @@ public class RoughAlignToReef extends Command {
     private PIDController spinPID = new PIDController(5.0, 0.0, 0.0);
             
     /**
-     * Returns the pose of the closest april tag in "targets" to "pos"
+     * Finds the closest april tag to a position.
      * 
-     * @param pos
-     * @param targets
-     * @return
+     * @param pos The Pose2d to find the closest relative tag.
+     * @param targets The list of AprilTag IDs to check for.
+     * @return The pose of the closest april tag in "targets" to "pos"
      */
     private static Pose2d findClosestPose(Pose2d pos, int[] targets) {
         double minDistance = Double.MAX_VALUE;
