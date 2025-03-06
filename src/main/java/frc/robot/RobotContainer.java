@@ -258,7 +258,7 @@ public class RobotContainer {
         algaeEndEffector = new AlgaeEndEffector(new AlgaeEndEffectorIOTalonFX(canivoreCanBuilder.id(15).build(), canivoreCanBuilder.id(24).build()));
         // algaeEndEffector = new AlgaeEndEffector(new AlgaeEndEffectorIONova(canivoreCanBuilder.id(15).build(), canivoreCanBuilder.id(24).build()));
 
-        climber = new Climber(new ClimberIOTalonFX(canivoreCanBuilder.id(19).build()));
+        climber = new Climber(new ClimberIOTalonFX(rioCanBuilder.id(19).build()));
 
         // Real robot, instantiate hardware IO implementations
         break;
