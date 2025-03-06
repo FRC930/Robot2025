@@ -44,7 +44,7 @@ public class StowToL4 extends SequentialCommandGroup {
         Starting(new LoggedTunableNumber("MoveToL4Command/elbow/StartingDegrees", 0)),
         MidPoint(new LoggedTunableNumber("MoveToL4Command/elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("MoveToL4Command/elbow/FinalDegrees", -100)),
-        Confirm(new LoggedTunableNumber("MoveToL4Command/elbow/FinalDegrees", -140));
+        Confirm(new LoggedTunableNumber("MoveToL4Command/elbow/ConfirmDegrees", -140));
 
         DoubleSupplier position;
         MutAngle distance;
