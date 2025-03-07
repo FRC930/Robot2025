@@ -37,32 +37,32 @@ public class AutoCommandManager {
     configureNamedCommands(drive, shoulder, elbow, elevator, wrist, coralEE, algaeEE);;
     
 
-    PathPlannerAuto CharacterizationTest = new PathPlannerAuto("CharacterizeAuto");
-    PathPlannerAuto ChoreoStraightAuto = new PathPlannerAuto("ChoreoStraightAuto");
+    // PathPlannerAuto CharacterizationTest = new PathPlannerAuto("CharacterizeAuto");
+    // PathPlannerAuto ChoreoStraightAuto = new PathPlannerAuto("ChoreoStraightAuto");
 
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+     // Set up auto routines
+     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // // Set up SysId routines
+    // autoChooser.addOption(
+    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Forward)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Reverse)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
 
-    // Add Choreo Paths
-    autoChooser.addOption("Characterization Test Path", CharacterizationTest);
-    autoChooser.addOption("[Choreo] Straight Test", ChoreoStraightAuto);
+    // // Add Choreo Paths
+    // autoChooser.addOption("Characterization Test Path", CharacterizationTest);
+    // autoChooser.addOption("[Choreo] Straight Test", ChoreoStraightAuto);
   }
 
   public Command getAutonomousCommand() {
