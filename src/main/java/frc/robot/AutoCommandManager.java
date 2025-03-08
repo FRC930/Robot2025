@@ -78,7 +78,7 @@ public class AutoCommandManager {
       NamedCommands.registerCommand("StowToL1", new StowToL1(shoulder, elbow, wrist));
       NamedCommands.registerCommand("StowToL2", new StowToL2(shoulder, elbow, elevator, wrist));
       NamedCommands.registerCommand("StowToL3", new StowToL3(shoulder, elbow, wrist, elevator));
-      NamedCommands.registerCommand("StowToL4", new StowToL4(shoulder, elbow, elevator, wrist));
+      NamedCommands.registerCommand("StowToL4", new StowToL3(shoulder, elbow, wrist, elevator));
       NamedCommands.registerCommand("ScoreL1",StowToL1.getNewScoreCommand(coralEE)
         .andThen(new WaitCommand(0.02))
         .andThen(StowToL1.getNewStopScoreCommand(coralEE)));
@@ -88,15 +88,15 @@ public class AutoCommandManager {
       NamedCommands.registerCommand("ScoreL3",StowToL3.getNewScoreCommand(elbow, wrist, coralEE)
         .andThen(new WaitCommand(0.02))
         .andThen(StowToL3.getNewStopScoreCommand(elbow, wrist, coralEE)));
-      NamedCommands.registerCommand("ScoreL4",StowToL4.getNewScoreCommand(elbow, wrist, coralEE)
+      NamedCommands.registerCommand("ScoreL4",StowToL3.getNewScoreCommand(elbow, wrist, coralEE)
         .andThen(new WaitCommand(0.02))
-        .andThen(StowToL4.getNewStopScoreCommand(elbow, wrist, coralEE)));
+        .andThen(StowToL3.getNewStopScoreCommand(elbow, wrist, coralEE)));
 
       // MAY NOT use added Score Command
       NamedCommands.registerCommand("StopScoreL1",StowToL1.getNewStopScoreCommand(coralEE));
       NamedCommands.registerCommand("StopScoreL2",StowToL2.getNewStopScoreCommand(elbow, wrist, coralEE));
       NamedCommands.registerCommand("StopScoreL3",StowToL3.getNewStopScoreCommand(elbow, wrist, coralEE));
-      NamedCommands.registerCommand("StopScoreL4",StowToL4.getNewStopScoreCommand(elbow, wrist, coralEE));
+      NamedCommands.registerCommand("StopScoreL4",StowToL3.getNewStopScoreCommand(elbow, wrist, coralEE));
   
       NamedCommands.registerCommand("CoralOuttake", new OutakeCoral(coralEE));
       NamedCommands.registerCommand("StopDrivetrain", new StopDrivetrainCommand(drive));
