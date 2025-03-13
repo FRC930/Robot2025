@@ -90,6 +90,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIONova;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intakeextender.IntakeExtender;
@@ -248,7 +249,7 @@ public class RobotContainer {
         coralEndEffector = new CoralEndEffector(new CoralEndEffectorIOTalonFX(canivoreCanBuilder.id(12).build(), canivoreCanBuilder.id(17).build()));
         // coralEndEffector = new CoralEndEffector(new CoralEndEffectorIONova(canivoreCanBuilder.id(12).build(), canivoreCanBuilder.id(17).build()));
         
-        intake = new Intake(new IntakeIOTalonFX(canivoreCanBuilder.id(18).build()));
+        intake = new Intake(new IntakeIONova(canivoreCanBuilder.id(18).build(),canivoreCanBuilder.id(26).build()));
 
         intakeExtender = new IntakeExtender(new IntakeExtenderIOTalonFX(rioCanBuilder.id(16).build()));
 
