@@ -18,9 +18,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class TakeAlgaeL2 extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL2/shoulder/StartingDegrees", 10)),
-        // MidPoint(new LoggedTunableNumber("StowToL3Command/shoulder/MidPointDegrees", 110)),
-        // SafeToSwingElbow(new LoggedTunableNumber("StowToL3Command/shoulder/SafeToSwingElbowDegrees", 100)),
         Final(new LoggedTunableNumber("TakeAlgaeL2/shoulder/FinalDegrees", 20));
 
         DoubleSupplier position;
@@ -38,8 +35,6 @@ public class TakeAlgaeL2 extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL2/elbow/StartingDegrees", 10)),
-        // ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("TakeAlgaeL2/elbow/FinalDegrees", 100));
 
         DoubleSupplier position;
@@ -57,7 +52,6 @@ public class TakeAlgaeL2 extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL2/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("TakeAlgaeL2/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
@@ -75,7 +69,6 @@ public class TakeAlgaeL2 extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL2/elevator/StartingInches", 0)),
         Final(new LoggedTunableNumber("TakeAlgaeL2/elevator/FinalInches", 10));
 
         DoubleSupplier position;
@@ -99,17 +92,6 @@ public class TakeAlgaeL2 extends SequentialCommandGroup {
             toesies.getNewSetVoltsCommand(8)
             .alongWith(shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position))
             .alongWith(elevator.getNewSetDistanceCommand(ElevatorPositions.Final.position))
-
-            // LOGIC NEEDED FOR INTAKE TO STOW
-            // .alongWith(
-            //     new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.SafeToSwingElbow.angle().in(Degrees)))
-            //         .andThen(
-            //             elbow.getNewSetAngleCommand(ElbowPositions.Final.angle().in(Degrees))
-            //                 .alongWith(new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.ShoulderSafeSwing.angle().in(Degrees)))
-            //         )
-            //     )
-            // ),
-            // shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
         );
         addRequirements(shoulder, elbow, wrist, toesies, elevator);
     }

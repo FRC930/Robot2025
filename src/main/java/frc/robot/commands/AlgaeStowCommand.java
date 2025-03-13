@@ -21,7 +21,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class AlgaeStowCommand extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeStow/shoulder/StartingDegrees", 0.0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/shoulder/FinalDegrees", 20.0)), 
         SafeToLowerElevator(new LoggedTunableNumber("StowToAlgaeStow/shoulder/SafeToLowerElevator", -45.0));
 
@@ -40,7 +39,6 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeStow/elbow/StartingDegrees", 0.0)),
         ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 70.0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/elbow/FinalDegrees", 70.0));
 
@@ -59,7 +57,6 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeStow/elevator/StartingInches", 0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/elevator/FinalInches", 0));
 
         DoubleSupplier position;
@@ -77,7 +74,6 @@ public class AlgaeStowCommand extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeStow/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToAlgaeStow/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;

@@ -14,9 +14,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class LollypopAlgaeIntake extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("LollypopAlgaeIntake/shoulder/StartingDegrees", 10)),
-        // MidPoint(new LoggedTunableNumber("StowToL3Command/shoulder/MidPointDegrees", 110)),
-        // SafeToSwingElbow(new LoggedTunableNumber("StowToL3Command/shoulder/SafeToSwingElbowDegrees", 100)),
         Final(new LoggedTunableNumber("LollypopAlgaeIntake/shoulder/FinalDegrees", 40));
 
         DoubleSupplier position;
@@ -34,8 +31,6 @@ public class LollypopAlgaeIntake extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("LollypopAlgaeIntake/elbow/StartingDegrees", 10)),
-        // ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("LollypopAlgaeIntake/elbow/FinalDegrees", 75));
 
         DoubleSupplier position;
@@ -53,7 +48,6 @@ public class LollypopAlgaeIntake extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("LollypopAlgaeIntake/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("LollypopAlgaeIntake/wrist/FinalDegrees", 90));
 
         DoubleSupplier position;

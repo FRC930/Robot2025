@@ -15,7 +15,6 @@ import frc.robot.util.LoggedTunableNumber;
 
 public class StowToGroundIntake extends SequentialCommandGroup {
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowToGroundIntake/Shoulder/StartingDegrees", 0)),
         MidPoint(new LoggedTunableNumber("StowToGroundIntake/Shoulder/MidPointDegrees", 110)),
         SafeToSwingElbow(new LoggedTunableNumber("StowToGroundIntake/Shoulder/SafeToSwingElbowDegrees", 100)),
         Final(new LoggedTunableNumber("StowToGroundIntake/Shoulder/FinalDegrees", 95));
@@ -36,7 +35,6 @@ public class StowToGroundIntake extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToGroundIntake/Elbow/StartingDegrees", 0)),
         ShoulderSafeSwing(new LoggedTunableNumber("StowToGroundIntake/Elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("StowToGroundIntake/Elbow/FinalDegrees", -90));
 
@@ -55,7 +53,6 @@ public class StowToGroundIntake extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToGroundIntake/Wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToGroundIntake/Wrist/FinalDegrees", 180));
 
         DoubleSupplier position;

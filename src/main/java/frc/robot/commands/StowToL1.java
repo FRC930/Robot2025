@@ -15,9 +15,7 @@ import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 
 public class StowToL1 extends SequentialCommandGroup {
-
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowToL1/shoulder/StartingDegrees", 10)),
         SafeToTurnWrist(new LoggedTunableNumber("StowToL1/shoulder/SafeToTurnWristDegrees", 90)),
         Final(new LoggedTunableNumber("StowToL1/shoulder/FinalDegrees", 60));
 
@@ -36,7 +34,6 @@ public class StowToL1 extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToL1/elbow/StartingDegrees", 10)),
         SafeToTurnWrist(new LoggedTunableNumber("StowToL1/elbow/SafeToTurnWristDegrees", 90)),
         Final(new LoggedTunableNumber("StowToL1/elbow/FinalDegrees", -25));
 
@@ -55,7 +52,6 @@ public class StowToL1 extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToL1/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToL1/wrist/FinalDegrees", 90));
 
         DoubleSupplier position;

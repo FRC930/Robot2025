@@ -18,9 +18,6 @@ public class StationIntakeReverseCommand extends SequentialCommandGroup {
     private static final String className = StationIntakeReverseCommand.class.getSimpleName();
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber(className + "/shoulder/StartingDegrees", 10)),
-        // MidPoint(new LoggedTunableNumber("StowToL3Command/shoulder/MidPointDegrees", 110)),
-        // SafeToSwingElbow(new LoggedTunableNumber("StowToL3Command/shoulder/SafeToSwingElbowDegrees", 100)),
         Final(new LoggedTunableNumber(className + "/shoulder/FinalDegrees", 55));
 
         DoubleSupplier position;
@@ -38,8 +35,6 @@ public class StationIntakeReverseCommand extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber(className + "/elbow/StartingDegrees", 10)),
-        // ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber(className + "/elbow/FinalDegrees", 33));
 
         DoubleSupplier position;
@@ -57,7 +52,6 @@ public class StationIntakeReverseCommand extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber(className + "/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber(className + "/wrist/FinalDegrees", -90));
 
         DoubleSupplier position;
@@ -80,17 +74,6 @@ public class StationIntakeReverseCommand extends SequentialCommandGroup {
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
             .alongWith(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
             .alongWith(coralEndEffector.getNewSetVoltsCommand(6))
-
-            // LOGIC NEEDED FOR INTAKE TO STOW
-            // .alongWith(
-            //     new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.SafeToSwingElbow.angle().in(Degrees)))
-            //         .andThen(
-            //             elbow.getNewSetAngleCommand(ElbowPositions.Final.angle().in(Degrees))
-            //                 .alongWith(new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.ShoulderSafeSwing.angle().in(Degrees)))
-            //         )
-            //     )
-            // ),
-            // shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
         );
         addRequirements(shoulder, elbow, elevator, wrist);
     }
