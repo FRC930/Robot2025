@@ -133,9 +133,13 @@ public class ReefScoreCommandFactory {
         Function<Pose2d, Pose2d> positionFunction = getGetTargetPositionFunction(position, isBackingUp);
         //Base command
         Command returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive);
-        //If we're backing up, add a condition to kill when we're farther away than the backup distance
+        //If we're backing up, add kill conditions
         if(isBackingUp) {
-            returnedCommand = returnedCommand.until(() -> (drive.getDistanceTo(positionFunction.apply(drive.getPose())).in(Meters) > offsetBBackingUp.getAsDouble()));
+            returnedCommand = returnedCommand
+                // Kill when we are out of the distance (not necessary since we kill)
+                // .until(() -> (drive.getDistanceTo(positionFunction.apply(drive.getPose())).in(Meters) > offsetBBackingUp.getAsDouble()))
+                // Don't run the backup if we are out of the distance
+                .unless(() -> (drive.getDistanceTo(positionFunction.apply(drive.getPose())).in(Meters) > offsetBBackingUp.getAsDouble()));
         }
         return returnedCommand;
     }
@@ -150,7 +154,7 @@ public class ReefScoreCommandFactory {
      */
     public static Command getNewReefCoralScoreSequence(ReefPosition position, Map<ReefPositionsUtil.ScoreLevel,Command> coralLevelCommands, Map<ReefPositionsUtil.ScoreLevel,Command> scoreCoralLevelCommands, Map<ReefPositionsUtil.ScoreLevel,Command> stopCoralLevelCommands, Drive drive) {
         return getNewAlignToReefCommand(position, true, drive)
-                .alongWith(new WaitCommand(0.1).andThen(ReefPositionsUtil.getInstance().getCoralLevelSelector(coralLevelCommands)))
+                .alongWith(ReefPositionsUtil.getInstance().getCoralLevelSelector(coralLevelCommands))
             .andThen(getNewAlignToReefCommand(position, false, drive))
             // .andThen(new WaitCommand(0.2))
             .andThen(ReefPositionsUtil.getInstance().getCoralLevelSelector(scoreCoralLevelCommands))
