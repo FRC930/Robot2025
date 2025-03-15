@@ -48,7 +48,7 @@ public class CoralEndEffector extends SubsystemBase {
    * @return
    */
   public BooleanSupplier placeholderGetHasCoralSupplier() {
-    return () -> false;
+    return () -> true;
   }
 
   public void setTarget(Voltage target) {

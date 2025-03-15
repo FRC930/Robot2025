@@ -610,10 +610,14 @@ public class RobotContainer {
       .onFalse(
         new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector)  
       );
+    testcontroller.a().onTrue(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector)
+    .andThen(StowToGroundIntake.getRunGroundIntakeCommand(intake, intakeExtender))
+    .andThen(StowToGroundIntake.getTakeCoralFromGroundIntakeCommand(intake, intakeExtender, shoulder, elbow, wrist, coralEndEffector))
+    ).onFalse(StowToGroundIntake.getReturnToStowCommand(shoulder, elbow, wrist, coralEndEffector));
 
     SmartDashboard.putData(new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector));
-    System.out.println(StowToGroundIntake.getReturnToStowCommand(shoulder, elbow, wrist, coralEndEffector));
-    SmartDashboard.putData("ReturnToStowFromGroundIntake",StowToGroundIntake.getReturnToStowCommand(shoulder, elbow, wrist, coralEndEffector));
+    // System.out.println(StowToGroundIntake.getReturnToStowCommand(shoulder, elbow, wrist, coralEndEffector));
+    // SmartDashboard.putData("ReturnToStowFromGroundIntake",StowToGroundIntake.getReturnToStowCommand(shoulder, elbow, wrist, coralEndEffector));
     SmartDashboard.putData(new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector));
     SmartDashboard.putData(new StowToL3(shoulder, elbow, wrist, elevator));
     SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist));
