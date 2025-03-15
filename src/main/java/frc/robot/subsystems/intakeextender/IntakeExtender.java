@@ -21,6 +21,8 @@ import frc.robot.util.LoggedTunableNumber;
 
 public class IntakeExtender extends SubsystemBase {
   private IntakeExtenderIO m_intakeextenderIO;
+  double groundIntakeMinDeg = 0;
+  double groundIntakeMaxDeg = 90;
 
   IntakeExtenderInputsAutoLogged loggedintakeExtender = new IntakeExtenderInputsAutoLogged();
 
@@ -55,9 +57,9 @@ public class IntakeExtender extends SubsystemBase {
   public Command getNewIntakeExtenderTurnCommand(LoggedTunableNumber angle) {
     return new InstantCommand(
       () -> {
-        setAngle(Degrees.of((angle.get())));
+        setAngle(Degrees.of((MathUtil.clamp(angle.get(), groundIntakeMinDeg, groundIntakeMaxDeg))));
       },
-      this);
+      this); 
   }
 
   public Command getNewIntakeExtenderTurnCommand(double i) {
