@@ -132,18 +132,29 @@ public class StowToGroundIntake extends SequentialCommandGroup {
      * @return
      */
     public static Command getRunGroundIntakeCommand(Intake intake, IntakeExtender extender) {
-        return new RepeatCommand(ConditionalCommand(
-            intake.getNewSetVoltsCommand(6)
-            .andThen(new WaitUntilCommand(intake.))
-        ));
+        return intake.getNewSetVoltsCommand(6)
+                .alongWith(extender.getNewIntakeExtenderTurnCommand(90))
+                .alongWith(new WaitUntilCommand(extender.getNewAtAngleTrigger(Degrees.of(90), Degrees.of(1))));
     }
 
     /**
      * The third part of the ground intake. Raises the ground intake, takes a coral from it, then moves it to the ready pos
      * @return
      */
-    public static Command getTakeCoralFromGroundIntakeCommand() {
-        return
+    public static Command getTakeCoralFromGroundIntakeCommand(Intake intake, IntakeExtender extender, ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector fingeys) {
+        return intake.getNewSetVoltsCommand(0)
+                .alongWith(extender.getNewIntakeExtenderTurnCommand(0))
+                .alongWith(new WaitUntilCommand(extender.getNewAtAngleTrigger(Degrees.of(0), Degrees.of(1))))
+                
+                .andThen(elbow.getNewSetAngleCommand(ElbowPositions.Final.position.getAsDouble() + 5))
+                .alongWith(fingeys.getNewSetVoltsCommand(6))
+                .alongWith(new WaitUntilCommand(elbow.getNewAtAngleTrigger(Degrees.of(ElbowPositions.Final.position.getAsDouble() + 5), Degrees.of(1))))
+                
+                .andThen(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
+                .alongWith(fingeys.getNewSetVoltsCommand(1))
+                .alongWith(new WaitUntilCommand(elbow.getNewAtAngleTrigger(Degrees.of(ElbowPositions.Final.position.getAsDouble()), Degrees.of(1))))
+                .alongWith(extender.getNewIntakeExtenderTurnCommand(90))
+                .alongWith(new WaitUntilCommand(extender.getNewAtAngleTrigger(Degrees.of(90), Degree.of(1))));
     }
 
     /**

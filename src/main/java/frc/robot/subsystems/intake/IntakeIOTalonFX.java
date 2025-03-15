@@ -62,8 +62,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   @Override
-  public boolean getSensor() {
+  public Distance getSensor() {
       // TODO Auto-generated method stub
-      return rangeSensor.getDistance(false).get;
+      return rangeSensor.getDistance(true).getValue();
   }
 }

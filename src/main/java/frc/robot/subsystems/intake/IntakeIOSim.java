@@ -65,6 +65,6 @@ public class IntakeIOSim implements IntakeIO {
 
   @Override
   public Distance getSensor() {
-      return 
+      return Feet.of(0);
   }
 }

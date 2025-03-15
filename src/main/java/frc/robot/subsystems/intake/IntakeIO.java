@@ -31,5 +31,5 @@ public interface IntakeIO {
 
   public void stop();
 
-  public boolean getSensor();
+  public Distance getSensor();
 }

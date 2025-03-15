@@ -65,8 +65,8 @@ public class Intake extends SubsystemBase{
 
   public Trigger getNewHasCoralTrigger() {
     return new Trigger(() -> {
-      m_intakeIO.
-    })
+      return true;
+    });
   }
 
   @Override
