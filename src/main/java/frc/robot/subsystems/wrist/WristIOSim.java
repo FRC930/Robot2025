@@ -70,8 +70,9 @@ public class WristIOSim implements WristIO {
     runVolts(Volts.of(0));
   }
 
+  
   public void setGains(Gains gains) {
-    DriverStation.reportWarning("Sim gains tuning not implemented", true);
+    // DriverStation.reportWarning("Sim gains tuning not implemented", true);
   }
 
   @Override

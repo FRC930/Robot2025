@@ -9,11 +9,14 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
+import javax.sound.sampled.ReverbType;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Intake extends SubsystemBase{
@@ -58,6 +61,12 @@ public class Intake extends SubsystemBase{
       },
       this
     );
+  }
+
+  public Trigger getNewHasCoralTrigger() {
+    return new Trigger(() -> {
+      m_intakeIO.
+    })
   }
 
   @Override

@@ -22,6 +22,7 @@ public interface IntakeIO {
     public MutVoltage voltage;
     public MutCurrent supplyCurrent;
     public MutCurrent statorCurrent;
+    public MutDistance sensorDistance;
   }
 
   public void setTarget(Voltage setpoint);
@@ -29,4 +30,6 @@ public interface IntakeIO {
   public void updateInputs(IntakeInputs input);
 
   public void stop();
+
+  public boolean getSensor();
 }
