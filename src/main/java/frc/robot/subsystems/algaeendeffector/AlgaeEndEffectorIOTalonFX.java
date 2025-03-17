@@ -1,5 +1,6 @@
 package frc.robot.subsystems.algaeendeffector;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -10,28 +11,20 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.arm.ArmJointIO.ArmInputs;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.util.CanDef;
 import frc.robot.util.PhoenixUtil;
 
-
-
 public class AlgaeEndEffectorIOTalonFX implements AlgaeEndEffectorIO {
-  public VoltageOut Request;
-  public TalonFX Motor;
-
-  public ArmInputs inputs;
-
+  private VoltageOut request;
+  private TalonFX motor;
   private CANrange m_sensor;
 
-  private Voltage m_setPoint = Voltage.ofBaseUnits(0, Volts);
+  private Voltage m_setPoint = Volts.of(0);
 
   public AlgaeEndEffectorIOTalonFX(CanDef motorCanDef, CanDef sensorCanDef) {
-    Motor = new TalonFX(motorCanDef.id(),motorCanDef.bus());
-    Request = new VoltageOut(0.0);
+    motor = new TalonFX(motorCanDef.id(),motorCanDef.bus());
+    request = new VoltageOut(0.0);
     m_sensor = new CANrange(sensorCanDef.id(),sensorCanDef.bus());
 
     configureTalons();
@@ -45,33 +38,29 @@ public class AlgaeEndEffectorIOTalonFX implements AlgaeEndEffectorIO {
     cfg.CurrentLimits.SupplyCurrentLimit = 30.0;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
+    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(cfg));
   }
 
   @Override
-  public void updateInputs(ToesiesInputs inputs) {
-    inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
+  public void updateInputs(AlgaeEndEffectorInputs inputs) {
+    inputs.angularVelocity.mut_replace(motor.getVelocity().getValue());
     inputs.voltageSetPoint.mut_replace(m_setPoint);
-    inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
-    inputs.supplyCurrent.mut_replace(Motor.getSupplyCurrent().getValue());
+    inputs.voltage.mut_replace(motor.getMotorVoltage().getValue());
+    inputs.supplyCurrent.mut_replace(motor.getSupplyCurrent().getValue());
+    inputs.torqueCurrent.mut_replace(motor.getStatorCurrent().getValue());
+    inputs.hasAlgae = m_sensor.getDistance().getValue().lt(Inches.of(AlgaeEndEffector.ALGAE_DISTANCE_THRESHOLD.get()));
   }
 
   @Override
   public void setTarget(Voltage target) {
-    Request = Request.withOutput(target);
-    Motor.setControl(Request);
+    request = request.withOutput(target);
+    motor.setControl(request);
     m_setPoint = target;
   }
 
   @Override
   public void stop() {
-    Motor.setControl(new StaticBrake());
-  }
-
-  @Override
-  public Distance getDistance() {
-    return m_sensor.getDistance().getValue();
-
+    motor.setControl(new StaticBrake());
   }
   
 }

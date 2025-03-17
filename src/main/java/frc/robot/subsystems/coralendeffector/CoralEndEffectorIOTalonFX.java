@@ -8,24 +8,23 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Volts;
 
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.CanDef;
 import frc.robot.util.PhoenixUtil;
 
 public class CoralEndEffectorIOTalonFX implements CoralEndEffectorIO {
-  public VoltageOut Request;
-  public TalonFX Motor;
-
-  private Voltage m_setPoint = Voltage.ofBaseUnits(0, Volts);
-
+  private VoltageOut request;
+  private TalonFX motor;
   private CANrange m_sensor;
 
+  private Voltage m_setPoint = Volts.of(0);
+
   public CoralEndEffectorIOTalonFX(CanDef canbus, CanDef sensorCanDef) {
-    Motor = new TalonFX(canbus.id(),canbus.bus());
-    Request = new VoltageOut(0.0);
+    motor = new TalonFX(canbus.id(),canbus.bus());
+    request = new VoltageOut(0.0);
     m_sensor = new CANrange(sensorCanDef.id(),sensorCanDef.bus());
     
     configureTalons();
@@ -41,32 +40,28 @@ public class CoralEndEffectorIOTalonFX implements CoralEndEffectorIO {
     cfg.Voltage.PeakForwardVoltage = 16.0;
     cfg.Voltage.PeakReverseVoltage = 16.0;
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
+    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(cfg));
   }
 
   @Override
-  public void updateInputs(FingeysInputs inputs) {
-    inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
+  public void updateInputs(CoralEndEffectorInputs inputs) {
+    inputs.angularVelocity.mut_replace(motor.getVelocity().getValue());
     inputs.voltageSetPoint.mut_replace(m_setPoint);
-    inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
-    inputs.supplyCurrent.mut_replace(Motor.getSupplyCurrent().getValue());
-    inputs.sensorDistance.mut_replace(m_sensor.getDistance(true).getValue());
+    inputs.voltage.mut_replace(motor.getMotorVoltage().getValue());
+    inputs.supplyCurrent.mut_replace(motor.getSupplyCurrent().getValue());
+    inputs.torqueCurrent.mut_replace(motor.getStatorCurrent().getValue());
+    inputs.hasCoral = m_sensor.getDistance().getValue().lt(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD.get()));
   }
 
   @Override
   public void setTarget(Voltage target) {
-    Request = Request.withOutput(target);
-    Motor.setControl(Request);
+    request = request.withOutput(target);
+    motor.setControl(request);
     m_setPoint = target;
   }
 
   @Override
   public void stop() {
-    Motor.setControl(new StaticBrake());
-  }
-
-  @Override
-  public Distance getDistance() {
-    return m_sensor.getDistance().getValue();
+    motor.setControl(new StaticBrake());
   }
 }

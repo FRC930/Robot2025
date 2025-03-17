@@ -4,14 +4,8 @@ import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.util.function.Supplier;
-
-import javax.sound.sampled.ReverbType;
-
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,9 +14,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Intake extends SubsystemBase{
-  private IntakeIO m_intakeIO;
+  public static LoggedTunableNumber CORAL_DISTANCE_THRESHOLD = new LoggedTunableNumber("Intake/CoralSensorDistanceInches", 0.1);
 
-  IntakeInputsAutoLogged loggedIntake = new IntakeInputsAutoLogged();
+  private IntakeIO m_intakeIO;
+  private IntakeInputsAutoLogged loggedIntake = new IntakeInputsAutoLogged();
 
   public Intake(IntakeIO intakeIO) {
     m_intakeIO = intakeIO;
@@ -33,40 +28,31 @@ public class Intake extends SubsystemBase{
     loggedIntake.voltageSetPoint = Volts.mutable(0);
   }
 
-  public void setTarget(Voltage target) {
+  private void setTarget(Voltage target) {
     m_intakeIO.setTarget(target);
   }
 
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
-    return new InstantCommand(
-        () -> {
-          setTarget(Volts.of((volts.get())));
-        },
-        this);
+    return new InstantCommand(() -> {
+      setTarget(Volts.of((volts.get())));
+    }, this);
   }
 
   public Command getNewSetVoltsCommand(double i) {
-    return new InstantCommand(
-        () -> {
-          setTarget(Volts.of(i));
-        },
-        this);
+    return new InstantCommand(() -> {
+      setTarget(Volts.of(i));
+    }, this);
   }
 
   public Command getNewSetSpeedCommand(double percentOutput) {
-    return new InstantCommand(
-      () -> {
-        double volts = 12.0 * percentOutput;
-        setTarget(Volts.of(volts));
-      },
-      this
-    );
+    return new InstantCommand(() -> {
+      double volts = 12.0 * percentOutput;
+      setTarget(Volts.of(volts));
+    }, this);
   }
 
-  public Trigger getNewHasCoralTrigger() {
-    return new Trigger(() -> {
-      return true;
-    });
+  public Trigger hasCoralTrigger() {
+    return new Trigger(() -> loggedIntake.hasCoral);
   }
 
   @Override

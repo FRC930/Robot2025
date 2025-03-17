@@ -50,28 +50,24 @@ public class IntakeExtender extends SubsystemBase {
     return ()->loggedintakeExtender.Angle;
   }
 
-  public void setAngle(Angle angle) {
+  private void setAngle(Angle angle) {
     m_intakeextenderIO.setTarget(angle);
   }
   
   public Command getNewIntakeExtenderTurnCommand(LoggedTunableNumber angle) {
-    return new InstantCommand(
-      () -> {
-        setAngle(Degrees.of((MathUtil.clamp(angle.get(), groundIntakeMinDeg, groundIntakeMaxDeg))));
-      },
-      this); 
+    return new InstantCommand(() -> {
+      setAngle(Degrees.of((MathUtil.clamp(angle.get(), groundIntakeMinDeg, groundIntakeMaxDeg))));
+    }, this); 
   }
 
   public Command getNewIntakeExtenderTurnCommand(double i) {
-    return new InstantCommand(
-      () -> {
-        setAngle(Degrees.of(i));
-      },
-      this);
+    return new InstantCommand(() -> {
+      setAngle(Degrees.of(i));
+    }, this);
   }
 
   public Trigger getNewAtAngleTrigger(Angle angle,Angle tolerance) {
-     return new Trigger(() -> {
+    return new Trigger(() -> {
       return MathUtil.isNear(angle.baseUnitMagnitude(), loggedintakeExtender.Angle.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
     });
   }

@@ -334,13 +334,16 @@ public class RobotContainer {
     .onFalse(new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector));
 
     // Coral Station Intake No Auto Align
-    controller.leftBumper().and(()->!ReefPositionsUtil.getInstance().getIsAutoAligning())
+    controller.leftBumper()
+      .and(()->!ReefPositionsUtil.getInstance().getIsAutoAligning())
+      .and(coralEndEffector.hasCoralTrigger().negate())
       .onTrue(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEndEffector))
       .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
     // Coral Station Intake Auto Align Sequence
     controller.leftBumper()
       .and(() -> ReefPositionsUtil.getInstance().getIsAutoAligning())
+      .and(coralEndEffector.hasCoralTrigger().negate())
       .onTrue(StationIntakeCommandFactory.getNewStationIntakeSequence(
           () -> intakePosChooser.get(),
           true,

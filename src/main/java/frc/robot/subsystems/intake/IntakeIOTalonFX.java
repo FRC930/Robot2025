@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -10,22 +8,22 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Volts;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.CanDef;
 import frc.robot.util.PhoenixUtil;
 
 public class IntakeIOTalonFX implements IntakeIO {
-  public VoltageOut Request;
-  public TalonFX Motor;
-
+  private VoltageOut request;
+  private TalonFX motor;
   private CANrange rangeSensor;
-  private Voltage m_setPoint = Voltage.ofBaseUnits(0, Volts);
+  
+  private Voltage m_setPoint = Volts.of(0);
 
   public IntakeIOTalonFX(CanDef motorCanDef) {
-    Motor = new TalonFX(motorCanDef.id(),motorCanDef.bus());
-    Request = new VoltageOut(0.0);
+    motor = new TalonFX(motorCanDef.id(),motorCanDef.bus());
+    request = new VoltageOut(m_setPoint);
 
     configureTalons();
   }
@@ -38,32 +36,28 @@ public class IntakeIOTalonFX implements IntakeIO {
     cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
+    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(cfg));
   }
 
   @Override
   public void updateInputs(IntakeInputs inputs) {
-    inputs.angularVelocity.mut_replace(Motor.getVelocity().getValue());
+    inputs.angularVelocity.mut_replace(motor.getVelocity().getValue());
     inputs.voltageSetPoint.mut_replace(m_setPoint);
-    inputs.voltage.mut_replace(Motor.getMotorVoltage().getValue());
-    inputs.supplyCurrent.mut_replace(Motor.getSupplyCurrent().getValue());
+    inputs.voltage.mut_replace(motor.getMotorVoltage().getValue());
+    inputs.supplyCurrent.mut_replace(motor.getSupplyCurrent().getValue());
+    inputs.statorCurrent.mut_replace(motor.getStatorCurrent().getValue());
+    inputs.hasCoral = rangeSensor.getDistance().getValue().lt(Inches.of(Intake.CORAL_DISTANCE_THRESHOLD.get()));
   }
 
   @Override
   public void setTarget(Voltage target) {
-    Request = Request.withOutput(target);
-    Motor.setControl(Request);
+    request = request.withOutput(target);
+    motor.setControl(request);
     m_setPoint = target;
   }
 
   @Override
   public void stop() {
-    Motor.setControl(new StaticBrake());
-  }
-
-  //TODO: IMPLEMENT RANGE SENSOR
-  @Override
-  public Distance getSensor() {
-      return rangeSensor.getDistance(true).getValue();
+    motor.setControl(new StaticBrake());
   }
 }

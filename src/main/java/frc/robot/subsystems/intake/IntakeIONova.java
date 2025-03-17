@@ -14,6 +14,7 @@ import com.thethriftybot.ThriftyNova.CurrentType;
 import com.thethriftybot.ThriftyNova.MotorType;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.Distance;
@@ -49,6 +50,7 @@ public class IntakeIONova implements IntakeIO {
     inputs.voltageSetPoint.mut_replace(m_setPoint);
     inputs.voltage.mut_replace(Volts.of(Motor.getVoltage()));
     inputs.supplyCurrent.mut_replace(Amps.of(Motor.getSupplyCurrent()));
+    inputs.hasCoral = rangeSensor.getDistance().getValue().lt(Inches.of(Intake.CORAL_DISTANCE_THRESHOLD.get()));
   }
 
   @Override
@@ -60,11 +62,5 @@ public class IntakeIONova implements IntakeIO {
   @Override
   public void stop() {
     Motor.setVoltage(0);
-  }
-
-  //TODO: IMPLEMENT RANGE SENSOR
-  @Override
-  public Distance getSensor() {
-      return rangeSensor.getDistance(true).getValue();
   }
 }

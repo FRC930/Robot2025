@@ -26,13 +26,10 @@ public class IntakeIOSim implements IntakeIO {
 
   private final LinearSystem<N2, N1, N2> m_flywheelPlant = LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
 
-  private LoggedTunableNumber intakeSensorSim;
-  private MutDistance intakeSensorDistance;
+  private LoggedTunableNumber intakeSensorSim = new LoggedTunableNumber("Sim/Intake/SensorDistanceInches", 1);
 
   public IntakeIOSim(int motorId) {
     sim = new DCMotorSim(m_flywheelPlant, DRIVE_GEARBOX, 0.1, 0.1);
-    intakeSensorDistance = Meters.mutable(1);
-    intakeSensorSim = new LoggedTunableNumber("RobotState/Intake/SensorInput", 1);
   }
 
   @Override
@@ -42,17 +39,13 @@ public class IntakeIOSim implements IntakeIO {
 
   @Override
   public void updateInputs(IntakeInputs input) {
-    //Inputs
-    intakeSensorDistance.mut_replace(Meters.of(intakeSensorSim.get()));
-
     //Logging
-    input.angularVelocity.mut_replace(
-        DegreesPerSecond.convertFrom(sim.getAngularVelocityRadPerSec(), RadiansPerSecond),
-        DegreesPerSecond);
+    input.angularVelocity.mut_replace(sim.getAngularVelocity());
     input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
     input.statorCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
     input.voltageSetPoint.mut_replace(appliedVoltage);
     input.voltage.mut_replace(Volts.of(sim.getInputVoltage()));
+    input.hasCoral = Inches.of(intakeSensorSim.get()).lt(Inches.of(Intake.CORAL_DISTANCE_THRESHOLD.get()));
 
     // Periodic
     sim.setInputVoltage(appliedVoltage.in(Volts));
@@ -61,10 +54,5 @@ public class IntakeIOSim implements IntakeIO {
 
   @Override
   public void stop() {
-  }
-
-  @Override
-  public Distance getSensor() {
-      return Feet.of(0);
   }
 }
