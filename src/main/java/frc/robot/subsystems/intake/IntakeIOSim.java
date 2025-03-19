@@ -26,7 +26,7 @@ public class IntakeIOSim implements IntakeIO {
 
   private final LinearSystem<N2, N1, N2> m_flywheelPlant = LinearSystemId.createDCMotorSystem(flwheel_kV, flwheel_kA);
 
-  private LoggedTunableNumber intakeSensorSim = new LoggedTunableNumber("Sim/Intake/SensorDistanceInches", 1);
+  private LoggedTunableNumber intakeSensorSim = new LoggedTunableNumber("Intake/SensorDistanceInches", 1);
 
   public IntakeIOSim(int motorId) {
     sim = new DCMotorSim(m_flywheelPlant, DRIVE_GEARBOX, 0.1, 0.1);

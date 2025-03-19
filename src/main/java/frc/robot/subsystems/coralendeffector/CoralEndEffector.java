@@ -25,7 +25,7 @@ import frc.robot.util.LoggedTunableNumber;
  * </ul>
  */
 public class CoralEndEffector extends SubsystemBase {
-  public static LoggedTunableNumber CORAL_DISTANCE_THRESHOLD = new LoggedTunableNumber("Coral End Effector/CoralSensorDistanceInches", 1.85);
+  public static LoggedTunableNumber CORAL_DISTANCE_THRESHOLD = new LoggedTunableNumber("Coral End Effector/SENSORTHRESHOLD", 1.85);
 
   private CoralEndEffectorIO m_IO;
   private CoralEndEffectorInputsAutoLogged logged = new CoralEndEffectorInputsAutoLogged();

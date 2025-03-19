@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Intake extends SubsystemBase{
-  public static LoggedTunableNumber CORAL_DISTANCE_THRESHOLD = new LoggedTunableNumber("Intake/CoralSensorDistanceInches", 3.75);
+  public static LoggedTunableNumber CORAL_DISTANCE_THRESHOLD = new LoggedTunableNumber("Intake/SENSORTHRESHOLD", 3.75);
 
   private IntakeIO m_intakeIO;
   private IntakeInputsAutoLogged loggedIntake = new IntakeInputsAutoLogged();
