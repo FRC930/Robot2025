@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeStowCommand;
@@ -548,6 +549,7 @@ public class RobotContainer {
             StowToGroundIntake.getTakeCoralFromGroundIntakeCommand(intake, intakeExtender, shoulder, elbow, wrist, coralEndEffector), 
             new StowToGroundIntake(shoulder, elbow, wrist, coralEndEffector)
             .andThen(StowToGroundIntake.getRunGroundIntakeCommand(intake, intakeExtender))
+            .andThen(new WaitUntilCommand(intake.hasCoralTrigger()))
             .andThen(StowToGroundIntake.getTakeCoralFromGroundIntakeCommand(intake, intakeExtender, shoulder, elbow, wrist, coralEndEffector)), 
             coralEndEffector.hasCoralTrigger()
           ), 
