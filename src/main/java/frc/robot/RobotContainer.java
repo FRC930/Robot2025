@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeStowCommand;
+import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.BargeScoreCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.L4ToStow;
@@ -512,7 +513,13 @@ public class RobotContainer {
     // testcontroller.povLeft().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(-1, 0, Rotation2d.kCCW_90deg);}, drive));
     // testcontroller.povRight().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(-1, 0, Rotation2d.kCW_90deg);}, drive));
     // testcontroller.povUp().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(0, 0, Rotation2d.kZero);}, drive));
-    // testcontroller.povDown().whileTrue(new AutoAlignCommand((p)->Drive.getBargeScorePose(p), drive));
+    testcontroller.povDown().whileTrue(
+      new StowToBarge(shoulder,elbow,elevator,wrist)
+      .andThen(new AutoAlignCommand((p)->Drive.getBargeScorePose(p), drive))
+      .andThen(new BargeScoreCommand(algaeEndEffector))
+    ).onFalse(
+      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
+    );
     testcontroller.b().onTrue(
         ReefScoreCommandFactory.getNewAutoReefAlgaeScoreSequenceCommand(drive, shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector))
       .onFalse(
