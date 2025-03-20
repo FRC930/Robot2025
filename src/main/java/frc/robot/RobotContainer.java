@@ -22,6 +22,8 @@ package frc.robot;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.print.attribute.standard.OutputDeviceAssigned;
+
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -48,11 +50,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeStowCommand;
 import frc.robot.commands.AutoAlignCommand;
+import frc.robot.commands.BargeAlignCommand;
 import frc.robot.commands.BargeScoreCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.L4ToStow;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.OutakeCoral;
+import frc.robot.commands.ProcessorAlignCommand;
 import frc.robot.commands.ReefScoreCommandFactory;
 import frc.robot.commands.ReefScoreCommandFactory.ReefPosition;
 import frc.robot.commands.StationIntakeCommand;
@@ -515,10 +519,19 @@ public class RobotContainer {
     // testcontroller.povUp().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(0, 0, Rotation2d.kZero);}, drive));
     testcontroller.povDown().whileTrue(
       new StowToBarge(shoulder,elbow,elevator,wrist)
-      .andThen(new AutoAlignCommand((p)->Drive.getBargeScorePose(p), drive))
+      .andThen(new BargeAlignCommand(drive))
       .andThen(new BargeScoreCommand(algaeEndEffector))
     ).onFalse(
       new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
+    );
+
+    testcontroller.povUp().onTrue(
+      (new AlgaeStowCommand(shoulder,elbow,elevator,wrist,algaeEndEffector)
+        .alongWith(new ProcessorAlignCommand(drive))
+      )
+      .andThen(new OutakeAlgae(algaeEndEffector))
+      .andThen(new WaitCommand(0.3))
+      .andThen(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector))
     );
     testcontroller.b().onTrue(
         ReefScoreCommandFactory.getNewAutoReefAlgaeScoreSequenceCommand(drive, shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector))
