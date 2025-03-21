@@ -48,7 +48,7 @@ public class StationIntakeCommandFactory {
 
     // for tags 1 and 13
 
-    private static LoggedTunableNumber outsideRightOffsetBFinal = new LoggedTunableNumber("StationAutoAlign/outsideRightOffsetBFinal", 0.4);
+    private static LoggedTunableNumber outsideRightOffsetBFinal = new LoggedTunableNumber("StationAutoAlign/outsideRightOffsetBFinal", 1.05);
     private static LoggedTunableNumber outsideRightOffset = new LoggedTunableNumber("StationAutoAlign/outsideRightOffset", 0.5);
 
     private static LoggedTunableNumber insideLeftOffsetBFinal = new LoggedTunableNumber("StationAutoAlign/insideLeftOffsetBFinal", 0.4);

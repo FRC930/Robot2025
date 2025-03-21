@@ -102,7 +102,7 @@ public class AutoCommandManager {
     //#region Prep Scores
     NamedCommands.registerCommand("OverhandIntakeToL4", new OverhandIntakeToL4(shoulder, elbow, elevator, wrist, coralEE));
     NamedCommands.registerCommand("OverhandIntakeToL4Arm", new OverhandIntakeToL4(shoulder, elbow, wrist, coralEE));
-    NamedCommands.registerCommand("OverhandIntakeToL4Elevator", new OverhandIntakeToL4(elevator));
+    // NamedCommands.registerCommand("OverhandIntakeToL4Elevator", new OverhandIntakeToL4(elevator));
 
     NamedCommands.registerCommand("StowToL1", new StowToL1(shoulder, elbow, wrist));
     NamedCommands.registerCommand("StowToL2", new StowToL2(shoulder, elbow, elevator, wrist));
