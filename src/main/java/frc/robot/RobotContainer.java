@@ -519,7 +519,7 @@ public class RobotContainer {
     // testcontroller.povUp().whileTrue(new AutoAlignCommand((thisOneVariableWhichIDontReallyNeedSoIWillUseAnExtremelyConciseNameFor) -> {return new Pose2d(0, 0, Rotation2d.kZero);}, drive));
     testcontroller.povDown().whileTrue(
       new StowToBarge(shoulder,elbow,elevator,wrist)
-      .andThen(new BargeAlignCommand(drive))
+      .andThen(new BargeAlignCommand(drive,()->controller.getLeftX()))
       .andThen(new BargeScoreCommand(algaeEndEffector))
     ).onFalse(
       new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
