@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraLeft;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -99,8 +100,16 @@ public class StationIntakeCommandFactory {
             double backOffset = insideLeftOffsetBFinal.get();
             double appliedOffset = 0;
             int closestTargetId = findClosestTargetId(pose);
+            IntakePosition localIntakePos;
+            if (pos == null || pos.get() == null) {
+                localIntakePos = IntakePosition.Center;
+                Logger.recordMetadata("StationIntakeCommandFactoryPos", "The Intake Position is at the Center.");
+            } else {
+                localIntakePos = pos.get();
+                Logger.recordMetadata("StationIntakeCommandFactoryPos", "The Intake Position is at the position of Intake.");
+            }
 
-            switch (pos.get()) {
+            switch (localIntakePos) {
                 case Outside:
                     if (closestTargetId == 2 || closestTargetId == 12) {
                         appliedOffset = -outsideLeftOffset.getAsDouble();

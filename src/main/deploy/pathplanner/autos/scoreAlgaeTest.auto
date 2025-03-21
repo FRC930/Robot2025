@@ -1,0 +1,105 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "stowToAlgaeIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "scoreAlgaeTest.0"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "takeAlgaeL2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignScoreLeft"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "scoreAlgaeTest.1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stowToAlgaeIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outakeAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "scoreAlgaeTest.2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "takeAlgaeL2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignScoreLeft"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "scoreAlgaeTest.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stowToAlgaeIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outakeAlgae"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

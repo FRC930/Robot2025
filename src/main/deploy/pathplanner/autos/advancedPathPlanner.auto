@@ -27,22 +27,15 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StowToL4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "WaitUntilL4"
-                      }
-                    }
-                  ]
+                  "name": "StowToL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilL4"
                 }
               },
               {
@@ -120,22 +113,15 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StowToL4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "WaitUntilL4"
-                      }
-                    }
-                  ]
+                  "name": "StowToL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilL4"
                 }
               },
               {
@@ -213,22 +199,15 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StowToL4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "WaitUntilL4"
-                      }
-                    }
-                  ]
+                  "name": "StowToL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilL4"
                 }
               },
               {
@@ -306,22 +285,15 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StowToL4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "WaitUntilL4"
-                      }
-                    }
-                  ]
+                  "name": "StowToL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilL4"
                 }
               },
               {
