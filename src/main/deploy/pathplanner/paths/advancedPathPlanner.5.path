@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L4ToStationIntake",
+      "name": "L4ToOverhandIntake",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
@@ -43,7 +43,7 @@
             {
               "type": "named",
               "data": {
-                "name": "L4ToStow"
+                "name": "L4ToOverhandIntake"
               }
             },
             {

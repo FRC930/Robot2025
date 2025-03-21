@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.GroundIntakeToStow;
+import frc.robot.commands.L4ToOverhandIntake;
 import frc.robot.commands.L4ToStow;
 import frc.robot.commands.OutakeCoral;
+import frc.robot.commands.OverhandIntakeToL4;
 import frc.robot.commands.ReefScoreCommandFactory;
 import frc.robot.commands.ReefScoreCommandFactory.ReefPosition;
 import frc.robot.commands.StationIntakeCommand;
@@ -94,9 +96,14 @@ public class AutoCommandManager {
     //#region Intakes
     NamedCommands.registerCommand("StationIntake", new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE));
     NamedCommands.registerCommand("ReverseStationIntake", new StationIntakeReverseCommand(shoulder, elbow, elevator, wrist, coralEE));
+    NamedCommands.registerCommand("L4ToOverhandIntake", new L4ToOverhandIntake(shoulder, elbow, elevator, wrist, coralEE));
     //#endregion
 
     //#region Prep Scores
+    NamedCommands.registerCommand("OverhandIntakeToL4", new OverhandIntakeToL4(shoulder, elbow, elevator, wrist, coralEE));
+    NamedCommands.registerCommand("OverhandIntakeToL4Arm", new OverhandIntakeToL4(shoulder, elbow, wrist, coralEE));
+    NamedCommands.registerCommand("OverhandIntakeToL4Elevator", new OverhandIntakeToL4(elevator));
+
     NamedCommands.registerCommand("StowToL1", new StowToL1(shoulder, elbow, wrist));
     NamedCommands.registerCommand("StowToL2", new StowToL2(shoulder, elbow, elevator, wrist));
     NamedCommands.registerCommand("StowToL3", new StowToL3(shoulder, elbow, wrist, elevator));

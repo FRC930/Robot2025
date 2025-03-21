@@ -8,6 +8,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
@@ -96,7 +97,40 @@ public class OverhandIntakeToL4 extends SequentialCommandGroup {
             elevator.getNewSetDistanceCommand(ElevatorPositions.Final.position),
             coralEE.getNewSetVoltsCommand(1.0)
         );
-        addRequirements(shoulder, elbow, wrist, elevator);
+        addRequirements(shoulder, elbow, wrist, elevator, coralEE);
+    }
+
+    /**
+     * No elevator used
+     * 
+     * @param shoulder
+     * @param elbow
+     * @param wrist
+     * @param coralEE
+     */
+    public OverhandIntakeToL4(ArmJoint shoulder, ArmJoint elbow, Wrist wrist, CoralEndEffector coralEE) {
+        super(
+            shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position),
+            elbow.getNewSetAngleCommand(ElbowPositions.Final.position),
+            wrist.getNewWristTurnCommand(WristPositions.Final.position),
+            coralEE.getNewSetVoltsCommand(1.0)
+        );
+        addRequirements(shoulder, elbow, wrist, coralEE);
+    }
+
+    /**
+     * No elevator used
+     * 
+     * @param shoulder
+     * @param elbow
+     * @param wrist
+     * @param coralEE
+     */
+    public OverhandIntakeToL4(Elevator elevator) {
+        super(
+            elevator.getNewSetDistanceCommand(ElevatorPositions.Final.position)
+        );
+        addRequirements(elevator);
     }
 
 }

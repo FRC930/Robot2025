@@ -68,18 +68,6 @@
                 "data": {
                   "name": "StopScoreL4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
-                }
               }
             ]
           }
@@ -97,7 +85,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StationIntake"
+                  "name": "L4ToOverhandIntake"
                 }
               },
               {
@@ -126,7 +114,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "StowToL4"
+                        "name": "OverhandIntakeToL4"
                       }
                     },
                     {
@@ -161,18 +149,6 @@
                 "data": {
                   "name": "StopScoreL4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
-                }
               }
             ]
           }
@@ -190,7 +166,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StationIntake"
+                  "name": "L4ToOverhandIntake"
                 }
               },
               {
@@ -219,7 +195,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "StowToL4"
+                        "name": "OverhandIntakeToL4Arm"
                       }
                     },
                     {
@@ -254,18 +230,6 @@
                 "data": {
                   "name": "StopScoreL4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
-                }
               }
             ]
           }
@@ -283,7 +247,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StationIntake"
+                  "name": "L4ToOverhandIntake"
                 }
               },
               {
@@ -312,7 +276,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "StowToL4"
+                        "name": "OverhandIntakeToL4"
                       }
                     },
                     {
@@ -346,18 +310,6 @@
                 "type": "named",
                 "data": {
                   "name": "StopScoreL4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
                 }
               }
             ]

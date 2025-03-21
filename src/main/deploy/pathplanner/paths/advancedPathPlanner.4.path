@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "StationIntakeToL4Arm",
+      "name": "OverhandIntakeToL4Arm",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
@@ -43,13 +43,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StationIntakeToStow"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "StowToL4Arm"
+                "name": "OverhandIntakeToL4Arm"
               }
             }
           ]
@@ -57,13 +51,13 @@
       }
     },
     {
-      "name": "StowToL4Elevator",
+      "name": "OverhandIntakeToL4Elevator",
       "waypointRelativePos": 0.9,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "StowToL4Elevator"
+          "name": "OverhandIntakeToL4Elevator"
         }
       }
     }
