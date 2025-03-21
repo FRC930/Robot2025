@@ -41,7 +41,6 @@ public class StowToL4 extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("MoveToL4Command/elbow/StartingDegrees", 65)),
         MidPoint(new LoggedTunableNumber("MoveToL4Command/elbow/ShoulderSafeSwingDegrees", 0)),
         Final(new LoggedTunableNumber("MoveToL4Command/elbow/FinalDegrees", -100)),
         Confirm(new LoggedTunableNumber("MoveToL4Command/elbow/ConfirmDegrees", -140));
@@ -61,7 +60,6 @@ public class StowToL4 extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("MoveToL4Command/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("MoveToL4Command/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
@@ -79,7 +77,6 @@ public class StowToL4 extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
-        Starting(new LoggedTunableNumber("MoveToL4Command/elevator/StartingInches", 0)),
         SafeToSwingShoulder(new LoggedTunableNumber("MoveToL4Command/elevator/SafeToSwingShoulderInches", 5.0)),
         Final(new LoggedTunableNumber("MoveToL4Command/elevator/FinalInches", 16));
 

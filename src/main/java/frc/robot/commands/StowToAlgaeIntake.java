@@ -22,7 +22,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class StowToAlgaeIntake extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeIntake/Shoulder/StartingDegrees", 0)),
         MidPoint(new LoggedTunableNumber("StowToAlgaeIntake/Shoulder/MidPointDegrees", 110)),
         SafeToSwingElbow(new LoggedTunableNumber("StowToAlgaeIntake/Shoulder/SafeToSwingElbowDegrees", 100)),
         Final(new LoggedTunableNumber("StowToAlgaeIntake/Shoulder/FinalDegrees", 90));
@@ -43,7 +42,6 @@ public class StowToAlgaeIntake extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeIntake/Elbow/StartingDegrees", 0)),
         ShoulderSafeSwing(new LoggedTunableNumber("StowToAlgaeIntake/Elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("StowToAlgaeIntake/Elbow/FinalDegrees", 90));
 
@@ -62,7 +60,6 @@ public class StowToAlgaeIntake extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeIntake/Wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToAlgaeIntake/Wrist/FinalDegrees", 180));
 
         DoubleSupplier position;
@@ -80,7 +77,6 @@ public class StowToAlgaeIntake extends SequentialCommandGroup {
     }
     
     private enum AlgaeIntakePositions {
-        Starting(new LoggedTunableNumber("StowToAlgaeIntake/AlgaeIntake/StartingVolts", 0)),
         Final(new LoggedTunableNumber("StowToAlgaeIntake/AlgaeIntake/FinalVolts", 2));
 
         DoubleSupplier voltage;

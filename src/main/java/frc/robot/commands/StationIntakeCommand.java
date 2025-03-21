@@ -39,7 +39,6 @@ public class StationIntakeCommand extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber(className + "/elbow/StartingDegrees", 10.0)),
         Final(new LoggedTunableNumber(className + "/elbow/FinalDegrees", 180.0-38.5));
 
         DoubleSupplier position;
@@ -57,7 +56,6 @@ public class StationIntakeCommand extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber(className + "/wrist/StartingDegrees", 0.0)),
         Final(new LoggedTunableNumber(className + "/wrist/FinalDegrees", -90.0));
 
         DoubleSupplier position;

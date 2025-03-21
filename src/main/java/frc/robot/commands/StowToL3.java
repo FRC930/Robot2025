@@ -37,7 +37,6 @@ public class StowToL3 extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToL3/elbow/StartingDegrees", 10)),
         Final(new LoggedTunableNumber("StowToL3/elbow/FinalDegrees", 20)),
         Confirm(new LoggedTunableNumber("StowToL3/elbow/ConfirmDegrees", -20));
 
@@ -56,7 +55,6 @@ public class StowToL3 extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToL3/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToL3/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;

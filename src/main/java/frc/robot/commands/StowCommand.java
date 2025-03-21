@@ -20,7 +20,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class StowCommand extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowCommand/shoulder/StartingDegrees", 0)),
         SafeToSwingElbow(new LoggedTunableNumber("StowCommand/shoulder/SafeToSwingElbowDegrees", 105)),
         SafeToSwingElbowHigh(new LoggedTunableNumber("StowCommand/shoulder/SafeToSwingElbowHighDegrees", 10)),
         Final(new LoggedTunableNumber("StowCommand/shoulder/FinalDegrees", 90));
@@ -41,7 +40,6 @@ public class StowCommand extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowCommand/elbow/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowCommand/elbow/FinalDegrees", 65));
 
         DoubleSupplier position;
@@ -59,7 +57,6 @@ public class StowCommand extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowCommand/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowCommand/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
@@ -77,7 +74,6 @@ public class StowCommand extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
-        Starting(new LoggedTunableNumber("StowCommand/elevator/StartingInches", 0)),
         Final(new LoggedTunableNumber("StowCommand/elevator/FinalInches",0));
 
         DoubleSupplier position;

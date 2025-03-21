@@ -18,9 +18,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class TakeAlgaeL3 extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL3/shoulder/StartingDegrees", 10)),
-        // MidPoint(new LoggedTunableNumber("StowToL3Command/shoulder/MidPointDegrees", 110)),
-        // SafeToSwingElbow(new LoggedTunableNumber("StowToL3Command/shoulder/SafeToSwingElbowDegrees", 100)),
         Final(new LoggedTunableNumber("TakeAlgaeL3/shoulder/FinalDegrees", -30));
 
         DoubleSupplier position;
@@ -38,8 +35,6 @@ public class TakeAlgaeL3 extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL3/elbow/StartingDegrees", 10)),
-        // ShoulderSafeSwing(new LoggedTunableNumber("StowToL3Command/elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("TakeAlgaeL3/elbow/FinalDegrees", 57));
 
         DoubleSupplier position;
@@ -57,7 +52,6 @@ public class TakeAlgaeL3 extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL3/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("TakeAlgaeL3/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
@@ -75,7 +69,6 @@ public class TakeAlgaeL3 extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
-        Starting(new LoggedTunableNumber("TakeAlgaeL3/elevator/StartingInches", 0)),
         Final(new LoggedTunableNumber("TakeAlgaeL3/elevator/FinalInches", 5));
 
         DoubleSupplier position;

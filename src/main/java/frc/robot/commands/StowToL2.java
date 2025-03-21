@@ -17,7 +17,6 @@ import frc.robot.util.LoggedTunableNumber;
 public class StowToL2 extends SequentialCommandGroup {
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("StowToL2/shoulder/StartingDegrees", 10)),
         Final(new LoggedTunableNumber("StowToL2/shoulder/FinalDegrees", 42.5)),
         Confirm(new LoggedTunableNumber("StowToL2/shoulder/Confirm", 70));
 
@@ -36,7 +35,6 @@ public class StowToL2 extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("StowToL2/elbow/StartingDegrees", 10)),
         Final(new LoggedTunableNumber("StowToL2/elbow/FinalDegrees", 20)), 
         Confirm(new LoggedTunableNumber("StowToL2/elbow/ConfirmDegrees", -20));
 
@@ -55,7 +53,6 @@ public class StowToL2 extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("StowToL2/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToL2/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
@@ -77,17 +74,6 @@ public class StowToL2 extends SequentialCommandGroup {
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
             .alongWith(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
-
-            // LOGIC NEEDED FOR INTAKE TO STOW
-            // .alongWith(
-            //     new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.SafeToSwingElbow.angle().in(Degrees)))
-            //         .andThen(
-            //             elbow.getNewSetAngleCommand(ElbowPositions.Final.angle().in(Degrees))
-            //                 .alongWith(new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.ShoulderSafeSwing.angle().in(Degrees)))
-            //         )
-            //     )
-            // ),
-            // shoulder.getNewSetAngleCommand(ShoulderPositions.Final.angle().in(Degrees))
         );
         addRequirements(shoulder, elbow, elevator, wrist);
     }

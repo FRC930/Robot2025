@@ -24,9 +24,6 @@ public class StowToBarge extends SequentialCommandGroup {
     public CoralEndEffector fingeys;
 
     private enum ShoulderPositions {
-        Starting(new LoggedTunableNumber("BargeScoreCommand/shoulder/StartingDegrees", 0)),
-        MidPoint(new LoggedTunableNumber("BargeScoreCommand/shoulder/MidPointDegrees", 0)),
-        SafeToSwingElbow(new LoggedTunableNumber("BargeScoreCommand/shoulder/SafeToSwingElbowDegrees", 40)),
         Final(new LoggedTunableNumber("BargeScoreCommand/shoulder/FinalDegrees", -80));
 
         DoubleSupplier position;
@@ -42,10 +39,8 @@ public class StowToBarge extends SequentialCommandGroup {
             return this.distance;
         }
     }
-
+    //#region TODO: WHY ARE WE NOT USING THESE???
     private enum ElbowPositions {
-        Starting(new LoggedTunableNumber("BargeScoreCommand/elbow/StartingDegrees", 0)),
-        ShoulderSafeSwing(new LoggedTunableNumber("BargeScoreCommand/elbow/ShoulderSafeSwingDegrees", 45)),
         Final(new LoggedTunableNumber("BargeScoreCommand/elbow/FinalDegrees", 65));
 
         DoubleSupplier position;
@@ -63,7 +58,6 @@ public class StowToBarge extends SequentialCommandGroup {
     }
 
     private enum WristPositions {
-        Starting(new LoggedTunableNumber("BargeScoreCommand/wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("BargeScoreCommand/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
@@ -81,7 +75,6 @@ public class StowToBarge extends SequentialCommandGroup {
     }
 
     private enum ElevatorPositions {
-        Starting(new LoggedTunableNumber("BargeScoreCommand/elevator/StartingInches", 0)),
         SafeToSwingShoulder(new LoggedTunableNumber("BargeScoreCommand/elevator/SafeToSwingShoulderInches", 5.0)),
         Final(new LoggedTunableNumber("BargeScoreCommand/elevator/FinalInches", 26.0));
 

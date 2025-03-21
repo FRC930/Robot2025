@@ -73,7 +73,6 @@ public class StowToGroundIntake extends SequentialCommandGroup {
     }
 
     private static enum IntakeExtenderPositions {
-        Starting(new LoggedTunableNumber("StowToGroundIntake/Wrist/StartingDegrees", 0)),
         Final(new LoggedTunableNumber("StowToGroundIntake/Wrist/FinalDegrees", -144));
 
         DoubleSupplier position;
