@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.LoggedTunableNumber;
@@ -43,32 +44,25 @@ public class Intake extends SubsystemBase{
   }
 
   private void setTarget(Voltage target) {
-    m_intakeIO.setTarget(target);
   }
 
   public Command getNewSetVoltsCommand(LoggedTunableNumber volts) {
-    return new InstantCommand(() -> {
-      setTarget(Volts.of((volts.get())));
-    }, this);
+    return new PrintCommand("I would run intake if it still existed");
   }
 
   public Command getNewSetVoltsCommand(double i) {
-    return new InstantCommand(() -> {
-      setTarget(Volts.of(i));
-    }, this);
+    return new PrintCommand("I would run intake if it still existed");
   }
 
   public Command getNewSetSpeedCommand(double percentOutput) {
-    return new InstantCommand(() -> {
-      double volts = 12.0 * percentOutput;
-      setTarget(Volts.of(volts));
-    }, this);
+    return new PrintCommand("I would run intake if it still existed");
   }
 
   public Trigger hasCoralTrigger() {
-    return new Trigger(() -> 
-      loggedIntake.coralDistance.gt(LOWER_SENSOR_BOUND) && loggedIntake.coralDistance.lt(UPPER_SENSOR_BOUND)
-    ).debounce(0.1);
+    return new Trigger(() -> {
+      System.out.println("We're checking the intake which doesn't exist lmao");
+      return true;
+    });
   }
 
   @Override

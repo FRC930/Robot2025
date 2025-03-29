@@ -45,14 +45,14 @@ public class IntakeIONova implements IntakeIO {
   }
 
   private void configureTalons() {
-    Motor.setMaxCurrent(CurrentType.STATOR, 40);
-    Motor.setMaxCurrent(CurrentType.SUPPLY,5);
-    Motor.setInversion(true);
-    Motor.setBrakeMode(true);
+    // Motor.setMaxCurrent(CurrentType.STATOR, 40);
+    // Motor.setMaxCurrent(CurrentType.SUPPLY,5);
+    // Motor.setInversion(true);
+    // Motor.setBrakeMode(true);
 
     CANrangeConfiguration cr_cfg = new CANrangeConfiguration();
     cr_cfg.ToFParams.UpdateMode = UpdateModeValue.ShortRange100Hz;
-    PhoenixUtil.tryUntilOk(5, () -> rangeSensor.getConfigurator().apply(cr_cfg));
+    // PhoenixUtil.tryUntilOk(5, () -> rangeSensor.getConfigurator().apply(cr_cfg));
   }
 
   @Override
@@ -66,7 +66,7 @@ public class IntakeIONova implements IntakeIO {
 
   @Override
   public void setTarget(Voltage target) {
-    Motor.setVoltage(target);
+    // Motor.setVoltage(target);
     m_setPoint = target;
   }
 

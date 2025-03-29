@@ -28,6 +28,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.auto.CommandUtil;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -39,6 +40,8 @@ import static edu.wpi.first.units.Units.Pounds;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -681,6 +684,7 @@ public class RobotContainer {
     SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist));
     SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
     SmartDashboard.putData(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector, intakeExtender));
+    SmartDashboard.putData(intakeExtender.getNewIntakeExtenderTurnCommand(90));
   }
 
   public void configureCharacterizationButtonBindings() {

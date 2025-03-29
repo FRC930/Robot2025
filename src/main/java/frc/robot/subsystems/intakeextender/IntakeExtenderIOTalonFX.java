@@ -40,13 +40,13 @@ public class IntakeExtenderIOTalonFX implements IntakeExtenderIO {
     cfg.Voltage.PeakReverseVoltage = 7;
     cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     cfg.Feedback.SensorToMechanismRatio = 33.3333;
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
+    // PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(cfg));
   }
 
   @Override
   public void setTarget(Angle target) {
     Request = Request.withPosition(target).withSlot(0);
-    Motor.setControl(Request);
+    // Motor.setControl(Request);
     m_setPoint = target;
   }
 
@@ -69,7 +69,7 @@ public class IntakeExtenderIOTalonFX implements IntakeExtenderIO {
     slot0Configs.kG = gains.kG;
     slot0Configs.kV = gains.kV;
     slot0Configs.kA = gains.kA;
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(slot0Configs));
+    // PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(slot0Configs));
 
     MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
     motionMagicConfigs.MotionMagicCruiseVelocity = gains.kMMV;
@@ -77,6 +77,6 @@ public class IntakeExtenderIOTalonFX implements IntakeExtenderIO {
     motionMagicConfigs.MotionMagicJerk = gains.kMMJ;
     motionMagicConfigs.MotionMagicExpo_kV = gains.kMMEV;
     motionMagicConfigs.MotionMagicExpo_kA = gains.kMMEA;
-    PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(motionMagicConfigs));
+    // PhoenixUtil.tryUntilOk(5, () -> Motor.getConfigurator().apply(motionMagicConfigs));
   }
 }

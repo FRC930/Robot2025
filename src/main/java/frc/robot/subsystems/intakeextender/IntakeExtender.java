@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.mutable.MutableMeasureBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotState;
@@ -45,7 +46,7 @@ public class IntakeExtender extends SubsystemBase {
     loggedintakeExtender.voltageSetPoint = Volts.mutable(0);
     loggedintakeExtender.voltage = Volts.mutable(0);
 
-    RobotState.instance().setIntakeExtenderSource(loggedintakeExtender.Angle);
+    // RobotState.instance().setIntakeExtenderSource(loggedintakeExtender.Angle);
   }
 
   public Supplier<Angle> getAngleSupplier() {
@@ -58,15 +59,11 @@ public class IntakeExtender extends SubsystemBase {
   }
   
   public Command getNewIntakeExtenderTurnCommand(DoubleSupplier angle) {
-    return new InstantCommand(() -> {
-      setAngle(Degrees.of(angle.getAsDouble()));
-    }, this); 
+    return new PrintCommand("I would run intake extender if it still existed");
   }
 
   public Command getNewIntakeExtenderTurnCommand(double i) {
-    return new InstantCommand(() -> {
-      setAngle(Degrees.of(i));
-    }, this);
+    return new PrintCommand("I would run intake extender if it still existed");
   }
 
   // public Trigger getNewAtAngleTrigger(Angle angle,Angle tolerance) {
@@ -77,34 +74,44 @@ public class IntakeExtender extends SubsystemBase {
 
   public Trigger getNewAtAngleTrigger(DoubleSupplier angle, Angle tolerance) {
     return new Trigger(() -> {
-      return MathUtil.isNear(angle.getAsDouble(), loggedintakeExtender.Angle.in(Degrees), tolerance.in(Degrees));
+      System.out.println("We're checking the intake extender which doesn't exist lmao");
+      return true;
     });
   }
 
   public Trigger getNewAtAngleTrigger(Supplier<Angle> angle, Angle tolerance) {
     return new Trigger(() -> {
-      return MathUtil.isNear(angle.get().in(Degrees), loggedintakeExtender.Angle.in(Degrees), tolerance.in(Degrees));
+      System.out.println("We're checking the intake extender which doesn't exist lmao");
+      return true;
     });
   }
 
   public Trigger getNewLessThanAngleTrigger(Supplier<Angle> angle) {
-    return new Trigger(() -> 
-      loggedintakeExtender.Angle.lt(angle.get())
-    );
+    return new Trigger(() -> {
+      System.out.println("We're checking the intake extender which doesn't exist lmao");
+      return true;
+    });
   }
 
   public Trigger getNewLessThanAngleTrigger(DoubleSupplier degrees) {
-    return getNewLessThanAngleTrigger(()->Degrees.of(degrees.getAsDouble()));
+    return new Trigger(() -> {
+      System.out.println("We're checking the intake extender which doesn't exist lmao");
+      return true;
+    });
   }
 
   public Trigger getNewGreaterThanAngleTrigger(Supplier<Angle> angle) {
-    return new Trigger(() -> 
-      loggedintakeExtender.Angle.gt(angle.get())
-    );
+    return new Trigger(() -> {
+      System.out.println("We're checking the intake extender which doesn't exist lmao");
+      return true;
+    });
   }
 
   public Trigger getNewGreaterThanAngleTrigger(DoubleSupplier degrees) {
-    return getNewGreaterThanAngleTrigger(()->Degrees.of(degrees.getAsDouble()));
+    return new Trigger(() -> {
+      System.out.println("We're checking the intake extender which doesn't exist lmao");
+      return true;
+    });
   }
 
 

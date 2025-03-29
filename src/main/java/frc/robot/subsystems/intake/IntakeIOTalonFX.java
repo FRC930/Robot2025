@@ -42,11 +42,11 @@ public class IntakeIOTalonFX implements IntakeIO {
     cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(cfg));
+    // PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(cfg));
 
     CANrangeConfiguration cr_cfg = new CANrangeConfiguration();
     cr_cfg.ToFParams.UpdateMode = UpdateModeValue.ShortRange100Hz;
-    PhoenixUtil.tryUntilOk(5, () -> rangeSensor.getConfigurator().apply(cr_cfg));
+    // PhoenixUtil.tryUntilOk(5, () -> rangeSensor.getConfigurator().apply(cr_cfg));
   }
 
   @Override
@@ -63,7 +63,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   @Override
   public void setTarget(Voltage target) {
     request = request.withOutput(target);
-    motor.setControl(request);
+    // motor.setControl(request);
     m_setPoint = target;
   }
 
