@@ -63,10 +63,4 @@ public class BargeAlignCommand extends AutoAlignCommand {
         Logger.recordOutput("BargeAlignCommand/targetPose", newPose);
         return newPose ;
   }
-
-  //Must be killed manually
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 }

@@ -10,6 +10,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.AlgaeStowCommand;
+import frc.robot.commands.BargeAlignCommand;
+import frc.robot.commands.BargeScoreCommand;
+import frc.robot.commands.BargeScoreThrowCommand;
 import frc.robot.commands.L4ToStow;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.OutakeCoral;
@@ -22,6 +25,7 @@ import frc.robot.commands.StationIntakeReverseCommand;
 import frc.robot.commands.StationIntakeToStow;
 import frc.robot.commands.StopDrivetrainCommand;
 import frc.robot.commands.StowCommand;
+import frc.robot.commands.StowToBarge;
 import frc.robot.commands.StowToL1;
 import frc.robot.commands.StowToL2;
 import frc.robot.commands.StowToL3;
@@ -195,6 +199,17 @@ public class AutoCommandManager {
     );
     NamedCommands.registerCommand("AutoAlignAlgaePluckBackup",
       ReefScoreCommandFactory.getNewAlgaePluckAutoAlignCommand(drive, true)
+    );
+
+    NamedCommands.registerCommand("StowToBarge",
+      new StowToBarge(shoulder, elbow, wrist)
+    );
+    NamedCommands.registerCommand("BargeAlignCommand",
+      new BargeAlignCommand(drive,()->0.0).withTimeout(1.0)
+    );
+    NamedCommands.registerCommand("BargeScore",
+      new BargeScoreThrowCommand(elevator, wrist, algaeEE)
+        .andThen()
     );
     //#endregion
   }
