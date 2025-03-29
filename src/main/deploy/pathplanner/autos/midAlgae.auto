@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "SetL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "GroundIntakeToStow"
           }
         },
@@ -121,7 +127,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "OutakeAlgae"
+                  "name": "AlgaeStow"
                 }
               }
             ]
@@ -134,58 +140,40 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StopDrivetrain"
+          }
+        },
+        {
           "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "TakeAlgaeL3"
+                  "name": "StowToBarge"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "StopDrivetrain"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
+                  "name": "BargeAlignCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoAlignAlgaePluck"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoAlignAlgaePluckBackup"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "OutakeAlgae"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AlgaeStow"
+                  "name": "BargeScore"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
           }
         }
       ]

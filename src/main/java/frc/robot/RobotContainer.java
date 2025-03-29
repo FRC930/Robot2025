@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -380,7 +381,7 @@ public class RobotContainer {
       .whileTrue(
         DriveCommands.brakeDrive(drive)
           .alongWith(new StowToBarge(shoulder, elbow, wrist))
-          .andThen(new BargeAlignCommand(drive,()->MathUtil.applyDeadband(controller.getLeftX(),0.1)))
+          .andThen(new RepeatCommand(new BargeAlignCommand(drive,()->MathUtil.applyDeadband(controller.getLeftX(),0.1))))
       )
       .onFalse(
         new ConditionalCommand(
