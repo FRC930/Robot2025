@@ -13,7 +13,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -25,10 +27,19 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  //A flag in case our practice field breaks the logged tunable numbers. Forces loggedtunablnumbers to be enabled
+  public static final boolean overrideEnableLoggedTunableNumbers = false;
+
+  public static final boolean isDSConnected = DriverStation.waitForDsConnection(1);
+  public static final boolean isInElim = DriverStation.getMatchType() == MatchType.Elimination;
+  public static final boolean isInQual = DriverStation.getMatchType() == MatchType.Qualification;
+  
+  public static final boolean isInMatch = isInElim || isInQual;
+  
   // When changing Mode.SIM to Mode.REPLAY, also change SimGui default flag in build.gradle
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-  public static final boolean tuningMode = RobotBase.isSimulation();
+  public static final boolean tuningMode = !isInMatch || overrideEnableLoggedTunableNumbers;
 
   public static enum Mode {
     /** Running on a real robot. */
