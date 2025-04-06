@@ -18,7 +18,8 @@ public class ShoulderConstants extends ArmJointConstants {
     public ShoulderConstants() {
         this.LeaderProfile = CanDef.builder().id(9).bus(CanBus.CANivore).build();
         this.FollowerProfile = CanDef.builder().id(25).bus(CanBus.CANivore).build();
-        this.CanCoderProfile = CanDef.builder().id(22).bus(CanBus.CANivore).build();
+        this.CanCoderProfile = null;
+        // this.CanCoderProfile = CanDef.builder().id(22).bus(CanBus.CANivore).build(); // Uh oh cancoder brokie
 
         this.SimGains =
             Gains.builder().kS(0.0).kG(0.0).kV(0.0).kA(0.0).kP(0.1).kI(0.0).kD(0.0).build();
@@ -36,14 +37,15 @@ public class ShoulderConstants extends ArmJointConstants {
         this.ReverseTorqueLimit = Amps.of(-80);
 
         this.NumMotors = 1;
-        this.SensorToMechanismGearing = 1.0;
-        this.MotorToSensorGearing = 89.47368421052633;//Greg moved a tooth on the gear     100.0/38.0*34.0
+        this.SensorToMechanismGearing = 89.47368421052633;
+        this.MotorToSensorGearing = 1.0;//Greg moved a tooth on the gear     100.0/38.0*34.0
         this.Length = Inches.of(18);
         this.Weight = Pounds.of(15);
         this.Motors = DCMotor.getKrakenX60(NumMotors);
         this.MaximumAngle = Degrees.of(180);
         this.MinimumAngle = Degrees.of(-180);
-        this.StartingAngle = Degrees.of(90);
+        this.StartingAngleSim = Degrees.of(90);
+        this.StartingAngleNoCancoder = Degrees.of(90);
 
         this.XPosition = Meters.of(0.07);
         this.YPosition = Inches.of(0);

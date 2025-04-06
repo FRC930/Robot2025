@@ -20,6 +20,9 @@ public abstract class ArmJointConstants {
     public CanDef FollowerProfile = null;
     public CanDef CanCoderProfile;
 
+    public boolean usesCanCoder;
+    public Angle angleOnInit;
+
     public Gains SimGains;
 
     public LoggedTunableGainsBuilder TalonFXGainsSlot0;
@@ -41,7 +44,8 @@ public abstract class ArmJointConstants {
     public DCMotor Motors;
     public Angle MaximumAngle;
     public Angle MinimumAngle;
-    public Angle StartingAngle;
+    public Angle StartingAngleSim;
+    public Angle StartingAngleNoCancoder;
 
     public Distance XPosition;
     public Distance YPosition;

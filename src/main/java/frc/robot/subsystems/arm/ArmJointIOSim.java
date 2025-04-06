@@ -34,13 +34,13 @@ public class ArmJointIOSim implements ArmJointIO {
                       -9999,
                       9999,
                       false, //TODO: Tune FFs to allow this to be true
-                      constants.StartingAngle.in(Radians),
+                      constants.StartingAngleSim.in(Radians),
                       0.001,
                       0.001);
     controller = new ProfiledPIDController(constants.SimGains.kP, constants.SimGains.kI, constants.SimGains.kD, new Constraints(constants.MaxVelocity.in(DegreesPerSecond), constants.MaxAcceleration.in(DegreesPerSecondPerSecond)));
     ff = new ArmFeedforward(constants.SimGains.kS, constants.SimGains.kG, constants.SimGains.kV, constants.SimGains.kA);
     m_Constants = constants;
-    controller.setGoal(constants.StartingAngle.in(Degrees));
+    controller.setGoal(constants.StartingAngleSim.in(Degrees));
   }
 
   @Override

@@ -55,7 +55,7 @@ public class ArmJoint extends SubsystemBase {
     m_constants.mechanismSimCallback.accept(m_loggedArm.angle);
     tunableSlot0Gains = m_constants.TalonFXGainsSlot0;
     tunableSlot1Gains = m_constants.TalonFXGainsSlot1;
-    m_loggedArm.angle.mut_replace(m_constants.StartingAngle);
+    m_loggedArm.angle.mut_replace(m_constants.StartingAngleSim);
   }
 
   public Supplier<Angle> getAngleSupplier() {

@@ -36,16 +36,25 @@ public class ArmJointIOTalonFX implements ArmJointIO {
   private Angle m_setPoint = Angle.ofRelativeUnits(0, Rotations);
 
   public ArmJointIOTalonFX(ArmJointConstants constants, InvertedValue motorInversion, SensorDirectionValue sensorDirection, NeutralModeValue neutralMode) {
-      m_Constants = constants;
-      if(constants.CanCoderProfile != null) {
+      m_Constants = constants; // Save our constants
+      //CANCODER INIT
+      if(constants.CanCoderProfile != null) { // If we have a cancoder profile, create our cancoder
         this.cancoder = new CANcoder(constants.CanCoderProfile.id(),constants.CanCoderProfile.bus());
       }
-      Motor = new TalonFX(constants.LeaderProfile.id(),constants.LeaderProfile.bus());
-      if(constants.FollowerProfile != null) {
+      //MOTOR INIT
+      Motor = new TalonFX(constants.LeaderProfile.id(),constants.LeaderProfile.bus()); // Create our motor (We want this to error if we have no motor, so no null checks)
+      //FOLLOWER INIT
+      if(constants.FollowerProfile != null) { // If we have a follower profile, make it follow
         FollowerMotor = new TalonFX(constants.FollowerProfile.id(),constants.FollowerProfile.bus());
       }
-      Request = new MotionMagicTorqueCurrentFOC(constants.StartingAngle);
+      //REQUEST INIT
+      Request = new MotionMagicTorqueCurrentFOC(constants.StartingAngleSim);
+      //DEVICE CONFIG
       configureTalons(motorInversion, sensorDirection, neutralMode);
+      //MISSING CANCODER?
+      if(constants.CanCoderProfile == null) { // If we don't have a cancoder profile, set our starting angle to the one without our cancoder
+        this.Motor.setPosition(constants.StartingAngleSim);
+      }
   }
 
   private void configureTalons(InvertedValue motorInversion, SensorDirectionValue cancoderSensorDirection, NeutralModeValue neutralMode) {
