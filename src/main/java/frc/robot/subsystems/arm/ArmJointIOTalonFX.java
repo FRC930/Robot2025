@@ -60,11 +60,11 @@ public class ArmJointIOTalonFX implements ArmJointIO {
 
     if(cancoder != null) {
       cfg.Feedback.FeedbackRemoteSensorID = cancoder.getDeviceID();
-      cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
       CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
       cc_cfg.MagnetSensor.MagnetOffset = m_Constants.CanCoderOffset.in(Rotations);//UNIT: ROTATIONS
       cc_cfg.MagnetSensor.SensorDirection = cancoderSensorDirection;
+      cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
       PhoenixUtil.tryUntilOk(5, () -> cancoder.getConfigurator().apply(cc_cfg));
     }
 
