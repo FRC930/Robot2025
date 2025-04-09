@@ -157,7 +157,7 @@ public class StationIntakeCommandFactory {
     public static Command getNewAlignToStationCommand(Supplier<IntakePosition> position, boolean isBackingUp, Drive drive) {
         Function<Pose2d, Pose2d> positionFunction = getGetTargetPositionFunction(position, isBackingUp);
         //Base command
-        Command returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive);
+        Command returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive, false);
         //If we're backing up, add a condition to kill when we're farther away than the backup distance
         if(isBackingUp) {
             returnedCommand = returnedCommand.until(() -> (drive.getDistanceTo(positionFunction.apply(drive.getAutoAlignPose())).in(Meters) > offsetBBackingUp.getAsDouble()));

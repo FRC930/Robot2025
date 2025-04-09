@@ -74,6 +74,8 @@ public class AutoAlignCommand extends Command {
     private double lastTimestamp = 0.0;
 
     private ControllerType controlscheme = ControllerType.SIMPLE;
+    
+    private boolean m_instantVelocity;
 
     enum ControllerType {
         SIMPLE, // Behaves the same as the command we've used so far
@@ -88,14 +90,15 @@ public class AutoAlignCommand extends Command {
      * @param drivetrain The Drive class to get the current pose from.
      * @param name The LoggedTunableNumber's (should be) exclusive name
      */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name) {
-        this(getTargetPoseFunction, ()->Transform2d.kZero, drivetrain, name);
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name, boolean instantVelocity) {
+        this(getTargetPoseFunction, ()->Transform2d.kZero, drivetrain, name, instantVelocity);
     }
 
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, String name) {
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, String name, boolean instantVelocity) {
         this.getTargetPoseFn = getTargetPoseFunction;
         this.drivetrain = drivetrain;
         this.speedModSupplier = speedOffset;
+        m_instantVelocity = instantVelocity;
     }
 
     /**
@@ -104,8 +107,8 @@ public class AutoAlignCommand extends Command {
      * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
      * @param drivetrain The Drive class to get the current pose from.
      */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain) {
-        this(getTargetPoseFunction, speedOffset, drivetrain, "AutoAlign");
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, boolean instantVelocity) {
+        this(getTargetPoseFunction, speedOffset, drivetrain, "AutoAlign", instantVelocity);
     }
 
     /**
@@ -114,8 +117,8 @@ public class AutoAlignCommand extends Command {
      * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
      * @param drivetrain The Drive class to get the current pose from.
      */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain) {
-        this(getTargetPoseFunction, drivetrain, "AutoAlign");
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, boolean instantVelocity) {
+        this(getTargetPoseFunction, drivetrain, "AutoAlign", instantVelocity);
     }
 
     /**
@@ -173,13 +176,15 @@ public class AutoAlignCommand extends Command {
         m_vx = drivetrain.getChassisSpeeds().vxMetersPerSecond;
         m_vy = drivetrain.getChassisSpeeds().vyMetersPerSecond;
 
-        
         m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI, strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
         m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI, throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
 
         m_strafePID.reset(m_tx, m_vy);
         m_throttlePID.reset(m_ty, m_vx);
-        m_throttle = m_throttlePID.calculate(m_ty, new TrapezoidProfile.State(), new TrapezoidProfile.Constraints(Integer.MAX_VALUE / 4.0, Integer.MAX_VALUE / 4.0));
+
+        if (m_instantVelocity) {
+            m_throttle = m_throttlePID.calculate(m_ty, new TrapezoidProfile.State(), new TrapezoidProfile.Constraints(Integer.MAX_VALUE / 4.0, Integer.MAX_VALUE / 4.0));
+        }
         
         spinPID.reset();
     }
@@ -190,7 +195,7 @@ public class AutoAlignCommand extends Command {
     */
     @Override
     public void execute() {
-        // targetPose = targetPose.transformBy(speedModSupplier.get().times(Timer.getFPGATimestamp() - lastTimestamp));
+        targetPose = targetPose.transformBy(speedModSupplier.get().times(Timer.getFPGATimestamp() - lastTimestamp));
 
         Pose2d targetPose_r = getRelativeTarget();
 
@@ -241,6 +246,8 @@ public class AutoAlignCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.runVelocity(new ChassisSpeeds());
+        if (!interrupted) {
+            drivetrain.runVelocity(new ChassisSpeeds());
+        }
     }
 }

@@ -33,7 +33,8 @@ public class BargeAlignCommand extends AutoAlignCommand {
         super (
           (p)->p,
           ()->new Transform2d(0.0,strafeControl.get() * adjustSpeed.get(),Rotation2d.kZero),
-          drive
+          drive,
+          false
         );
         
         this.drivetrain = drive;
