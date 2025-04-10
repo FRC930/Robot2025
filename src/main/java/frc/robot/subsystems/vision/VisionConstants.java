@@ -55,9 +55,9 @@ public static Transform3d robotToCameraRight =
 
       public static Transform3d robotToCameraFront =
       new Transform3d(
-          -0.001,
-          0.352,
-          -0.316,
+          .001,
+          -0.421,
+          0.198,
           new Rotation3d(0.0, Math.toRadians(0.0), Math.toRadians(0.0)));
 
   // Basic filtering thresholds
