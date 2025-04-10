@@ -35,7 +35,7 @@ public class VisionConstants {
     //IP 10.9.30.16
     //back Left (on endgame) values on robot, 
     // LL Forward -0.236449(-9.309 in y val from cad), LL Right -0.190119(-7.485 in x val from cad), LL up 0.317932(-12.517 in), LL Roll 0, LL Pitch -10, LL Yaw -172.5
-    //LL RIGHT IS +, IN CODE(y value) IT'S -
+    //LL RIGHT IS -, IN CODE(y value) IT'S +
       -0.236449,
       0.190119, 
       0.317932,
@@ -46,7 +46,7 @@ public static Transform3d robotToCameraRight =
     // 10.9.30.15
     //back right values on robot, 
     // LL Forward -0.236449(9.309in y val from cad), LL Right 0.190119(-7.485in x val from cad), LL up 0.318008(12.52in), LL Roll 0, LL Pitch 10, LL Yaw 172.5.
-    //LL RIGHT IS -, IN CODE(y value) IT'S +
+    //LL RIGHT IS +, IN CODE(y value) IT'S -
       -0.236449,
       -0.190119,
       0.318008,
