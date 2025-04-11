@@ -16,7 +16,7 @@ public class ProcessorAlignCommand extends AutoAlignCommand {
     private static final LoggedTunableNumber offsetR = new LoggedTunableNumber("AutoAlignCommands/ProcessorAlignCommand/offsetR",0.0);
 
     public ProcessorAlignCommand(Drive drive) {
-        super((p)->getProcessorScorePose(p),drive, false);
+        super((p)->getProcessorScorePose(p),drive);
     }
 
     public static Pose2d getProcessorScorePose(Pose2d robotPose) {

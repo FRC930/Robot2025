@@ -184,7 +184,7 @@ public class ReefScoreCommandFactory {
 
             // If we're backing up override our back offset
             if(isBackingUp) {
-                backOffset = offsetBBackingUp.getAsDouble();
+                // backOffset = offsetBBackingUp.getAsDouble();
             }
             
             //Get our closest tag
@@ -223,24 +223,24 @@ public class ReefScoreCommandFactory {
      * @param position Left or right
      * @param isBackingUp Whether or not we should back up if we're too close to the reef
      */
-    public static Command getNewAlignToReefCommand(ReefPosition position, boolean isBackingUp, Drive drive, boolean instantVelocity) {
+    public static Command getNewAlignToReefCommand(ReefPosition position, boolean isBackingUp, Drive drive, boolean useLastThrottle) {
         Function<Pose2d, Pose2d> positionFunction = getGetTargetPositionFunction(position, isBackingUp);
         //Base command
-        Command returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive, instantVelocity)
-        .raceWith(new RunCommand(() -> Logger.recordOutput("AutoAlign/DistanceMeters",drive.getDistanceTo(positionFunction.apply(drive.getAutoAlignPose())).in(Meters))));
-        //If we're backing up, add kill conditions
-        if(isBackingUp) {
-            // returnedCommand = returnedCommand
-                // Kill when we are out of the distance (not necessary since we kill)
-                // .until(() -> (drive.getDistanceTo(positionFunction.apply(drive.getPose())).in(Meters) > offsetBBackingUp.getAsDouble()))
-                // Don't run the backup if we are out of the distance
-                // .unless(() -> {
-                //     double dist = drive.getDistanceTo(positionFunction.apply(drive.getAutoAlignPose())).in(Meters);
-                //     Logger.recordOutput("AutoAlign/DistanceMeters",dist);
-                //     return dist > offsetBBackingUp.getAsDouble();
-                // });
+        Command returnedCommand;
+
+        if (useLastThrottle) { // adds withPreviousThrottle method
+            returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive).withPreviousThrottle();
+        } else {
+            returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive);
         }
+        
+        returnedCommand = returnedCommand.raceWith(new RunCommand(() -> Logger.recordOutput("AutoAlign/DistanceMeters",drive.getDistanceTo(positionFunction.apply(drive.getAutoAlignPose())).in(Meters))));
+        
         return returnedCommand;
+    }
+
+    public static Command getNewAlignToReefCommand(ReefPosition position, boolean isBackingUp, Drive drive) {
+        return getNewAlignToReefCommand(position, isBackingUp, drive, false);
     }
 
     /**
@@ -254,17 +254,17 @@ public class ReefScoreCommandFactory {
     public static Command getNewReefCoralScoreSequence(ReefPosition position, boolean isBackingUp, Map<ReefPositionsUtil.ScoreLevel,Command> coralLevelCommands, Map<ReefPositionsUtil.ScoreLevel,Command> scoreCoralLevelCommands, Map<ReefPositionsUtil.ScoreLevel,Command> stopCoralLevelCommands, Map<ReefPositionsUtil.ScoreLevel,Command> waitUntilCoralLevelCommands, Drive drive) {
         ReefPositionsUtil reefUtil = ReefPositionsUtil.getInstance();
         return 
-            getNewAlignToReefCommand(position, true, drive, false).onlyIf(()->isBackingUp)
+            getNewAlignToReefCommand(position, true, drive).onlyIf(()->isBackingUp)
                 .andThen(DriveCommands.brakeDrive(drive))
                 .withDeadline(
                     reefUtil.getCoralLevelSelector(coralLevelCommands)
                     .andThen(reefUtil.getCoralLevelSelector(waitUntilCoralLevelCommands))
                 )
-            .andThen(getNewAlignToReefCommand(position, false, drive, isBackingUp ? true : false))
+            .andThen(getNewAlignToReefCommand(position, false, drive, true))
             .andThen(reefUtil.getCoralLevelSelector(scoreCoralLevelCommands))
             // Added wait for score L4 so no need for wait here
             .andThen(
-                getNewAlignToReefCommand(position, true, drive, false).onlyIf(()->reefUtil.isSelected(ScoreLevel.L4))
+                getNewAlignToReefCommand(position, true, drive).onlyIf(()->reefUtil.isSelected(ScoreLevel.L4))
                     .andThen(reefUtil.getCoralLevelSelector(stopCoralLevelCommands))
             );
     }
@@ -274,9 +274,9 @@ public class ReefScoreCommandFactory {
     }
 
     public static Command getNewReefCoralScoreSequence(ReefPosition position, boolean isBackingUp, Drive drive) {
-        return getNewAlignToReefCommand(position, true, drive, false).onlyIf(()->isBackingUp)
+        return getNewAlignToReefCommand(position, true, drive).onlyIf(()->isBackingUp)
             .andThen(DriveCommands.brakeDrive(drive))
-            .andThen(getNewAlignToReefCommand(position, false, drive, isBackingUp ? true : false));
+            .andThen(getNewAlignToReefCommand(position, false, drive));
     }
 
     /**
@@ -299,15 +299,15 @@ public class ReefScoreCommandFactory {
         Wrist wrist, 
         AlgaeEndEffector algaeEE
     ) {
-        return getNewAlignToReefCommand(ReefPosition.Center, true, drive, false)
+        return getNewAlignToReefCommand(ReefPosition.Center, true, drive)
             .andThen(new ConditionalCommand(
                 new TakeAlgaeL2(shoulder, elbow, wrist, algaeEE, elevator),
                 new TakeAlgaeL3(shoulder, elbow, wrist, algaeEE, elevator),
                 () -> ReefPositionsUtil.getInstance().isSelected(DeAlgaeLevel.Low)))
-            .andThen(getNewAlignToReefCommand(ReefPosition.Center, false, drive, false))
+            .andThen(getNewAlignToReefCommand(ReefPosition.Center, false, drive))
             .until(algaeEE.hasAlgaeTrigger().debounce(0.5))
             .andThen(new WaitUntilCommand(algaeEE.hasAlgaeTrigger()))
-            .andThen(getNewAlignToReefCommand(ReefPosition.Center, true, drive, false))
+            .andThen(getNewAlignToReefCommand(ReefPosition.Center, true, drive))
             .andThen(new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEE));
     }
     
@@ -315,6 +315,6 @@ public class ReefScoreCommandFactory {
         Drive drive,
         boolean isBackingUp
     ) {
-        return getNewAlignToReefCommand(ReefPosition.Center, isBackingUp, drive, false);
+        return getNewAlignToReefCommand(ReefPosition.Center, isBackingUp, drive);
     }
 }

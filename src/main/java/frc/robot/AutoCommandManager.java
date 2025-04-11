@@ -139,15 +139,13 @@ public class AutoCommandManager {
       ReefScoreCommandFactory.getNewAlignToReefCommand(
         ReefPosition.Left, 
         true, 
-        drive,
-        false
+        drive
     ));
     NamedCommands.registerCommand("BackupL4Right", 
       ReefScoreCommandFactory.getNewAlignToReefCommand(
         ReefPosition.Right, 
         true, 
-        drive,
-        false
+        drive
     ));
     //#endregion
 

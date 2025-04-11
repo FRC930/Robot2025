@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import java.util.concurrent.TransferQueue;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -10,11 +9,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 
@@ -30,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LoggedTunableGainsBuilder;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.PoseUtils;
 import frc.robot.util.ReefPositionsUtil;
 
 public class AutoAlignCommand extends Command {
@@ -41,8 +38,8 @@ public class AutoAlignCommand extends Command {
     private Function<Pose2d, Pose2d> getTargetPoseFn;
 
     //#region TODO get accurate values
-    public static LoggedTunableGainsBuilder throttleGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/strafeGains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    public static LoggedTunableGainsBuilder throttleGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/strafeGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
     public static LoggedTunableNumber maxStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxThrottleTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",5.0);
@@ -75,7 +72,8 @@ public class AutoAlignCommand extends Command {
 
     private ControllerType controlscheme = ControllerType.SIMPLE;
     
-    private boolean m_instantVelocity;
+    private boolean m_useLastThrottle = false;
+
 
     enum ControllerType {
         SIMPLE, // Behaves the same as the command we've used so far
@@ -90,15 +88,14 @@ public class AutoAlignCommand extends Command {
      * @param drivetrain The Drive class to get the current pose from.
      * @param name The LoggedTunableNumber's (should be) exclusive name
      */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name, boolean instantVelocity) {
-        this(getTargetPoseFunction, ()->Transform2d.kZero, drivetrain, name, instantVelocity);
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name) {
+        this(getTargetPoseFunction, ()->Transform2d.kZero, drivetrain, name);
     }
 
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, String name, boolean instantVelocity) {
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, String name) {
         this.getTargetPoseFn = getTargetPoseFunction;
         this.drivetrain = drivetrain;
         this.speedModSupplier = speedOffset;
-        m_instantVelocity = instantVelocity;
     }
 
     /**
@@ -107,8 +104,8 @@ public class AutoAlignCommand extends Command {
      * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
      * @param drivetrain The Drive class to get the current pose from.
      */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, boolean instantVelocity) {
-        this(getTargetPoseFunction, speedOffset, drivetrain, "AutoAlign", instantVelocity);
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain) {
+        this(getTargetPoseFunction, speedOffset, drivetrain, "AutoAlign");
     }
 
     /**
@@ -117,8 +114,8 @@ public class AutoAlignCommand extends Command {
      * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
      * @param drivetrain The Drive class to get the current pose from.
      */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, boolean instantVelocity) {
-        this(getTargetPoseFunction, drivetrain, "AutoAlign", instantVelocity);
+    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain) {
+        this(getTargetPoseFunction, drivetrain, "AutoAlign");
     }
 
     /**
@@ -141,6 +138,11 @@ public class AutoAlignCommand extends Command {
     private Pose2d getNewTargetPose() {
         targetPose = getTargetPoseFn.apply(getCurrentPose());
         return targetPose;
+    }
+
+    public AutoAlignCommand withPreviousThrottle() {
+        m_useLastThrottle = true;
+        return this;
     }
 
     /**
@@ -179,13 +181,14 @@ public class AutoAlignCommand extends Command {
         m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI, strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
         m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI, throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
 
-        m_strafePID.reset(m_tx, m_vy);
-        m_throttlePID.reset(m_ty, m_vx);
+        System.out.println("Throttle is equal to: " + (m_useLastThrottle ? PoseUtils.getInstance().getLastThrottle() : "not used"));
+        m_strafePID.reset(m_tx, m_useLastThrottle ? PoseUtils.getInstance().getLastStrafe() : m_vy);
+        m_throttlePID.reset(m_ty, m_useLastThrottle ? PoseUtils.getInstance().getLastThrottle() : m_vx);
 
-        if (m_instantVelocity) {
-            m_throttle = m_throttlePID.calculate(m_ty, new TrapezoidProfile.State(), new TrapezoidProfile.Constraints(Integer.MAX_VALUE / 4.0, Integer.MAX_VALUE / 4.0));
+        if (m_useLastThrottle) {
+            m_throttlePID.calculate(m_ty, new State(), new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
         }
-        
+
         spinPID.reset();
     }
 
@@ -205,8 +208,8 @@ public class AutoAlignCommand extends Command {
         m_ty = -targetPose_r.getX();
         m_tr = targetPose_r.getRotation().unaryMinus().getRadians();
 
-        m_strafe = m_strafePID.calculate(m_tx, 0.0); 
-        m_throttle = m_throttlePID.calculate(m_ty, 0.0);
+        m_strafe = m_strafePID.calculate(m_tx, new State(), new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond))); 
+        m_throttle = m_throttlePID.calculate(m_ty, new State(), new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
         m_spin = MathUtil.clamp(spinPID.calculate(m_tr, 0.0), -MAX_SPIN, MAX_SPIN);
 
         if(controlscheme == ControllerType.COMPLEX_DRIVESUPPRESS) {
@@ -232,6 +235,11 @@ public class AutoAlignCommand extends Command {
         Logger.recordOutput("AutoAlign/TargetPose",targetPose);
         Logger.recordOutput("AutoAlign/distance", distance);
 
+        Logger.recordOutput("AutoAlign/TZSetPointPos", m_throttlePID.getSetpoint().position);
+        Logger.recordOutput("AutoAlign/TZSetPointVel", m_throttlePID.getSetpoint().velocity);
+
+        PoseUtils.getInstance().setLastThrottle(m_throttle);
+        PoseUtils.getInstance().setLastStrafe(m_strafe);
 
         lastTimestamp = Timer.getFPGATimestamp();
     }

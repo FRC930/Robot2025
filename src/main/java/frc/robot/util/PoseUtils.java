@@ -1,27 +1,34 @@
 package frc.robot.util;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.subsystems.drive.Drive;
-
 public class PoseUtils {
-    private PoseUtils instance;
+    private static PoseUtils instance;
 
-    private PoseUtils(Drive drivetrain) {
+    private double m_lastThrottleUsed;
+    
+    private double m_lastStrafeUsed;
 
-    }
+    private PoseUtils() {}
 
-    public PoseUtils getInstance() {
+    public static PoseUtils getInstance() {
         if(instance == null) {
-            DriverStation.reportError("PoseUtils not initialized before usage!", true);
-            return null;
+            instance = new PoseUtils();
         }
         return instance;
     }
 
-    public PoseUtils getInstance(Drive drivetrain) {
-        if(instance == null) {
-            instance = new PoseUtils(drivetrain);
-        }
-        return instance;
+    public double getLastThrottle() {
+        return m_lastThrottleUsed;
+    }
+
+    public void setLastThrottle(double throttle) {
+        m_lastThrottleUsed = throttle;
+    }
+
+    public double getLastStrafe() {
+        return m_lastStrafeUsed;
+    }
+
+    public void setLastStrafe(double strafe) {
+        m_lastStrafeUsed = strafe;
     }
 }
