@@ -170,6 +170,196 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "StowToBarge"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midAlgae.2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TakeAlgaeL2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopDrivetrain"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignAlgaePluckBackup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignAlgaePluck"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignAlgaePluckBackup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlgaeStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midAlgae.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopDrivetrain"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "BargeAlignCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StowToBarge"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midAlgae.2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TakeAlgaeL2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopDrivetrain"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignAlgaePluckBackup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignAlgaePluck"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignAlgaePluckBackup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlgaeStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midAlgae.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopDrivetrain"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "BargeAlignCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StowToBarge"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "BargeScore"
                 }
               }
