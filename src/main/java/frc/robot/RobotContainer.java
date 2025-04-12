@@ -42,6 +42,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -96,6 +98,8 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.led.CandleSubsystem;
+import frc.robot.subsystems.led.CandleSubsystem.AnimationTypes;
 import frc.robot.subsystems.vision.AprilTagVision;
 import static frc.robot.subsystems.vision.VisionConstants.limelightLeftName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightRightName;
@@ -142,6 +146,8 @@ public class RobotContainer {
   private final AlgaeEndEffector algaeEndEffector;
 
   private final Climber climber;
+
+  private final CandleSubsystem LEDs1;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -296,6 +302,7 @@ public class RobotContainer {
     autoCommandManager = new AutoCommandManager(drive, shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector);
     reefPositions = ReefPositionsUtil.getInstance();
     ReefScoreCommandFactory.initialize();
+    LEDs1 = new CandleSubsystem(rioCanBuilder.id(28).build(),30);
 
     // Configure the button bindings
     configureDriverBindings();
@@ -463,12 +470,15 @@ public class RobotContainer {
         SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive
       )
+      .alongWith(LEDs1.getSetLEDColorCommand(new Color8Bit(Color.kGreen)))
     ).onFalse(
-    new ConditionalCommand(
-      new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-      () -> reefPositions.isSelected(ScoreLevel.L4)
-    ));
+      new ConditionalCommand(
+        new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
+        new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
+        () -> reefPositions.isSelected(ScoreLevel.L4)
+      )
+      .alongWith(LEDs1.getSetLEDColorCommand(new Color8Bit(Color.kLightBlue)))
+    );
 
     // Right side reef auto align
     controller.rightBumper()
@@ -485,11 +495,15 @@ public class RobotContainer {
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
         SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive)
-    ).onFalse(new ConditionalCommand(
-      new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-      new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
-      () -> reefPositions.isSelected(ScoreLevel.L4)
-    ));
+        .alongWith(LEDs1.getSetLEDColorCommand(new Color8Bit(Color.kGreen)))
+    ).onFalse(
+      new ConditionalCommand(
+        new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
+        new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
+        () -> reefPositions.isSelected(ScoreLevel.L4)
+      )
+      .alongWith(LEDs1.getSetLEDColorCommand(new Color8Bit(Color.kLightBlue)))
+    );
 
     // Right side reef auto align superscore
     controller.leftBumper()
@@ -693,6 +707,10 @@ public class RobotContainer {
         new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector)
         )
     );
+
+    testcontroller.start()
+      .onTrue(LEDs1.getSetLEDColorCommand(new Color8Bit(Color.kGreen)))
+      .onFalse(LEDs1.getSetLEDColorCommand(new Color8Bit(Color.kLightBlue)));
     // testcontroller.b().onTrue(
     //     ReefScoreCommandFactory.getNewAlgaePluckAutoAlignSequenceCommand(DeAlgaeLevel.Low, drive, shoulder, elbow, elevator, wrist, algaeEndEffector))
     //   .onFalse(

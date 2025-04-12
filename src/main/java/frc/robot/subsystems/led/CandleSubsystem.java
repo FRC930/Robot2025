@@ -7,6 +7,10 @@
 package frc.robot.subsystems.led;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.CanDef;
@@ -78,7 +82,7 @@ public class CandleSubsystem extends SubsystemBase {
                 m_toAnimate = new FireAnimation(0.5, 0.7, LedCount, 0.7, 0.5);
                 break;
             case Larson:
-                m_toAnimate = new LarsonAnimation(0, 255, 46, 0, 1, LedCount, BounceMode.Front, 3);
+                m_toAnimate = new LarsonAnimation(25, 25, 46, 0, 1, LedCount, BounceMode.Front, 3);
                 break;
             case Rainbow:
                 m_toAnimate = new RainbowAnimation(1, 0.1, LedCount);
@@ -103,6 +107,25 @@ public class CandleSubsystem extends SubsystemBase {
                 break;
         }
         System.out.println("Changed to " + m_currentAnimation.toString());
+    }
+
+    public Command getChangeLEDAnimCommand(AnimationTypes newAnim) {
+        return new InstantCommand(() -> {
+            changeAnimation(newAnim);
+        });
+    }
+
+    public Command getFlashLEDColorCommand(Color8Bit color, int brightness, double time) {
+        return new InstantCommand(() -> {
+            m_toAnimate = new SingleFadeAnimation(color.red, color.blue, color.green, brightness, time, LedCount);
+        });
+    }
+
+    public Command getSetLEDColorCommand(Color8Bit color) {
+        return new InstantCommand(() -> {
+            m_toAnimate = null;
+            m_candle.setLEDs(color.red, color.green, color.blue);
+        });
     }
 
     @Override
