@@ -53,10 +53,12 @@ public static Transform3d robotToCameraRight =
       //LL PITCH IS +, IN CODE IT'S -
       new Rotation3d(0.0, Math.toRadians(-10.0), Math.toRadians(172.5)));
 
+      // front cam values on robot, 
+      // LL Forward 0.391, LL Right 0.0, LL up 0.198, LL Roll 0.0, LL Pitch 0.0, LL Yaw 0.0.
       public static Transform3d robotToCameraFront =
       new Transform3d(
-          .001,
-          -0.421,
+          .0,
+          -0.391,
           0.198,
           new Rotation3d(0.0, Math.toRadians(0.0), Math.toRadians(0.0)));
 
