@@ -336,20 +336,20 @@ public class RobotContainer {
     .onFalse(new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector));
 
     // Coral Station Intake Auto Align Sequence†
-    // controller.leftBumper()
-    //   .and(() -> ReefPositionsUtil.getInstance().getIsAutoAligning())
-    //   .and(coralEndEffector.hasCoralTrigger().negate())
-    //   .and(algaeEndEffector.hasAlgaeTrigger().negate()) 
-    //   .onTrue(
-    //     StationIntakeCommandFactory.getNewStationIntakeSequence(
-    //         () -> {
-    //         IntakePosition pos = intakePosChooser.get();
-    //         return pos == null ? IntakePosition.Inside : pos;
-    //       },
-    //         shoulder, elbow, elevator, wrist, coralEndEffector, drive
-    //     )
-    //   )
-    // .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
+    co_controller.povUp()
+      .and(() -> ReefPositionsUtil.getInstance().getIsAutoAligning())
+      .and(coralEndEffector.hasCoralTrigger().negate())
+      .and(algaeEndEffector.hasAlgaeTrigger().negate()) 
+      .onTrue(
+        StationIntakeCommandFactory.getNewStationIntakeSequence(
+            () -> {
+            IntakePosition pos = intakePosChooser.get();
+            return pos == null ? IntakePosition.Inside : pos;
+          },
+            shoulder, elbow, elevator, wrist, coralEndEffector, drive
+        )
+      )
+    .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
     // Go to barge auto align
     controller.y()
