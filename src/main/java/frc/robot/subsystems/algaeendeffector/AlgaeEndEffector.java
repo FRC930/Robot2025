@@ -8,11 +8,16 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Volts;
+
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
+import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.util.LoggedTunableNumber;
 
 /**
@@ -23,10 +28,12 @@ import frc.robot.util.LoggedTunableNumber;
  * </ul>
  */
 public class AlgaeEndEffector extends SubsystemBase {
-  public static LoggedTunableNumber ALGAE_DISTANCE_THRESHOLD = new LoggedTunableNumber("Sensors/AlgaeEndEffector/SENSORTHRESHOLD", 5.0);
+  public static LoggedTunableNumber ALGAE_DISTANCE_THRESHOLD_HIGH = new LoggedTunableNumber("Sensors/AlgaeEndEffector/SENSORTHRESHOLDHIGH", 4.0);
+  public static LoggedTunableNumber ALGAE_DISTANCE_THRESHOLD_LOW = new LoggedTunableNumber("Sensors/AlgaeEndEffector/SENSORTHRESHOLDLOW", 1.7);
   private AlgaeEndEffectorIO m_IO;
 
   AlgaeEndEffectorInputsAutoLogged logged = new AlgaeEndEffectorInputsAutoLogged();
+  private Debouncer algaeDebouncer = new Debouncer(0.15, DebounceType.kBoth);
 
   public AlgaeEndEffector(AlgaeEndEffectorIO io) {
     m_IO = io;
@@ -54,13 +61,24 @@ public class AlgaeEndEffector extends SubsystemBase {
     }, this);
   }
 
+  public boolean hasAlgae() {
+    return algaeDebouncer.calculate(
+      logged.algaeDistance.lte(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD_HIGH.get()))
+      &&
+      logged.algaeDistance.gte(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD_LOW.get()))
+    );
+  }
+
   public Trigger hasAlgaeTrigger() {
-    return new Trigger(() -> logged.algaeDistance.lt(Inches.of(AlgaeEndEffector.ALGAE_DISTANCE_THRESHOLD.get())));
+    return new Trigger(this::hasAlgae);
   }
 
   @Override
   public void periodic() {
     m_IO.updateInputs(logged);
     Logger.processInputs("RobotState/AlgaeEndEffector", logged);
+    if(Constants.tuningMode) {
+      Logger.recordOutput("RobotState/AlgaeEndEffector/hasAlgae", hasAlgaeTrigger());
+    }
   }
 }
