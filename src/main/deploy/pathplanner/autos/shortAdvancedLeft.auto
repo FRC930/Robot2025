@@ -120,46 +120,9 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StowToL4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "WaitUntilL4"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
                 "type": "named",
                 "data": {
-                  "name": "AutoAlignScoreLeft"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ScoreL4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "BackupL4Left"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StopScoreL4"
+                  "name": "FullScoreL4SequenceLeft"
                 }
               },
               {
