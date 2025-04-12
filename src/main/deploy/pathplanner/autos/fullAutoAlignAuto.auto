@@ -7,23 +7,54 @@
         {
           "type": "named",
           "data": {
-            "name": "SetL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Stow"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "shortAdvancedLeft.0"
+            "pathName": "fullAutoAlignAuto.0"
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
+          "data": {
+            "name": "SetL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FullScoreL4SequenceLeft"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4ToStow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilElevatorStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "fullAutoAlign.1"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -33,13 +64,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "StowToL4"
+                        "name": "StationIntake"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "WaitUntilL4"
+                        "name": "AutoAlignStationOutside"
                       }
                     }
                   ]
@@ -48,133 +79,92 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoAlignScoreLeft"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ScoreL4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "BackupL4Left"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StopScoreL4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
+                  "name": "WaitUntilHasCoral"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shortAdvancedLeft.1"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "StationIntake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoAlignStationOutside"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shortAdvancedLeft.2"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "FullScoreL4SequenceLeft"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shortAdvancedLeft.3"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "StationIntake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoAlignStationOutside"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shortAdvancedLeft.4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "StationIntakeToStow"
+            "name": "FullScoreL4SequenceLeft"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4ToStow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilElevatorStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StationIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoAlignStationOutside"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilHasCoral"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FullScoreL4SequenceRight"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4ToStow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilElevatorStow"
+                }
+              }
+            ]
           }
         }
       ]

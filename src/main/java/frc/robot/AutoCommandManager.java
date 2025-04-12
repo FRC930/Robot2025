@@ -141,6 +141,11 @@ public class AutoCommandManager {
 
     //#endregion
 
+    NamedCommands.registerCommand("FullScoreL4SequenceLeft", ReefScoreCommandFactory.getNewReefCoralScoreSequence(ReefPosition.Left, false, drive, shoulder, elbow, elevator, wrist, coralEE));
+    NamedCommands.registerCommand("FullScoreL4SequenceRight", ReefScoreCommandFactory.getNewReefCoralScoreSequence(ReefPosition.Right, false, drive, shoulder, elbow, elevator, wrist, coralEE));
+
+    NamedCommands.registerCommand("WaitUntilHasCoral", new WaitUntilCommand(coralEE.hasCoralTrigger()));
+
     //#region StopScore/Backup
     NamedCommands.registerCommand("StopScoreL1", StowToL1.getNewStopScoreCommand(coralEE));
     NamedCommands.registerCommand("StopScoreL2", StowToL2.getNewStopScoreCommand(elbow, wrist, coralEE));
