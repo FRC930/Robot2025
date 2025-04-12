@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -74,6 +75,9 @@ public class AutoAlignCommand extends Command {
     private double lastTimestamp = 0.0;
 
     private ControllerType controlscheme = ControllerType.SIMPLE;
+
+    private LinearFilter m_throttleFilter = LinearFilter.movingAverage(2);
+    private LinearFilter m_strafeFilter = LinearFilter.movingAverage(2);
 
     enum ControllerType {
         SIMPLE, // Behaves the same as the command we've used so far
@@ -212,8 +216,8 @@ public class AutoAlignCommand extends Command {
 
         ChassisSpeeds speeds =
         new ChassisSpeeds(
-            m_throttle,
-            m_strafe,
+            m_throttleFilter.calculate(m_throttle),
+            m_strafeFilter.calculate(m_strafe),
             m_spin);
         drivetrain.runVelocity(speeds);
 
