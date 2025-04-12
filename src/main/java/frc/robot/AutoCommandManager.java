@@ -4,13 +4,19 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
 import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.AlgaeStowCommand;
 import frc.robot.commands.BargeAlignCommand;
 import frc.robot.commands.BargeScoreThrowCommand;
+import frc.robot.commands.DriveCommands;
 import frc.robot.commands.L4ToStow;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.OutakeCoral;
@@ -38,6 +44,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.util.ReefPositionsUtil;
 import frc.robot.util.ReefPositionsUtil.ScoreLevel;
+import frc.robot.util.SelectorCommandFactory;
 
 
 public class AutoCommandManager {
@@ -54,6 +61,84 @@ public class AutoCommandManager {
 
      // Set up auto routines
      autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+     autoChooser.addOption("Test", new SequentialCommandGroup(
+
+      ReefPositionsUtil.getInstance().getNewSetScoreLevelCommand(ScoreLevel.L4),
+
+      ReefScoreCommandFactory.getNewReefCoralScoreSequence(
+        ReefPosition.Left, 
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive
+      ),
+
+      new L4ToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
+        .withDeadline(new WaitUntilCommand(elevator.getNewAtDistanceTrigger(Inches.of(0.0), Inches.of(1.0)))),
+
+      drive.getSetPoseCommand(()->drive.getAutoAlignPose()),
+
+      new PathPlannerAuto("fullAutoAlignAuto"),
+
+      StationIntakeCommandFactory.getNewAlignToStationCommand(
+        () -> {return IntakePosition.Outside;},
+        false,
+        drive
+      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)).withTimeout(2.0),
+
+      new WaitUntilCommand(coralEE.hasCoralTrigger()),
+
+      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE),
+
+      ReefScoreCommandFactory.getNewReefCoralScoreSequence(
+        ReefPosition.Left, 
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive
+      ),
+
+      new L4ToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
+        .withDeadline(new WaitUntilCommand(elevator.getNewAtDistanceTrigger(Inches.of(0.0), Inches.of(1.0)))),
+
+      StationIntakeCommandFactory.getNewAlignToStationCommand(
+        () -> {return IntakePosition.Outside;},
+        false,
+        drive
+      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)).withTimeout(2.0),
+
+      new WaitUntilCommand(coralEE.hasCoralTrigger()),
+
+      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE),
+
+      ReefScoreCommandFactory.getNewReefCoralScoreSequence(
+        ReefPosition.Right, 
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive
+      ),
+
+      new L4ToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
+        .withDeadline(new WaitUntilCommand(elevator.getNewAtDistanceTrigger(Inches.of(0.0), Inches.of(1.0)))),
+
+      StationIntakeCommandFactory.getNewAlignToStationCommand(
+        () -> {return IntakePosition.Outside;},
+        false,
+        drive
+      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)).withTimeout(2.0),
+
+      new WaitUntilCommand(coralEE.hasCoralTrigger()),
+        
+      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
+     ));
 
     // // Set up SysId routines
     // autoChooser.addOption(
@@ -230,16 +315,24 @@ public class AutoCommandManager {
     NamedCommands.registerCommand("FullAutoAlignSequenceLeft", 
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Left, 
-        true, 
-        drive, shoulder, elbow, elevator, wrist, coralEE
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive
       )
     );
 
     NamedCommands.registerCommand("FullAutoAlignSequenceRight", 
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Right, 
-        true, 
-        drive, shoulder, elbow, elevator, wrist, coralEE
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive
       )
     );
     //#endregion

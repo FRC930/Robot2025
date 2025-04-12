@@ -78,6 +78,13 @@ public class AprilTagVision extends Vision {
     super.addVisionMeasurement(pose, timestamp, fill);
   }
 
+  @Override
+  public void addVisionMeasurementAA(Pose2d pose, double timestamp, Vector<N3> fill) {
+    // tell system apriltag was used
+    updateTags();
+    super.addVisionMeasurementAA(pose, timestamp, fill);
+  }
+
   /** Tells system an autonomous path was executed */
   public void updateAutonomous() {
     m_HasRunAutonomous = true;

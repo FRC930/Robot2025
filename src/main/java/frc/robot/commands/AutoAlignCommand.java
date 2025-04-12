@@ -46,7 +46,7 @@ public class AutoAlignCommand extends Command {
     public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
     public static LoggedTunableNumber maxStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxThrottleTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxVelMetersPerSecond",3.0);
-    public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",5.0);
+    public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",3.0);
     public static LoggedTunableNumber maxAccelDistanceTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxAccMetersPerSecond",5.0);
     public static LoggedTunableNumber toleranceB = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceB", 0.01);
     public static LoggedTunableNumber toleranceR = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceR", 0.01);
@@ -76,8 +76,8 @@ public class AutoAlignCommand extends Command {
 
     private ControllerType controlscheme = ControllerType.SIMPLE;
 
-    private LinearFilter m_throttleFilter = LinearFilter.movingAverage(2);
-    private LinearFilter m_strafeFilter = LinearFilter.movingAverage(2);
+    private LinearFilter m_throttleFilter = LinearFilter.movingAverage(3);
+    private LinearFilter m_strafeFilter = LinearFilter.movingAverage(3);
 
     enum ControllerType {
         SIMPLE, // Behaves the same as the command we've used so far

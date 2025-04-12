@@ -93,7 +93,6 @@ public class StationIntakeCommand extends SequentialCommandGroup {
 
     public StationIntakeCommand(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEndEffector) {
         super(
-            new WaitUntilCommand(elbow.getNewGreaterThanAngleTrigger(ElbowPositions.Starting.position)),
             new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.Starting.position)),
             new WaitUntilCommand(elevator.getNewLessThanDistanceTrigger(ElevatorPositions.Starting.position)),
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
