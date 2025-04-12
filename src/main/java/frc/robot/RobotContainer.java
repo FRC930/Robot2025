@@ -338,8 +338,6 @@ public class RobotContainer {
     // Coral Station Intake Auto Align Sequence†
     co_controller.povUp()
       .and(() -> ReefPositionsUtil.getInstance().getIsAutoAligning())
-      .and(coralEndEffector.hasCoralTrigger().negate())
-      .and(algaeEndEffector.hasAlgaeTrigger().negate()) 
       .onTrue(
         StationIntakeCommandFactory.getNewStationIntakeSequence(
             () -> {
