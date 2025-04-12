@@ -179,7 +179,6 @@ public class AutoAlignCommand extends Command {
 
         m_strafePID.reset(m_tx, m_vy);
         m_throttlePID.reset(m_ty, m_vx);
-        m_throttle = m_throttlePID.calculate(m_ty, new TrapezoidProfile.State(), new TrapezoidProfile.Constraints(Integer.MAX_VALUE / 4.0, Integer.MAX_VALUE / 4.0));
         
         spinPID.reset();
     }
