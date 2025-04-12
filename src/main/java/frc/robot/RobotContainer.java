@@ -491,6 +491,53 @@ public class RobotContainer {
       () -> reefPositions.isSelected(ScoreLevel.L4)
     ));
 
+    // Right side reef auto align superscore
+    controller.leftBumper()
+    .and(
+      ()->reefPositions.getIsAutoAligning()
+    ).and(
+      () -> {return reefPositions.getAutoAlignSide() == AutoAlignSide.Right;}
+    ).whileTrue(
+      ReefScoreCommandFactory.getNewReefCoralScoreSequence(
+        ReefPosition.Right, 
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEndEffector),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive)
+        .andThen(
+          new ConditionalCommand(
+            ReefScoreCommandFactory.getNewAlgaePluckAutoAlignSequenceCommand(DeAlgaeLevel.Low, drive, shoulder, elbow, elevator, wrist, algaeEndEffector), 
+            ReefScoreCommandFactory.getNewAlgaePluckAutoAlignSequenceCommand(DeAlgaeLevel.Top, drive, shoulder, elbow, elevator, wrist, algaeEndEffector), 
+            () -> reefPositions.isSelected(DeAlgaeLevel.Low)))
+    ).onFalse(
+      new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector)
+    );
+
+    controller.leftBumper()
+    .and(
+      ()->reefPositions.getIsAutoAligning()
+    ).and(
+      () -> {return reefPositions.getAutoAlignSide() == AutoAlignSide.Left;}
+    ).whileTrue(
+      ReefScoreCommandFactory.getNewReefCoralScoreSequence(
+        ReefPosition.Left, 
+        true,
+        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEndEffector),
+        SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
+        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        drive)
+        .andThen(
+          new ConditionalCommand(
+            ReefScoreCommandFactory.getNewAlgaePluckAutoAlignSequenceCommand(DeAlgaeLevel.Low, drive, shoulder, elbow, elevator, wrist, algaeEndEffector), 
+            ReefScoreCommandFactory.getNewAlgaePluckAutoAlignSequenceCommand(DeAlgaeLevel.Top, drive, shoulder, elbow, elevator, wrist, algaeEndEffector), 
+            () -> reefPositions.isSelected(DeAlgaeLevel.Low)))
+    ).onFalse(
+      new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEndEffector)
+    );
+
     // Go to conditional coral level no auto align
     controller.rightBumper().and(()->!ReefPositionsUtil.getInstance().getIsAutoAligning())
     .onTrue(ReefPositionsUtil.getInstance().getCoralLevelSelector(coralLevelCommands))
