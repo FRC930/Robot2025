@@ -19,7 +19,7 @@ import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
-public class CANdleSystem extends SubsystemBase {
+public class CandleSubsystem extends SubsystemBase {
     private final CANdle m_candle;
     private final int LedCount;
 
@@ -39,7 +39,7 @@ public class CANdleSystem extends SubsystemBase {
     }
     private AnimationTypes m_currentAnimation;
 
-    public CANdleSystem(CanDef canloc, int LedCount) {
+    public CandleSubsystem(CanDef canloc, int LedCount) {
         this.LedCount = LedCount;
         m_candle = new CANdle(canloc.id(), canloc.bus());
         changeAnimation(AnimationTypes.SetAll);
