@@ -30,7 +30,7 @@ public class CoralEndEffector extends SubsystemBase {
 
   private CoralEndEffectorIO m_IO;
   private CoralEndEffectorInputsAutoLogged logged = new CoralEndEffectorInputsAutoLogged();
-  private Debouncer coralDebouncer = new Debouncer(0.15, DebounceType.kBoth);
+  private Debouncer coralDebouncer = new Debouncer(0.15, DebounceType.kRising);
 
   public CoralEndEffector(CoralEndEffectorIO io) {
     m_IO = io;
