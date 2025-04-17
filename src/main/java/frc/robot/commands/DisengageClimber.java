@@ -34,7 +34,7 @@ public class DisengageClimber extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Final(new LoggedTunableNumber(className + "/elbow/FinalEndgameDegrees", 155.0));
+        Final(new LoggedTunableNumber(className + "/elbow/FinalEndgameDegrees", 230.0));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -58,7 +58,7 @@ public class DisengageClimber extends SequentialCommandGroup {
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position),
             climber.getNewSetServoAngleCommand(0.0),
             new WaitCommand(0.5),
-            climber.getNewSetVoltsCommand(8.0)
+            climber.getNewSetVoltsCommand(10.0)
         );
     }
 }
