@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 6.272130681818181,
-        "y": 3.910326704545454
+        "x": 6.509323770491802,
+        "y": 3.9350922131147543
       },
       "prevControl": {
-        "x": 6.01173778024381,
-        "y": 3.9101234048349567
+        "x": 6.248930868917431,
+        "y": 3.934888913404257
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "PrepL4",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StowToL4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

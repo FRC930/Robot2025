@@ -39,7 +39,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "WaitUntilL4"
+                        "name": "WaitUntilL4NoStop"
                       }
                     }
                   ]
@@ -68,18 +68,6 @@
                 "data": {
                   "name": "StopScoreL4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4ToStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitUntilElevatorStow"
-                }
               }
             ]
           }
@@ -92,18 +80,6 @@
                 "type": "named",
                 "data": {
                   "name": "TakeAlgaeL2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StopDrivetrain"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               },
               {
@@ -140,25 +116,26 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "StopDrivetrain"
-          }
-        },
-        {
           "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "BargeAlignCommand"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StowToBarge"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "BargeAlignCommand"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StowToBarge"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -201,18 +178,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StopDrivetrain"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "AutoAlignAlgaePluckBackup"
                 }
               },
@@ -244,25 +209,26 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "StopDrivetrain"
-          }
-        },
-        {
           "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "BargeAlignCommand"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StowToBarge"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "BargeAlignCommand"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StowToBarge"
+                      }
+                    }
+                  ]
                 }
               },
               {
