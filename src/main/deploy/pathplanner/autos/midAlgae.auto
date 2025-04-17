@@ -170,7 +170,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StowToBarge"
+                  "name": "BargeScore"
                 }
               }
             ]
@@ -271,7 +271,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Stow"
+            "name": "AlgaeStow"
           }
         },
         {
@@ -369,7 +369,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Stow"
+            "name": "AlgaeStow"
           }
         }
       ]
