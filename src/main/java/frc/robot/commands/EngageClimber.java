@@ -17,7 +17,7 @@ public class EngageClimber extends SequentialCommandGroup {
      private static final String className = EngageClimber.class.getSimpleName();
 
     private enum ShoulderPositions {
-        Final(new LoggedTunableNumber(className + "/shoulder/FinalEndgameDegrees", 150));
+        Final(new LoggedTunableNumber(className + "/shoulder/FinalEndgameDegrees", 155));
 
         DoubleSupplier position;
         MutAngle distance;
@@ -34,7 +34,7 @@ public class EngageClimber extends SequentialCommandGroup {
     }
 
     private enum ElbowPositions {
-        Final(new LoggedTunableNumber(className + "/elbow/FinalEndgameDegrees", 150.0));
+        Final(new LoggedTunableNumber(className + "/elbow/FinalEndgameDegrees", 155.0));
 
         DoubleSupplier position;
         MutAngle distance;
