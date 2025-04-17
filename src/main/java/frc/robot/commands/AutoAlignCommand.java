@@ -47,7 +47,7 @@ public class AutoAlignCommand extends Command {
     public static LoggedTunableNumber maxStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxThrottleTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",3.0);
-    public static LoggedTunableNumber maxAccelDistanceTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxAccMetersPerSecond",5.0);
+    public static LoggedTunableNumber maxAccelDistanceTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxAccMetersPerSecond",3.0);
     public static LoggedTunableNumber toleranceB = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceB", 0.01);
     public static LoggedTunableNumber toleranceR = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceR", 0.01);
     public static LoggedTunableNumber spinBound = new LoggedTunableNumber("AutoAlignCommands/Shared/complexSpinBound", 10);
