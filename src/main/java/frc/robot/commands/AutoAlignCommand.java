@@ -42,8 +42,8 @@ public class AutoAlignCommand extends Command {
     private Function<Pose2d, Pose2d> getTargetPoseFn;
 
     //#region TODO get accurate values
-    public static LoggedTunableGainsBuilder throttleGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/strafeGains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    public static LoggedTunableGainsBuilder throttleGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/strafeGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
     public static LoggedTunableNumber maxStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxThrottleTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxVelMetersPerSecond",3.0);
     public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",3.0);
@@ -51,6 +51,7 @@ public class AutoAlignCommand extends Command {
     public static LoggedTunableNumber toleranceB = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceB", 0.01);
     public static LoggedTunableNumber toleranceR = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceR", 0.01);
     public static LoggedTunableNumber spinBound = new LoggedTunableNumber("AutoAlignCommands/Shared/complexSpinBound", 10);
+    public static LoggedTunableNumber strafeBound = new LoggedTunableNumber("AutoAlignCommands/Shared/complexThrottleBound", 1.0);
     //#endregion
 
     public static LinearVelocity m_maxStrafe = MetersPerSecond.of(maxStrafeTune.getAsDouble()); 
@@ -81,7 +82,8 @@ public class AutoAlignCommand extends Command {
 
     enum ControllerType {
         SIMPLE, // Behaves the same as the command we've used so far
-        COMPLEX_DRIVESUPPRESS //Supresses lateral movement until the spin is within a certain range
+        COMPLEX_DRIVESUPPRESS, //Supresses lateral movement until the spin is within a certain range
+        COMPLEX_THROTTLESUPRESS // Supresses lateral movement until the spin is within a certain range, supresses throttle until the strafe is within a certain range
         ;
     }
 
@@ -183,7 +185,6 @@ public class AutoAlignCommand extends Command {
 
         m_strafePID.reset(m_tx, m_vy);
         m_throttlePID.reset(m_ty, m_vx);
-        
         spinPID.reset();
     }
 
@@ -203,11 +204,21 @@ public class AutoAlignCommand extends Command {
         m_ty = -targetPose_r.getX();
         m_tr = targetPose_r.getRotation().unaryMinus().getRadians();
 
-        m_strafe = m_strafePID.calculate(m_tx, 0.0); 
-        m_throttle = m_throttlePID.calculate(m_ty, 0.0);
+        double txGoal = 0.0;
+        double tyGoal = 0.0;
+
+        if(controlscheme == ControllerType.COMPLEX_THROTTLESUPRESS) { // If we use the throttlesupress, we change our error by a throttle goal and bound, effectively moving the target closer to our current position
+            double coef = MathUtil.clamp(Math.abs(m_tx)/strafeBound.getAsDouble(),0,1);
+            tyGoal = m_ty * coef;
+        }
+
+        Logger.recordOutput("AutoAlign/actualTarget",getCurrentPose().transformBy(new Transform2d(-m_ty + tyGoal,-m_tx + txGoal, new Rotation2d(-m_tr))));
+
+        m_strafe = m_strafePID.calculate(m_tx, txGoal); 
+        m_throttle = m_throttlePID.calculate(m_ty, tyGoal);
         m_spin = MathUtil.clamp(spinPID.calculate(m_tr, 0.0), -MAX_SPIN, MAX_SPIN);
 
-        if(controlscheme == ControllerType.COMPLEX_DRIVESUPPRESS) {
+        if(controlscheme == ControllerType.COMPLEX_DRIVESUPPRESS || controlscheme == ControllerType.COMPLEX_THROTTLESUPRESS) {
             double coef = MathUtil.clamp(1.0-Math.abs((Degrees.convertFrom(m_tr, Radians)/spinBound.getAsDouble())), 0, 1);
             Logger.recordOutput("AutoAlign/coef", coef);
             m_throttle *= coef;
@@ -244,6 +255,8 @@ public class AutoAlignCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.runVelocity(new ChassisSpeeds());
+        if (!interrupted) {
+            drivetrain.runVelocity(new ChassisSpeeds());
+        }
     }
 }
