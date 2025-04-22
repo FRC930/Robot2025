@@ -72,12 +72,12 @@ public class ReefScoreCommandFactory {
     private static LoggedTunableNumber offsetLL1 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L1", 0.1804);
     private static LoggedTunableNumber offsetLL2 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L2", 0.18);
     private static LoggedTunableNumber offsetLL3 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L3", 0.19);
-    private static LoggedTunableNumber offsetLL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L4", 0.23);
+    private static LoggedTunableNumber offsetLL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L4", 0.22);
         //Right level overrides
     private static LoggedTunableNumber offsetRL1 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Right/L1", 0.1238);
     private static LoggedTunableNumber offsetRL2 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Right/L2", 0.15);
     private static LoggedTunableNumber offsetRL3 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Right/L3", 0.16);
-    private static LoggedTunableNumber offsetRL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Right/L4", 0.1);
+    private static LoggedTunableNumber offsetRL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Right/L4", 0.09);
         //Back level overrides (Overrides on how far back each level will be scored)
     private static LoggedTunableNumber offsetBFinalL1 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L1", 0.638);
     private static LoggedTunableNumber offsetBFinalL2 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L2", 0.7);
@@ -270,7 +270,7 @@ public class ReefScoreCommandFactory {
     }
 
     public static Command getNewReefCoralScoreSequence(ReefPosition position, Boolean isBackingUp, Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE) {
-        return getNewReefCoralScoreSequence(position, false, SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE), SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive), SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive), drive);
+        return getNewReefCoralScoreSequence(position, false, SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE), SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive), SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist), drive);
     }
 
     public static Command getNewReefCoralScoreSequence(ReefPosition position, boolean isBackingUp, Drive drive) {

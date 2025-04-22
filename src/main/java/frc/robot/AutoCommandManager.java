@@ -54,15 +54,11 @@ public class AutoCommandManager {
 
   public AutoCommandManager(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
     configureNamedCommands(drive, shoulder, elbow, elevator, wrist, coralEE, algaeEE);
-    
 
-    // PathPlannerAuto CharacterizationTest = new PathPlannerAuto("CharacterizeAuto");
-    // PathPlannerAuto ChoreoStraightAuto = new PathPlannerAuto("ChoreoStraightAuto");
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-     // Set up auto routines
-     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-     autoChooser.addOption("Test", new SequentialCommandGroup(
+    autoChooser.addOption("fullAutoAlignLeft", new SequentialCommandGroup(
 
       ReefPositionsUtil.getInstance().getNewSetScoreLevelCommand(ScoreLevel.L4),
 
@@ -81,7 +77,7 @@ public class AutoCommandManager {
 
       drive.getSetPoseCommand(()->drive.getAutoAlignPose()),
 
-      new PathPlannerAuto("fullAutoAlignAuto"),
+      new PathPlannerAuto("autoAlignPieceLeftDONOTPICK"),
 
       StationIntakeCommandFactory.getNewAlignToStationCommand(
         () -> {return IntakePosition.Outside;},
@@ -138,7 +134,7 @@ public class AutoCommandManager {
       new WaitUntilCommand(coralEE.hasCoralTrigger()),
         
       new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
-     ));
+    ));
 
     // // Set up SysId routines
     // autoChooser.addOption(
@@ -203,6 +199,8 @@ public class AutoCommandManager {
         .unless(StowToL4.getNewAtScoreTrigger(shoulder, elbow, elevator, wrist))
         .andThen(new WaitUntilCommand(StowToL4.getNewAtScoreTrigger(shoulder, elbow, elevator, wrist)).withTimeout(1.5)));
 
+    NamedCommands.registerCommand("WaitUntilL4NoStop", new WaitUntilCommand(StowToL4.getNewAtScoreTrigger(shoulder, elbow, elevator, wrist)).withTimeout(1.5));
+    
     NamedCommands.registerCommand("WaitUntilArmAtL4", 
       new StopDrivetrainCommand(drive)
         .unless(StowToL4.getNewArmAtL4Trigger(shoulder, elbow, wrist))

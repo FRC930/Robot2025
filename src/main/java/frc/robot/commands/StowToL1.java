@@ -94,7 +94,7 @@ public class StowToL1 extends SequentialCommandGroup {
 
     public static Trigger getNewAtScoreTrigger(ArmJoint shoulder, ArmJoint elbow, Wrist wrist) {
         return shoulder.getNewAtAngleTrigger(Degrees.of(ShoulderPositions.Final.position.getAsDouble()), Degrees.of(20.0))
-            .and(elbow.getNewAtAngleTrigger(Degrees.of(ElbowPositions.Final.position.getAsDouble()), Degrees.of(5.0)))
+            .and(elbow.getNewAtAngleTrigger(Degrees.of(ElbowPositions.Final.position.getAsDouble()), Degrees.of(6.0)))
             .and(wrist.getNewAtAngleTrigger(Degrees.of(WristPositions.Final.position.getAsDouble()), Degrees.of(5.0)));
     }
 }
