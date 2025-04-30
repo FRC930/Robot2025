@@ -42,22 +42,27 @@ public class AutoAlignCommand extends Command {
     private Function<Pose2d, Pose2d> getTargetPoseFn;
 
     //#region TODO get accurate values
-    public static LoggedTunableGainsBuilder throttleGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/strafeGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
-    public static LoggedTunableNumber maxStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxVelMetersPerSecond",3.0);
-    public static LoggedTunableNumber maxThrottleTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxVelMetersPerSecond",3.0);
-    public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",3.0);
-    public static LoggedTunableNumber maxAccelDistanceTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxAccMetersPerSecond",3.0);
+    // public static LoggedTunableGainsBuilder throttleGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/throttleGains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    // public static LoggedTunableGainsBuilder strafeGains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/strafeGains/", 4.0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    // public static LoggedTunableNumber maxStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxVelMetersPerSecond",3.0);
+    // public static LoggedTunableNumber maxThrottleTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxVelMetersPerSecond",3.0);
+    // public static LoggedTunableNumber maxAccelStrafeTune = new LoggedTunableNumber("AutoAlignCommands/Shared/strafeGains/maxAccMetersPerSecond",3.0);
+    // public static LoggedTunableNumber maxAccelDistanceTune = new LoggedTunableNumber("AutoAlignCommands/Shared/throttleGains/maxAccMetersPerSecond",3.0);
+
+    public static LoggedTunableGainsBuilder gains = new LoggedTunableGainsBuilder("AutoAlignCommands/Shared/gains/", 6.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    public static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlignCommands/Shared/Gains/maxAccMetersPerSecond",3.0);
+    public static LoggedTunableNumber max = new LoggedTunableNumber("AutoAlignCommands/Shared/Gains/maxVelMetersPerSecond",3.0);
+
     public static LoggedTunableNumber toleranceB = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceB", 0.01);
-    public static LoggedTunableNumber toleranceR = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceR", 0.01);
+    // public static LoggedTunableNumber toleranceR = new LoggedTunableNumber("AutoAlignCommands/Shared/toleranceR", 0.01);
     public static LoggedTunableNumber spinBound = new LoggedTunableNumber("AutoAlignCommands/Shared/complexSpinBound", 10);
     public static LoggedTunableNumber strafeBound = new LoggedTunableNumber("AutoAlignCommands/Shared/complexThrottleBound", 1.0);
     //#endregion
 
-    public static LinearVelocity m_maxStrafe = MetersPerSecond.of(maxStrafeTune.getAsDouble()); 
-    public static LinearVelocity m_maxThrottle = MetersPerSecond.of(maxThrottleTune.getAsDouble());
-    public static LinearAcceleration m_maxAccelStrafe = MetersPerSecondPerSecond.of(maxAccelStrafeTune.getAsDouble());
-    public static LinearAcceleration m_maxAccelThrottle = MetersPerSecondPerSecond.of(maxAccelDistanceTune.getAsDouble());
+    // public static LinearVelocity m_maxStrafe = MetersPerSecond.of(maxStrafeTune.getAsDouble()); 
+    // public static LinearVelocity m_maxThrottle = MetersPerSecond.of(maxThrottleTune.getAsDouble());
+    // public static LinearAcceleration m_maxAccelStrafe = MetersPerSecondPerSecond.of(maxAccelStrafeTune.getAsDouble());
+    // public static LinearAcceleration m_maxAccelThrottle = MetersPerSecondPerSecond.of(maxAccelDistanceTune.getAsDouble());
     public static final double MAX_SPIN = Math.toRadians(180.0);
 
     private double m_strafe;
@@ -68,8 +73,13 @@ public class AutoAlignCommand extends Command {
     private double m_vx;
     private double m_vy;
     private double m_tr;
-    private ProfiledPIDController m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI ,strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
-    private ProfiledPIDController m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI ,throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
+    private double m_td;
+    private double m_velocity;
+    // private ProfiledPIDController m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI ,strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
+    // private ProfiledPIDController m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI ,throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
+    private ProfiledPIDController m_pid = new ProfiledPIDController(gains.build().kP, gains.build().kI, gains.build().kD, new Constraints(max.getAsDouble(), maxAccel.getAsDouble()));
+
+
     private PIDController spinPID = new PIDController(5.0, 0.0, 0.0);
 
     private Supplier<Transform2d> speedModSupplier;
@@ -79,151 +89,168 @@ public class AutoAlignCommand extends Command {
 
     private LinearFilter m_throttleFilter = LinearFilter.movingAverage(3);
     private LinearFilter m_strafeFilter = LinearFilter.movingAverage(3);
-
-    enum ControllerType {
-        SIMPLE, // Behaves the same as the command we've used so far
-        COMPLEX_DRIVESUPPRESS, //Supresses lateral movement until the spin is within a certain range
-        COMPLEX_THROTTLESUPRESS // Supresses lateral movement until the spin is within a certain range, supresses throttle until the strafe is within a certain range
-        ;
-    }
-
-    /**
-     * This command utilitzes the swerve drive while it isn't field relative.
-     * The swerve drive returns back to field relative after the command is used.
-     * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
-     * @param drivetrain The Drive class to get the current pose from.
-     * @param name The LoggedTunableNumber's (should be) exclusive name
-     */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name) {
-        this(getTargetPoseFunction, ()->Transform2d.kZero, drivetrain, name);
-    }
-
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, String name) {
-        this.getTargetPoseFn = getTargetPoseFunction;
-        this.drivetrain = drivetrain;
-        this.speedModSupplier = speedOffset;
-    }
-
-    /**
-     * This command utilitzes the swerve drive while it isn't field relative.
-     * The swerve drive returns back to field relative after the command is used.
-     * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
-     * @param drivetrain The Drive class to get the current pose from.
-     */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain) {
-        this(getTargetPoseFunction, speedOffset, drivetrain, "AutoAlign");
-    }
-
-    /**
-     * This command utilitzes the swerve drive while it isn't field relative.
-     * The swerve drive returns back to field relative after the command is used.
-     * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
-     * @param drivetrain The Drive class to get the current pose from.
-     */
-    public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain) {
-        this(getTargetPoseFunction, drivetrain, "AutoAlign");
-    }
-
-    /**
-     * Sets the gains to the current values in the LoggedTunableNumbers of this class
-     */
-    private void resetGains() {
-        m_maxStrafe = MetersPerSecond.of(maxStrafeTune.getAsDouble()); 
-        m_maxThrottle = MetersPerSecond.of(maxThrottleTune.getAsDouble());
-        m_maxAccelStrafe = MetersPerSecondPerSecond.of(maxAccelStrafeTune.getAsDouble());
-        m_maxAccelThrottle = MetersPerSecondPerSecond.of(maxAccelDistanceTune.getAsDouble());
-
-        m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI, strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
-        m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI, throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
-    }
-
-    /**
-     * Resets the target pose based on {@link getTargetPoseFn}
-     * @return The new target pose
-     */
-    private Pose2d getNewTargetPose() {
-        targetPose = getTargetPoseFn.apply(getCurrentPose());
-        return targetPose;
-    }
-
-    /**
-     * @return The target pose relative to the robot pose.
-     */
-    private Pose2d getRelativeTarget() {
-        return targetPose.relativeTo(getCurrentPose());
-    }
-
-    private Pose2d getCurrentPose() {
-        return drivetrain.getAutoAlignPose();
-    }
-
-    public AutoAlignCommand withControlScheme(ControllerType controlScheme) {
-        this.controlscheme = controlScheme;
-        return this;
-    }
-
-    public void setTargetPoseFn(Function<Pose2d, Pose2d> newFunc) {
-        this.getTargetPoseFn = newFunc;
-    }
-
-    @Override
-    public void initialize() {
-        resetGains();
-
-        this.targetPose = getNewTargetPose();
-        Pose2d targetPose_R = getRelativeTarget();
-
-        m_tx = -targetPose_R.getY();
-        m_ty = -targetPose_R.getX();
-        m_tr = targetPose_R.getRotation().unaryMinus().getRadians();
-        m_vx = drivetrain.getChassisSpeeds().vxMetersPerSecond;
-        m_vy = drivetrain.getChassisSpeeds().vyMetersPerSecond;
-
-        
-        m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI, strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
-        m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI, throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
-
-        m_strafePID.reset(m_tx, m_vy);
-        m_throttlePID.reset(m_ty, m_vx);
-        spinPID.reset();
-    }
-
-    /* 
-    * This command utilitzes the swerve drive while it isn't field relative. 
-    * The swerve drive returns back to field relative after the command is used.
-    */
-    @Override
-    public void execute() {
-        // targetPose = targetPose.transformBy(speedModSupplier.get().times(Timer.getFPGATimestamp() - lastTimestamp));
-
-        Pose2d targetPose_r = getRelativeTarget();
-
-        double distance = getCurrentPose().getTranslation().getDistance(targetPose.getTranslation());
+    
+        enum ControllerType {
+            SIMPLE, // Behaves the same as the command we've used so far
+            COMPLEX_DRIVESUPPRESS, //Supresses lateral movement until the spin is within a certain range
+            COMPLEX_THROTTLESUPRESS // Supresses lateral movement until the spin is within a certain range, supresses throttle until the strafe is within a certain range
+            ;
+        }
+    
+        /**
+         * This command utilitzes the swerve drive while it isn't field relative.
+         * The swerve drive returns back to field relative after the command is used.
+         * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
+         * @param drivetrain The Drive class to get the current pose from.
+         * @param name The LoggedTunableNumber's (should be) exclusive name
+         */
+        public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name) {
+            this(getTargetPoseFunction, ()->Transform2d.kZero, drivetrain, name);
+        }
+    
+        public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain, String name) {
+            this.getTargetPoseFn = getTargetPoseFunction;
+            this.drivetrain = drivetrain;
+            this.speedModSupplier = speedOffset;
+        }
+    
+        /**
+         * This command utilitzes the swerve drive while it isn't field relative.
+         * The swerve drive returns back to field relative after the command is used.
+         * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
+         * @param drivetrain The Drive class to get the current pose from.
+         */
+        public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Supplier<Transform2d> speedOffset, Drive drivetrain) {
+            this(getTargetPoseFunction, speedOffset, drivetrain, "AutoAlign");
+        }
+    
+        /**
+         * This command utilitzes the swerve drive while it isn't field relative.
+         * The swerve drive returns back to field relative after the command is used.
+         * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a target position.
+         * @param drivetrain The Drive class to get the current pose from.
+         */
+        public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain) {
+            this(getTargetPoseFunction, drivetrain, "AutoAlign");
+        }
+    
+        /**
+         * Sets the gains to the current values in the LoggedTunableNumbers of this class
+         */
+        private void resetGains() {
+            // m_maxStrafe = MetersPerSecond.of(maxStrafeTune.getAsDouble()); 
+            // m_maxThrottle = MetersPerSecond.of(maxThrottleTune.getAsDouble());
+            // m_maxAccelStrafe = MetersPerSecondPerSecond.of(maxAccelStrafeTune.getAsDouble());
+            // m_maxAccelThrottle = MetersPerSecondPerSecond.of(maxAccelDistanceTune.getAsDouble());
+    
+            // m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI, strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
+            // m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI, throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
+            m_pid = new ProfiledPIDController(gains.build().kP, gains.build().kI, gains.build().kD, new Constraints(max.getAsDouble(), maxAccel.getAsDouble()));
+    
+        }
+    
+        /**
+         * Resets the target pose based on {@link getTargetPoseFn}
+         * @return The new target pose
+         */
+        private Pose2d getNewTargetPose() {
+            targetPose = getTargetPoseFn.apply(getCurrentPose());
+            return targetPose;
+        }
+    
+        /**
+         * @return The target pose relative to the robot pose.
+         */
+        private Pose2d getRelativeTarget() {
+            return targetPose.relativeTo(getCurrentPose());
+        }
+    
+        private Pose2d getCurrentPose() {
+            return drivetrain.getAutoAlignPose();
+        }
+    
+        public AutoAlignCommand withControlScheme(ControllerType controlScheme) {
+            this.controlscheme = controlScheme;
+            return this;
+        }
+    
+        public void setTargetPoseFn(Function<Pose2d, Pose2d> newFunc) {
+            this.getTargetPoseFn = newFunc;
+        }
+    
+        @Override
+        public void initialize() {
+            resetGains();
+    
+            this.targetPose = getNewTargetPose();
+            Pose2d targetPose_R = getRelativeTarget();
+    
+            m_td = getCurrentPose().getTranslation().getDistance(targetPose.getTranslation());
+    
+            m_tx = -targetPose_R.getY();
+            m_ty = -targetPose_R.getX();
+            m_tr = targetPose_R.getRotation().unaryMinus().getRadians();
+            m_vx = drivetrain.getChassisSpeeds().vxMetersPerSecond;
+            m_vy = drivetrain.getChassisSpeeds().vyMetersPerSecond;
+            
+            m_velocity = Math.hypot(m_vx, m_vy);
+    
+            
+            // m_strafePID = new ProfiledPIDController(strafeGains.build().kP, strafeGains.build().kI, strafeGains.build().kD, new Constraints(m_maxStrafe.in(MetersPerSecond), m_maxAccelStrafe.in(MetersPerSecondPerSecond)));
+            // m_throttlePID = new ProfiledPIDController(throttleGains.build().kP, throttleGains.build().kI, throttleGains.build().kD, new Constraints(m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
+    
+            m_pid = new ProfiledPIDController(gains.build().kP, gains.build().kI, gains.build().kD, new Constraints(max.getAsDouble(), maxAccel.getAsDouble()));
+    
+            // m_strafePID.reset(m_tx, m_vy);
+            // m_throttlePID.reset(m_ty, m_vx);
+            spinPID.reset();
+    
+            m_pid.reset(m_td, m_velocity);    
+        }
+    
+        /* 
+        * This command utilitzes the swerve drive while it isn't field relative. 
+        * The swerve drive returns back to field relative after the command is used.
+        */
+        @Override
+        public void execute() {
+            // targetPose = targetPose.transformBy(speedModSupplier.get().times(Timer.getFPGATimestamp() - lastTimestamp));
+    
+            Pose2d targetPose_r = getRelativeTarget();
+    
+            m_td = getCurrentPose().getTranslation().getDistance(targetPose.getTranslation());
 
         m_tx = -targetPose_r.getY();
         m_ty = -targetPose_r.getX();
         m_tr = targetPose_r.getRotation().unaryMinus().getRadians();
 
-        double txGoal = 0.0;
-        double tyGoal = 0.0;
+        // double txGoal = 0.0;
+        // double tyGoal = 0.0;
 
         if(controlscheme == ControllerType.COMPLEX_THROTTLESUPRESS) { // If we use the throttlesupress, we change our error by a throttle goal and bound, effectively moving the target closer to our current position
             double coef = MathUtil.clamp(Math.abs(m_tx)/strafeBound.getAsDouble(),0,1);
-            tyGoal = m_ty * coef;
+            // tyGoal = m_ty * coef;
         }
 
-        Logger.recordOutput("AutoAlign/actualTarget",getCurrentPose().transformBy(new Transform2d(-m_ty + tyGoal,-m_tx + txGoal, new Rotation2d(-m_tr))));
+        // Logger.recordOutput("AutoAlign/actualTarget",getCurrentPose().transformBy(new Transform2d(-m_ty + tyGoal,-m_tx + txGoal, new Rotation2d(-m_tr))));
 
-        m_strafe = m_strafePID.calculate(m_tx, txGoal); 
-        m_throttle = m_throttlePID.calculate(m_ty, tyGoal);
+        // m_strafe = m_strafePID.calculate(m_tx, txGoal); 
+        // m_throttle = m_throttlePID.calculate(m_ty, tyGoal);
         m_spin = MathUtil.clamp(spinPID.calculate(m_tr, 0.0), -MAX_SPIN, MAX_SPIN);
+
+        double m_totalThrottle = m_pid.calculate(m_td, 0.0);
 
         if(controlscheme == ControllerType.COMPLEX_DRIVESUPPRESS || controlscheme == ControllerType.COMPLEX_THROTTLESUPRESS) {
             double coef = MathUtil.clamp(1.0-Math.abs((Degrees.convertFrom(m_tr, Radians)/spinBound.getAsDouble())), 0, 1);
             Logger.recordOutput("AutoAlign/coef", coef);
-            m_throttle *= coef;
-            m_strafe *= coef;
+            // m_throttle *= coef;
+            // m_strafe *= coef;
+            m_totalThrottle *= coef;
         }
+
+        double theta = Math.atan(m_ty/m_tx);
+        m_throttle = m_totalThrottle * Math.sin(theta);
+        m_strafe = m_totalThrottle * Math.cos(theta);
 
         ChassisSpeeds speeds =
         new ChassisSpeeds(
@@ -239,7 +266,8 @@ public class AutoAlignCommand extends Command {
         Logger.recordOutput("AutoAlign/throttle", m_throttle);
         Logger.recordOutput("AutoAlign/spin", m_spin);
         Logger.recordOutput("AutoAlign/TargetPose",targetPose);
-        Logger.recordOutput("AutoAlign/distance", distance);
+        Logger.recordOutput("AutoAlign/distance", m_td);
+        Logger.recordOutput("AutoAlign/totalThrottle", m_totalThrottle);
 
 
         lastTimestamp = Timer.getFPGATimestamp();
@@ -250,7 +278,7 @@ public class AutoAlignCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-        return MathUtil.isNear(m_tx, 0.0,toleranceR.getAsDouble()) && MathUtil.isNear(m_ty, 0.0,toleranceB.getAsDouble()) && MathUtil.isNear(m_tr, 0.0,(toleranceB.getAsDouble()+toleranceR.getAsDouble())/2.0) || !ReefPositionsUtil.getInstance().getIsAutoAligning();
+        return MathUtil.isNear(m_td, 0.0,toleranceB.getAsDouble()) || !ReefPositionsUtil.getInstance().getIsAutoAligning();
     }
 
     @Override
