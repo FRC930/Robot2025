@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.commands.AutoAlignCommand.ControllerType;
+import frc.robot.commands.AutoAlignCommand.MovementMode;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
@@ -229,7 +229,7 @@ public class ReefScoreCommandFactory {
     public static Command getNewAlignToReefCommand(ReefPosition position, boolean isBackingUp, Drive drive) {
         Function<Pose2d, Pose2d> positionFunction = getGetTargetPositionFunction(position, isBackingUp);
         //Base command
-        Command returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive).withControlScheme(ControllerType.COMPLEX_THROTTLESUPRESS);
+        Command returnedCommand = new AutoAlignCommand(getGetTargetPositionFunction(position, isBackingUp), drive).withControlScheme(MovementMode.SUPPRESS_UNTIL_ROTATED);
         //If we're backing up, add kill conditions
         if(isBackingUp) {
             // returnedCommand = returnedCommand
