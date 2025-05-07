@@ -13,13 +13,20 @@
 
 package frc.robot.util;
 
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.hardware.ParentDevice;
-import edu.wpi.first.wpilibj.DriverStation;
+
+import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.ironmaple.simulation.SimulatedArena;
+
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.hardware.ParentDevice;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 
 public class PhoenixUtil {
   /** Attempts to run the command until no error is produced. */
@@ -58,5 +65,17 @@ public class PhoenixUtil {
 
   public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
     tryUntilOk(maxAttempts, command, Optional.empty());
+
+  }
+
+  public static double[] getSimulationOdometryTimeStamps() {
+    final double[] odometryTimeStamps = new double[SimulatedArena.getSimulationSubTicksIn1Period()];
+    for (int i = 0; i < odometryTimeStamps.length; i++) {
+        odometryTimeStamps[i] = Timer.getFPGATimestamp()
+                - 0.02
+                + i * SimulatedArena.getSimulationDt().in(Seconds);
+    }
+
+    return odometryTimeStamps;
   }
 }

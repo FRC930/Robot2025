@@ -19,6 +19,21 @@
  */
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+import static frc.robot.subsystems.vision.VisionConstants.*;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj2.command.Commands;
+
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -86,6 +101,7 @@ import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
+import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
@@ -112,6 +128,12 @@ import frc.robot.util.ReefPositionsUtil.DeAlgaeLevel;
 import frc.robot.util.ReefPositionsUtil.ScoreLevel;
 import frc.robot.util.SelectorCommandFactory;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -121,6 +143,7 @@ import frc.robot.util.SelectorCommandFactory;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private SwerveDriveSimulation driveSimulation = null;
 
   private final double DRIVE_SPEED = 1.0;
   private final double ANGULAR_SPEED = 0.75;
@@ -176,22 +199,24 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+        driveSimulation = new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
+        SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+        drive = new Drive(
+            new GyroIOSim(driveSimulation.getGyroSimulation()),
+            new ModuleIOSim(driveSimulation.getModules()[0]),
+            new ModuleIOSim(driveSimulation.getModules()[1]),
+            new ModuleIOSim(driveSimulation.getModules()[2]),
+            new ModuleIOSim(driveSimulation.getModules()[3]),
+            driveSimulation::setSimulationWorldPose);
 
         vision =
             new AprilTagVision(
                 drive::setPose,
                 drive::addVisionMeasurement,
                 drive::addVisionMeasurementAutoAlign,
-                new VisionIOPhotonVisionSim(limelightLeftName, robotToCameraLeft, drive::getPose),
-                new VisionIOPhotonVisionSim(limelightRightName, robotToCameraRight, drive::getPose),
-                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, drive::getPose));
+                new VisionIOPhotonVisionSim(limelightLeftName, robotToCameraLeft, driveSimulation::getSimulatedDriveTrainPose),
+                new VisionIOPhotonVisionSim(limelightRightName, robotToCameraRight, driveSimulation::getSimulatedDriveTrainPose),
+                new VisionIOPhotonVisionSim(limelightFrontName, robotToCameraFront, driveSimulation::getSimulatedDriveTrainPose));
 
         wrist = new Wrist(new WristIOSim(3));
         elevator = new Elevator(
@@ -232,7 +257,9 @@ public class RobotContainer {
           new ModuleIOTalonFX(TunerConstants.FrontLeft),
           new ModuleIOTalonFX(TunerConstants.FrontRight),
           new ModuleIOTalonFX(TunerConstants.BackLeft),
-          new ModuleIOTalonFX(TunerConstants.BackRight));
+          new ModuleIOTalonFX(TunerConstants.BackRight),
+
+          (robotPose) -> {});
 
         vision =
             new AprilTagVision(
@@ -299,6 +326,11 @@ public class RobotContainer {
   }
 
   public void configureDriverBindings() {
+
+    // Reset gyro / odometry
+        final Runnable resetOdometry = Constants.currentMode == Constants.Mode.SIM
+                ? () -> drive.setPose(driveSimulation.getSimulatedDriveTrainPose())
+                : () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d()));
 
     //#region controller
 
@@ -777,6 +809,19 @@ public class RobotContainer {
     }
   }
 
+  public void resetSimulation() {
+      if (Constants.currentMode != Constants.Mode.SIM) return;
+
+      drive.setPose(new Pose2d(3, 3, new Rotation2d()));
+      SimulatedArena.getInstance().resetFieldForAuto();
+  }
+
+  public void updateSimulation() {
+        if (Constants.currentMode != Constants.Mode.SIM) return;
+
+        SimulatedArena.getInstance().simulationPeriodic();
+  }
+
   public void loggingPeriodic() {
     Logger.recordOutput("ReefPositions/Selected Score Position", reefPositions.getScoreLevel());
     Logger.recordOutput("ReefPositions/Selected Auto Align Side", reefPositions.getAutoAlignSide());
@@ -790,6 +835,9 @@ public class RobotContainer {
     Logger.recordOutput("ReefPositions/DeAlgaePos/Top", reefPositions.isSelected(DeAlgaeLevel.Top));
     Logger.recordOutput("ReefPositions/DeAlgaePos/Low", reefPositions.isSelected(DeAlgaeLevel.Low));
     Logger.recordOutput("ReefPositions/isAutoAlignEnabled", reefPositions.getIsAutoAligning());
+    Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+    Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+    Logger.recordOutput("FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
   }
 
   public void disabledPeriodic() {
