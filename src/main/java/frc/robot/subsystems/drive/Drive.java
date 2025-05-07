@@ -14,8 +14,6 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
@@ -28,7 +26,6 @@ import java.util.function.Supplier;
 
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -109,19 +106,18 @@ public class Drive extends SubsystemBase {
           getModuleTranslations());
 
   public static final DriveTrainSimulationConfig mapleSimConfig = DriveTrainSimulationConfig.Default()
-            .withRobotMass(Kilograms.of(ROBOT_MASS_KG))
-            .withCustomModuleTranslations(getModuleTranslations())
-            .withGyro(COTS.ofPigeon2())
-            .withSwerveModule(new SwerveModuleSimulationConfig(
-                    DCMotor.getKrakenX60(1),
-                    DCMotor.getFalcon500(1),
-                    TunerConstants.FrontLeft.DriveMotorGearRatio,
-                    TunerConstants.FrontLeft.SteerMotorGearRatio,
-                    Volts.of(TunerConstants.FrontLeft.DriveFrictionVoltage),
-                    Volts.of(TunerConstants.FrontLeft.SteerFrictionVoltage),
-                    Inches.of(2),
-                    KilogramSquareMeters.of(TunerConstants.FrontLeft.SteerInertia),
-                    WHEEL_COF));
+        // Specify gyro type (for realistic gyro drifting and error simulation)
+        .withGyro(COTS.ofPigeon2())
+        // Specify swerve module (for realistic swerve dynamics)
+        .withSwerveModule(COTS.ofMark4(
+                DCMotor.getKrakenX60Foc(1), // Drive motor is a Kraken X60
+                DCMotor.getKrakenX60Foc(1), // Steer motor is a Kraken X44
+                COTS.WHEELS.COLSONS.cof, // Use the COF for Colson Wheels
+                3)) // L3 Gear ratio
+        // Configures the track length and track width (spacing between swerve modules)
+        .withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
+        // Configures the bumper size (dimensions of the robot bumper)
+        .withBumperSize(Inches.of(38.26772), Inches.of(34.48819));
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
