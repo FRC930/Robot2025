@@ -14,6 +14,7 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilogram;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
@@ -110,14 +111,16 @@ public class Drive extends SubsystemBase {
         .withGyro(COTS.ofPigeon2())
         // Specify swerve module (for realistic swerve dynamics)
         .withSwerveModule(COTS.ofMark4(
-                DCMotor.getKrakenX60Foc(1), // Drive motor is a Kraken X60
-                DCMotor.getKrakenX60Foc(1), // Steer motor is a Kraken X44
+                DCMotor.getKrakenX60(1), // Drive motor is a Kraken X60
+                DCMotor.getKrakenX60(1), // Steer motor is a Kraken X60
                 COTS.WHEELS.COLSONS.cof, // Use the COF for Colson Wheels
-                3)) // L3 Gear ratio
+                4)) // L3 Gear ratio
         // Configures the track length and track width (spacing between swerve modules)
         .withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
         // Configures the bumper size (dimensions of the robot bumper)
-        .withBumperSize(Inches.of(38.26772), Inches.of(34.48819));
+        .withBumperSize(Inches.of(38.26772), Inches.of(34.48819))
+        // Configures the robot weight
+        .withRobotMass(Kilogram.of(63.5029));
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
