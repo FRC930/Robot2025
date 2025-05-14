@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -178,6 +180,9 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
     robotContainer.teleopInit();
+    SimulatedArena.getInstance()
+                .addGamePieceProjectile(ReefscapeCoralOnFly.DropFromCoralStation(
+                        ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true));
   }
 
   /** This function is called periodically during operator control. */

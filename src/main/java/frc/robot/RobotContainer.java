@@ -19,24 +19,13 @@
  */
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-import static frc.robot.subsystems.vision.VisionConstants.*;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.wpilibj2.command.Commands;
-
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import java.util.Map;
 import java.util.Optional;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -46,15 +35,22 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -99,7 +95,6 @@ import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOSim;
 import frc.robot.subsystems.coralendeffector.CoralEndEffectorIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIOSim;
@@ -108,12 +103,12 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
-import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightLeftName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightRightName;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
+import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraLeft;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraRight;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.Wrist;
@@ -127,12 +122,6 @@ import frc.robot.util.ReefPositionsUtil.AutoAlignSide;
 import frc.robot.util.ReefPositionsUtil.DeAlgaeLevel;
 import frc.robot.util.ReefPositionsUtil.ScoreLevel;
 import frc.robot.util.SelectorCommandFactory;
-
-import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -593,6 +582,52 @@ public class RobotContainer {
     // Toggle auto align on/off
     controller.start()
       .onTrue(new InstantCommand(() -> {reefPositions.setIsAutoAligning(!reefPositions.getIsAutoAligning());}));
+
+    controller.povUp()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
+          driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+          new Translation2d(0.4, 0),
+          driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+          Meters.of(1.35),
+          MetersPerSecond.of(1.5),
+          Degrees.of(-60)))));
+
+    controller.povDown()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeCoralOnFly(
+          driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+          new Translation2d(0.4, 0),
+          driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+          Meters.of(1.35),
+          MetersPerSecond.of(1.5),
+          Degrees.of(-60)))));
+
+
+    controller.povUp()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
+          driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+          new Translation2d(0.4, 0),
+          driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+          Meters.of(1.35),
+          MetersPerSecond.of(1.5),
+          Degrees.of(-60)))));
+
+    controller.povDown()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeCoralOnFly(
+          driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+          new Translation2d(0.4, 0),
+          driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+          Meters.of(1.35),
+          MetersPerSecond.of(1.5),
+          Degrees.of(-60)))));
+
 
     controller.back()
       .onTrue(
