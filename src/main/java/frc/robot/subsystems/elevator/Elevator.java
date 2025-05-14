@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotState;
+import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.util.LoggedTunableGainsBuilder;
 
 public class Elevator extends SubsystemBase {
@@ -77,12 +78,23 @@ public class Elevator extends SubsystemBase {
         this);
   }
 
+  /**
+   * Constructs a trigger that dynamically updates to trigger when the elevator's CANCoder angle is lesser than the given one.
+   * @param angle The angle to check for in the condition.
+   * @return The constructed {@link Trigger}.
+   */
   public Trigger getNewAtDistanceTrigger(Distance dist, Distance tolerance) {
     return new Trigger(() -> {
       return MathUtil.isNear(dist.baseUnitMagnitude(), loggedelevator.distance.baseUnitMagnitude(), tolerance.baseUnitMagnitude());
     });
   }
 
+  /**
+   * Constructs a trigger for when the elevator's CANCoder's reported angle is within a certain threshold.
+   * @param angle The angle, in degrees, to check if the CANCoder is within threshold of.
+   * @param tolerance The threshold, or error, that the conditional will allow for the trigger.
+   * @return The constructed {@link Trigger} with a dynamic {@code MathUtil.isNear(...)} conditional.
+   */
   public Trigger getNewAtDistanceTrigger(DoubleSupplier dist, DoubleSupplier tolerance) {
     return new Trigger(() -> {
       return MathUtil.isNear(dist.getAsDouble(), loggedelevator.distance.in(Inches), tolerance.getAsDouble());
@@ -90,9 +102,9 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Returns when this joint is greater than 'angle' away from the forward horizontal
-   * @param angle
-   * @return
+   * Constructs a trigger that dynamically updates to trigger when the elevator's CANCoder angle is greater than the given one.
+   * @param angle The angle to check for in the condition.
+   * @return * the constructed {@link trigger}
    */
   public Trigger getNewGreaterThanDistanceTrigger(DoubleSupplier distance) {
     return new Trigger(() -> {
@@ -101,9 +113,9 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Returns when this joint is less than 'angle' away from the forward horizontal
-   * @param angle
-   * @return
+   * Constructs a trigger that dynamically updates to trigger when the elevator's CANCoder angle is lesser than the given one.
+   * @param angle The angle to check for in the condition.
+   * @return The constructed {@link Trigger}.
    */
   public Trigger getNewLessThanDistanceTrigger(DoubleSupplier distance) {
     return new Trigger(() -> {
@@ -111,6 +123,9 @@ public class Elevator extends SubsystemBase {
     });
   }
 
+  /**
+   * Updates all of the {@link elevatorIO}'s inputs, and adds them to the {@link Logger} ({@link org.littletonrobotics.junction.Logger}).
+   */
   @Override
   public void periodic() {
     tunableGains.ifGainsHaveChanged((gains) -> this.m_ElevatorIO.setGains(gains));
