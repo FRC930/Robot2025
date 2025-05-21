@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 
 import java.util.function.DoubleSupplier;
 
@@ -10,6 +11,7 @@ import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.IntakeIOSim;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.elevator.Elevator;
@@ -91,7 +93,7 @@ public class StationIntakeCommand extends SequentialCommandGroup {
         }
     }
 
-    public StationIntakeCommand(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEndEffector) {
+    public StationIntakeCommand(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEndEffector, IntakeIOSim intakeSim) {
         super(
             new WaitUntilCommand(shoulder.getNewGreaterThanAngleTrigger(ShoulderPositions.Starting.position)),
             new WaitUntilCommand(elevator.getNewLessThanDistanceTrigger(ElevatorPositions.Starting.position)),
@@ -99,6 +101,8 @@ public class StationIntakeCommand extends SequentialCommandGroup {
             shoulder.getNewSetAngleCommand(ShoulderPositions.Final.position)
             .alongWith(elbow.getNewSetAngleCommand(ElbowPositions.Final.position))
             .alongWith(coralEndEffector.getNewSetVoltsCommand(6.0))
+            .alongWith(intakeSim.setRunnningCommand(true))
+            .alongWith(intakeSim.dropCoralCommand())
         );
         addRequirements(shoulder, elbow, elevator, wrist);
     }

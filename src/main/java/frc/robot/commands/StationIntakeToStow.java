@@ -1,16 +1,15 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.function.DoubleSupplier;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;
-import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.IntakeIOSim;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
@@ -55,7 +54,7 @@ public class StationIntakeToStow extends SequentialCommandGroup {
         }
     }
 
-    public StationIntakeToStow(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
+    public StationIntakeToStow(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE, IntakeIOSim intakeSim) {
         super(
             shoulder.getNewSetAngleCommand(ShoulderPositions.MidPoint.position),
             new WaitUntilCommand(shoulder.getNewLessThanAngleTrigger(ShoulderPositions.SafeToTwistWrist.position)),
@@ -63,6 +62,7 @@ public class StationIntakeToStow extends SequentialCommandGroup {
             // Needed so coral doesn't hit bar on way back
             new WaitUntilCommand(wrist.getNewGreaterThanAngleTrigger(WristPositions.SafeToSwingShoulder.position)),
             new StowCommand(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
+            .alongWith(intakeSim.setRunnningCommand(true))
         );
         addRequirements(shoulder, elbow, wrist, elevator, coralEE, algaeEE);
     }

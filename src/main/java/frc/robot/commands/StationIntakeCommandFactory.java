@@ -1,14 +1,13 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraLeft;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,8 +17,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoAlignCommand.MovementMode;
+import frc.robot.subsystems.IntakeIOSim;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
 import frc.robot.subsystems.drive.Drive;
@@ -174,8 +173,10 @@ public class StationIntakeCommandFactory {
      * @param drive
      * @return
      */
-    public static Command getNewStationIntakeSequence(Supplier<IntakePosition> position, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, Drive drive) {
-        return new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)
+    public static Command getNewStationIntakeSequence(Supplier<IntakePosition> position, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, Drive drive, IntakeIOSim intakeSim) {
+        return new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE, intakeSim)
+            .andThen(intakeSim.setRunnningCommand(true))
+            .andThen(intakeSim.dropCoralCommand())
             .andThen(
                 getNewAlignToStationCommand(position, false, drive)
             );

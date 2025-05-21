@@ -36,6 +36,7 @@ import frc.robot.commands.StowToL3;
 import frc.robot.commands.StowToL4;
 import frc.robot.commands.TakeAlgaeL2;
 import frc.robot.commands.TakeAlgaeL3;
+import frc.robot.subsystems.IntakeIOSim;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.arm.ArmJoint;
 import frc.robot.subsystems.coralendeffector.CoralEndEffector;
@@ -52,8 +53,8 @@ public class AutoCommandManager {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  public AutoCommandManager(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
-    configureNamedCommands(drive, shoulder, elbow, elevator, wrist, coralEE, algaeEE);
+  public AutoCommandManager(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE, IntakeIOSim intakeSim) {
+    configureNamedCommands(drive, shoulder, elbow, elevator, wrist, coralEE, algaeEE, intakeSim);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -83,11 +84,11 @@ public class AutoCommandManager {
         () -> {return IntakePosition.Outside;},
         false,
         drive
-      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)).withTimeout(2.0),
+      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE, intakeSim)).withTimeout(2.0),
 
       new WaitUntilCommand(coralEE.hasCoralTrigger()),
 
-      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE),
+      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE, intakeSim),
 
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Left, 
@@ -106,11 +107,11 @@ public class AutoCommandManager {
         () -> {return IntakePosition.Outside;},
         false,
         drive
-      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)).withTimeout(2.0),
+      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE, intakeSim)).withTimeout(2.0),
 
       new WaitUntilCommand(coralEE.hasCoralTrigger()),
 
-      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE),
+      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE, intakeSim),
 
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Right, 
@@ -129,11 +130,11 @@ public class AutoCommandManager {
         () -> {return IntakePosition.Outside;},
         false,
         drive
-      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE)).withTimeout(2.0),
+      ).alongWith(new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE, intakeSim)).withTimeout(2.0),
 
       new WaitUntilCommand(coralEE.hasCoralTrigger()),
         
-      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE)
+      new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE, intakeSim)
     ));
 
     // // Set up SysId routines
@@ -162,7 +163,7 @@ public class AutoCommandManager {
     return autoChooser.get();
   }
 
-  private void configureNamedCommands(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE) {
+  private void configureNamedCommands(Drive drive, ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, CoralEndEffector coralEE, AlgaeEndEffector algaeEE, IntakeIOSim intakeSim) {
     //#region Stows
     NamedCommands.registerCommand("Stow", new StowCommand(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
     NamedCommands.registerCommand("UnsafeStow", StowCommand.getNewUnsafeStowCommand(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
@@ -170,13 +171,13 @@ public class AutoCommandManager {
     NamedCommands.registerCommand("L4ToStow", new L4ToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
     NamedCommands.registerCommand("AlgaeStow", new AlgaeStowCommand(shoulder, elbow, elevator, wrist, algaeEE));
     // Needed so not hit coral on elevator
-    NamedCommands.registerCommand("StationIntakeToStow", new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
+    NamedCommands.registerCommand("StationIntakeToStow", new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE, intakeSim));
     NamedCommands.registerCommand("UnsafeStationIntakeToStow", StationIntakeToStow.getNewUnsafeStationIntakeToStow(shoulder, elbow, elevator, wrist, coralEE, algaeEE));
     NamedCommands.registerCommand("WaitUntilElevatorStow", new WaitUntilCommand(elevator.getNewAtDistanceTrigger(Inches.of(0.0), Inches.of(1.0))));
     //#endregion
 
     //#region Intakes
-    NamedCommands.registerCommand("StationIntake", new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE));
+    NamedCommands.registerCommand("StationIntake", new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEE, intakeSim));
     NamedCommands.registerCommand("ReverseStationIntake", new StationIntakeReverseCommand(shoulder, elbow, elevator, wrist, coralEE));
     NamedCommands.registerCommand("TakeAlgaeL2",
       new TakeAlgaeL2(shoulder, elbow, wrist, algaeEE, elevator)
