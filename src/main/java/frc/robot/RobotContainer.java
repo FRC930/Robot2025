@@ -21,7 +21,9 @@ package frc.robot;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
+import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly;
@@ -40,6 +42,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
@@ -53,6 +56,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -80,6 +84,7 @@ import frc.robot.commands.StowToBarge;
 import frc.robot.commands.TakeAlgaeL2;
 import frc.robot.commands.TakeAlgaeL3;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.IntakeIOSim;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOSim;
 import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOTalonFX;
@@ -155,6 +160,7 @@ public class RobotContainer {
   private final CommandXboxController co_controller = new CommandXboxController(1);
   private final CommandXboxController characterizeController = new CommandXboxController(2);
   private final CommandXboxController testcontroller = new CommandXboxController(3);
+  private final CommandXboxController simcontroller = new CommandXboxController(4);
 
   private final AprilTagVision vision;
 
@@ -312,6 +318,7 @@ public class RobotContainer {
     configureDriverBindings();
     configureTestButtonBindings();
     configureCharacterizationButtonBindings();
+    configureMapleSimButtonBindings();
   }
 
   public void configureDriverBindings() {
@@ -770,6 +777,79 @@ public class RobotContainer {
     // SmartDashboard.putData(new StowToL4(shoulder, elbow, elevator, wrist));
     // SmartDashboard.putData(new TakeAlgaeL2(shoulder, elbow, wrist, algaeEndEffector, elevator));
     // SmartDashboard.putData(new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
+  }
+
+  public void configureMapleSimButtonBindings() {
+    // Spawns Algae
+    simcontroller.povLeft()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+      .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
+        driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+        new Translation2d(0.4, 0),
+        driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+        driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+        Meters.of(1.35),
+        MetersPerSecond.of(1.5),
+        Degrees.of(-60)))
+        )
+    );
+
+    // Spawns Coral
+    simcontroller.povRight()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+      .addGamePieceProjectile(new ReefscapeCoralOnFly(
+        driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+        new Translation2d(0.4, 0),
+        driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+        driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+        Meters.of(1.35),
+        MetersPerSecond.of(1.5),
+        Degrees.of(-60)))
+        )
+    );
+
+    // Spawns 2000 Algae
+    simcontroller.povUp()
+      .onTrue(
+          new SequentialCommandGroup(
+              IntStream.range(0, 2000)
+                  .mapToObj(i -> Commands.runOnce(() -> SimulatedArena.getInstance()
+                  .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
+                    driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+                    new Translation2d(0.4, 0),
+                    driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+                    driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+                    Meters.of(1.35),
+                    MetersPerSecond.of(1.5),
+                    Degrees.of(-60)))))
+                  .toArray(Command[]::new)
+          )
+      );
+
+    // Spawns 2000 Coral
+    simcontroller.povDown()
+      .onTrue(
+          new SequentialCommandGroup(
+              IntStream.range(0, 2000)
+                  .mapToObj(i -> Commands.runOnce(() -> SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeCoralOnFly(
+          driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+          new Translation2d(0.4, 0),
+          driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+          Meters.of(1.35),
+          MetersPerSecond.of(1.5),
+          Degrees.of(-60)))))
+          .toArray(Command[]::new)
+          )
+      );
+
+    simcontroller.a()
+      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+        .addGamePieceProjectile(ReefscapeCoralOnFly.DropFromCoralStation(
+                        ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true))
+        )
+    );
   }
 
   public void configureCharacterizationButtonBindings() {
