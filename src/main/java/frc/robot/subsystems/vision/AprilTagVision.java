@@ -1,6 +1,9 @@
 package frc.robot.subsystems.vision;
 
-import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
+import java.util.Optional;
+import java.util.function.Consumer;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,11 +14,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
 import frc.robot.subsystems.vision.VisionIO.PoseObservation;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
-import java.util.Optional;
-import java.util.function.Consumer;
-import org.littletonrobotics.junction.Logger;
 
 public class AprilTagVision extends Vision {
 

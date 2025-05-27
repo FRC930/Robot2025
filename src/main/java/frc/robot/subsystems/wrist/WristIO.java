@@ -1,13 +1,13 @@
 package frc.robot.subsystems.wrist;
 
+import org.littletonrobotics.junction.AutoLog;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutCurrent;
 import edu.wpi.first.units.measure.MutVoltage;
 import frc.robot.util.Gains;
-
-import org.littletonrobotics.junction.AutoLog;
 
 public interface WristIO {
 

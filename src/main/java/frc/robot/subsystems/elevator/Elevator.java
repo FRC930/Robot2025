@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotState;
-import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.util.LoggedTunableGainsBuilder;
 
 public class Elevator extends SubsystemBase {

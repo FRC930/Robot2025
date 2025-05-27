@@ -1,14 +1,12 @@
 package frc.robot.subsystems.coralendeffector;
 
+import com.ctre.phoenix6.hardware.CANrange;
 import com.thethriftybot.ThriftyNova;
 import com.thethriftybot.ThriftyNova.MotorType;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Volts;
-
-import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.CanDef;
 

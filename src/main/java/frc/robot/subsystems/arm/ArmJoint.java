@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.LoggedTunableGainsBuilder;
-import frc.robot.util.LoggedTunableNumber;
 
 public class ArmJoint extends SubsystemBase {
 

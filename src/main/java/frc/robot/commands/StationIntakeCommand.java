@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
-
 import java.util.function.DoubleSupplier;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutAngle;

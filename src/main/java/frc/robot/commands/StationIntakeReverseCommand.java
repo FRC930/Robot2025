@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
-import java.util.stream.Stream;
 
 import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;

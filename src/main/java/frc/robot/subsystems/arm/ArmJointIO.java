@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import org.littletonrobotics.junction.AutoLog;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
@@ -7,8 +9,6 @@ import edu.wpi.first.units.measure.MutCurrent;
 import edu.wpi.first.units.measure.MutVoltage;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.Gains;
-
-import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmJointIO {
 

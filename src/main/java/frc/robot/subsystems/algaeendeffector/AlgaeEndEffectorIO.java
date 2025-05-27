@@ -1,11 +1,12 @@
 package frc.robot.subsystems.algaeendeffector;
 
+import org.littletonrobotics.junction.AutoLog;
+
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutCurrent;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.measure.Voltage;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface AlgaeEndEffectorIO {
 

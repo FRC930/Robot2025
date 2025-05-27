@@ -4,10 +4,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
 import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.AlgaeStowCommand;
 import frc.robot.commands.BargeAlignCommand;
 import frc.robot.commands.BargeScoreThrowCommand;
-import frc.robot.commands.DriveCommands;
 import frc.robot.commands.L4ToStow;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.OutakeCoral;

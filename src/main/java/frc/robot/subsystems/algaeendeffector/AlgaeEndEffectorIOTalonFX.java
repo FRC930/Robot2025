@@ -9,11 +9,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
-import com.revrobotics.sim.MovingAverageFilterSim;
-
-import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.CanDef;
 import frc.robot.util.PhoenixUtil;
