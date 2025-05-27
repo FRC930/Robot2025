@@ -29,13 +29,10 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.google.gson.annotations.Until;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
@@ -69,8 +66,6 @@ import frc.robot.commands.StationIntakeCommandFactory.IntakePosition;
 import frc.robot.commands.StationIntakeToStow;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.StowToBarge;
-import frc.robot.commands.StowToL3;
-import frc.robot.commands.StowToL4;
 import frc.robot.commands.TakeAlgaeL2;
 import frc.robot.commands.TakeAlgaeL3;
 import frc.robot.generated.TunerConstants;
@@ -97,12 +92,12 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.vision.AprilTagVision;
+import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightLeftName;
 import static frc.robot.subsystems.vision.VisionConstants.limelightRightName;
-import static frc.robot.subsystems.vision.VisionConstants.limelightFrontName;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraLeft;
 import static frc.robot.subsystems.vision.VisionConstants.robotToCameraRight;
-import static frc.robot.subsystems.vision.VisionConstants.robotToCameraFront;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.Wrist;
@@ -566,6 +561,12 @@ public class RobotContainer {
     // Toggle auto align on/off
     controller.start()
       .onTrue(new InstantCommand(() -> {reefPositions.setIsAutoAligning(!reefPositions.getIsAutoAligning());}));
+
+    controller.back()
+      .onTrue(
+        new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEndEffector)
+      )
+      .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
 
     //#endregion
     //#region Co-Controller
