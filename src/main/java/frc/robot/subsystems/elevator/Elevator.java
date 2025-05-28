@@ -56,7 +56,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setDistance(Distance target) {
-    m_ElevatorIO.setTarget(target);
+    m_ElevatorIO.setM_target(target);
   }
 
   public Command getNewSetDistanceCommand(DoubleSupplier distance) {

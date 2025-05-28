@@ -17,29 +17,38 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.util.Gains;
 
+/**
+ * An implementation of the {@link ElevatorIO} for running the robot in simulation.
+ * @see {@link ElevatorIO}
+ * {@inheritDoc}
+ */
 public class ElevatorIOSim implements ElevatorIO {
-  private final ElevatorFeedforward ff = new ElevatorFeedforward(0.0, 0.8, 0.0, 0.0);
-  private final ProfiledPIDController controller = new ProfiledPIDController(5.0, 0.0, 0.0, new Constraints(90, 120));
-  private final ElevatorSim sim;
+  private final ElevatorFeedforward m_feedforward = new ElevatorFeedforward(0.0, 0.8, 0.0, 0.0);
+  private final ProfiledPIDController m_controller = new ProfiledPIDController(5.0, 0.0, 0.0, new Constraints(90, 120));
+  private final ElevatorSim m_sim;
 
-  private Distance target = Inches.of(0);
-  private MutVoltage appliedVoltage = Volts.mutable(0.0);
+  private Distance m_target = Inches.of(0);
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0.0);
 
-  public ElevatorIOSim(int motorId, ElevatorSim elevatorSim) {
-    sim = elevatorSim;
+  /**
+   * A constructor to create a {@link ElevatorIOSim} with a specified motorID.
+   * @param elevatorSim The WPILib elevator simulation. @see {@link ElevatorSim}
+   */
+  public ElevatorIOSim(ElevatorSim elevatorSim) {
+    m_sim = elevatorSim;
   }
 
   @Override
   public void setTarget(Distance target) {
-    this.target = target;
-    controller.setGoal(target.in(Inches));
+    this.m_target = target;
+    m_controller.setGoal(target.in(Inches));
   }
 
   private void updateVoltageSetpoint() {
-    Distance currentPosition = Meters.of(sim.getPositionMeters());
-    LinearVelocity currentVelocity = MetersPerSecond.of(sim.getVelocityMetersPerSecond());
-    Voltage controllerVoltage = Volts.of(controller.calculate(currentPosition.in(Inches), this.target.in(Inches)));
-    Voltage feedForwardVoltage = Volts.of(ff.calculate(currentVelocity.in(InchesPerSecond)));
+    Distance currentPosition = Meters.of(m_sim.getPositionMeters());
+    LinearVelocity currentVelocity = MetersPerSecond.of(m_sim.getVelocityMetersPerSecond());
+    Voltage controllerVoltage = Volts.of(m_controller.calculate(currentPosition.in(Inches), this.m_target.in(Inches)));
+    Voltage feedForwardVoltage = Volts.of(m_feedforward.calculate(currentVelocity.in(InchesPerSecond)));
 
     Voltage effort = controllerVoltage.plus(feedForwardVoltage);
 
@@ -48,19 +57,19 @@ public class ElevatorIOSim implements ElevatorIO {
 
   private void runVolts(Voltage volts) {
     double clampedEffort = MathUtil.clamp(volts.in(Volts), -12, 12);
-    appliedVoltage.mut_replace(clampedEffort, Volts);
-    sim.setInputVoltage(clampedEffort);
+    m_appliedVoltage.mut_replace(clampedEffort, Volts);
+    m_sim.setInputVoltage(clampedEffort);
   }
   
   @Override
   public void updateInputs(ElevatorInputs input) {
-    sim.update(0.02);
-    input.distance.mut_replace(sim.getPositionMeters(), Meters);
-    input.velocity.mut_replace(MetersPerSecond.of(sim.getVelocityMetersPerSecond()));
-    input.setPoint.mut_replace(Inches.of(controller.getGoal().position));
-    input.supplyCurrent.mut_replace(sim.getCurrentDrawAmps(), Amps);
+    m_sim.update(0.02);
+    input.distance.mut_replace(m_sim.getPositionMeters(), Meters);
+    input.velocity.mut_replace(MetersPerSecond.of(m_sim.getVelocityMetersPerSecond()));
+    input.setPoint.mut_replace(Inches.of(m_controller.getGoal().position));
+    input.supplyCurrent.mut_replace(m_sim.getCurrentDrawAmps(), Amps);
     input.torqueCurrent.mut_replace(input.supplyCurrent.in(Amps), Amps);
-    input.voltageSetPoint.mut_replace(appliedVoltage);
+    input.voltageSetPoint.mut_replace(m_appliedVoltage);
 
     // Periodic
     updateVoltageSetpoint();
@@ -69,7 +78,7 @@ public class ElevatorIOSim implements ElevatorIO {
   @Override
   public void stop() {
     Distance currentDistance = Distance.ofRelativeUnits(0, Meters);
-    controller.reset(currentDistance.in(Meters));
+    m_controller.reset(currentDistance.in(Meters));
     runVolts(Volts.of(0));
   }
 
