@@ -21,7 +21,7 @@ public class IntakeIOSim {
             // Specify the drivetrain to which this intake is attached
             driveTrain,
             // Width of the intake
-            Meters.of(0.4),
+            Meters.of(0.6),
             // The extension length of the intake beyond the robot's frame (when activated)
             Meters.of(0.2),
             // The intake is mounted on the back side of the chassis
@@ -46,6 +46,10 @@ public class IntakeIOSim {
 
     public boolean isGamePieceInsideIntake() {
         return intakeSimulation.getGamePiecesAmount() != 0; // True if there is a game piece in the intake
+    }
+
+    public int getGamePiecesAmount() {
+        return intakeSimulation.getGamePiecesAmount();
     }
 
     public void dropCoral(){
