@@ -801,10 +801,12 @@ public class RobotContainer {
       );
 
     simcontroller.a()
-      .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
+      .onTrue(Commands.runOnce(() -> {
+        SimulatedArena.getInstance()
         .addGamePieceProjectile(ReefscapeCoralOnFly.DropFromCoralStation(
-                        ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true))
-        )
+                        ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true));
+                        intakeSim.setRunning(true);
+  })
     );
   }
 
@@ -909,6 +911,7 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
     Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
     Logger.recordOutput("FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+    Logger.recordOutput("Coral/NumberHave", intakeSim.getGamePiecesAmount());
   }
 
   public void disabledPeriodic() {
