@@ -10,28 +10,39 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.CanDef;
 import frc.robot.util.PhoenixUtil;
 
+/**
+ * An implementation of the {@link AlgaeEndEffectorIO} for real life TalonFX motors.
+ * @see {@link AlgaeEndEffectorIO}
+ * {@inheritDoc}
+ */
 public class AlgaeEndEffectorIOTalonFX implements AlgaeEndEffectorIO {
-  private VoltageOut request;
-  private TalonFX motor;
-  private CANrange m_sensor;
+  private VoltageOut m_request;
+  private final TalonFX m_motor;
+  private final CANrange m_sensor;
 
-  private LinearFilter m_filter = LinearFilter.movingAverage(10);
-  private Voltage m_setPoint = Volts.of(0);
+  private Voltage m_target = Volts.of(0);
 
+  /**
+   * A constructor to create a {@link AlgaeEndEffectorIOTalonFX} with specified CAN definitions.
+   * @param motorCanDef The CAN definition for the TalonFX motors.
+   * @param sensorCanDef The CAN definition for the CANrange sensors.
+   */
   public AlgaeEndEffectorIOTalonFX(CanDef motorCanDef, CanDef sensorCanDef) {
-    motor = new TalonFX(motorCanDef.id(),motorCanDef.bus());
-    request = new VoltageOut(0.0);
+    m_motor = new TalonFX(motorCanDef.id(),motorCanDef.bus());
+    m_request = new VoltageOut(0.0);
     m_sensor = new CANrange(sensorCanDef.id(),sensorCanDef.bus());
 
     configureTalons();
   }
 
+  /**
+   * A helper to reconfigure the TalonFX motors.
+   */
   private void configureTalons() {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
     cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -40,33 +51,44 @@ public class AlgaeEndEffectorIOTalonFX implements AlgaeEndEffectorIO {
     cfg.CurrentLimits.SupplyCurrentLimit = 30.0;
     cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(cfg));
+    PhoenixUtil.tryUntilOk(5, () -> m_motor.getConfigurator().apply(cfg));
 
     CANrangeConfiguration cr_cfg = new CANrangeConfiguration();
     cr_cfg.ToFParams.UpdateMode = UpdateModeValue.ShortRange100Hz;
     PhoenixUtil.tryUntilOk(5, ()->m_sensor.getConfigurator().apply(cr_cfg));
   }
 
+  /**
+   * @see {@link AlgaeEndEffectorIO#updateInputs}
+   * {@inheritDoc}
+   */
   @Override
   public void updateInputs(AlgaeEndEffectorInputs inputs) {
-    inputs.angularVelocity.mut_replace(motor.getVelocity().getValue());
-    inputs.voltageSetPoint.mut_replace(m_setPoint);
-    inputs.voltage.mut_replace(motor.getMotorVoltage().getValue());
-    inputs.supplyCurrent.mut_replace(motor.getSupplyCurrent().getValue());
-    inputs.torqueCurrent.mut_replace(motor.getStatorCurrent().getValue());
+    inputs.angularVelocity.mut_replace(m_motor.getVelocity().getValue());
+    inputs.voltageTarget.mut_replace(m_target);
+    inputs.voltage.mut_replace(m_motor.getMotorVoltage().getValue());
+    inputs.supplyCurrent.mut_replace(m_motor.getSupplyCurrent().getValue());
+    inputs.torqueCurrent.mut_replace(m_motor.getStatorCurrent().getValue());
     inputs.algaeDistance.mut_replace(m_sensor.getDistance().getValue());
   }
 
+  /**
+   * @see {@link AlgaeEndEffectorIO#setTarget}
+   * {@inheritDoc}
+   */
   @Override
   public void setTarget(Voltage target) {
-    request = request.withOutput(target);
-    motor.setControl(request);
-    m_setPoint = target;
+    m_request = m_request.withOutput(target);
+    m_motor.setControl(m_request);
+    m_target = target;
   }
 
+  /**
+   * @see {@link AlgaeEndEffectorIO#stop}
+   * {@inheritDoc}
+   */
   @Override
   public void stop() {
-    motor.setControl(new StaticBrake());
+    m_motor.setControl(new StaticBrake());
   }
-  
 }

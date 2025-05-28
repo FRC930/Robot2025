@@ -28,8 +28,8 @@ public class AlgaeEndEffector extends SubsystemBase {
   public static LoggedTunableNumber ALGAE_DISTANCE_THRESHOLD_LOW = new LoggedTunableNumber("Sensors/AlgaeEndEffector/SENSORTHRESHOLDLOW", 1.7);
   private final AlgaeEndEffectorIO m_IO;
 
-  AlgaeEndEffectorInputsAutoLogged logged = new AlgaeEndEffectorInputsAutoLogged();
-  private final Debouncer algaeDebouncer = new Debouncer(0.15, DebounceType.kBoth);
+  private final AlgaeEndEffectorInputsAutoLogged m_logged = new AlgaeEndEffectorInputsAutoLogged();
+  private final Debouncer m_algaeDebouncer = new Debouncer(0.15, DebounceType.kBoth);
 
   /**
    * Constructs an {@link AlgaeEndEffector} with the {@link AlgaeEndEffectorIO} specified.
@@ -37,12 +37,12 @@ public class AlgaeEndEffector extends SubsystemBase {
    */
   public AlgaeEndEffector(AlgaeEndEffectorIO io) {
     m_IO = io;
-    logged.angularVelocity = DegreesPerSecond.mutable(0);
-    logged.supplyCurrent = Amps.mutable(0);
-    logged.torqueCurrent = Amps.mutable(0);
-    logged.voltage = Volts.mutable(0);
-    logged.voltageSetPoint = Volts.mutable(0);
-    logged.algaeDistance = Inches.mutable(100);
+    m_logged.angularVelocity = DegreesPerSecond.mutable(0);
+    m_logged.supplyCurrent = Amps.mutable(0);
+    m_logged.torqueCurrent = Amps.mutable(0);
+    m_logged.voltage = Volts.mutable(0);
+    m_logged.voltageTarget = Volts.mutable(0);
+    m_logged.algaeDistance = Inches.mutable(100);
   }
 
   /**
@@ -80,10 +80,10 @@ public class AlgaeEndEffector extends SubsystemBase {
    * @return The {@link boolean} of whether there is currently an Algae in the End Effector.
    */
   public boolean hasAlgae() {
-    return algaeDebouncer.calculate(
-      logged.algaeDistance.lte(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD_HIGH.get()))
+    return m_algaeDebouncer.calculate(
+      m_logged.algaeDistance.lte(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD_HIGH.get()))
       &&
-      logged.algaeDistance.gte(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD_LOW.get()))
+      m_logged.algaeDistance.gte(Inches.of(CoralEndEffector.CORAL_DISTANCE_THRESHOLD_LOW.get()))
     );
   }
 
@@ -101,8 +101,8 @@ public class AlgaeEndEffector extends SubsystemBase {
    */
   @Override
   public void periodic() {
-    m_IO.updateInputs(logged);
-    Logger.processInputs("RobotState/AlgaeEndEffector", logged);
+    m_IO.updateInputs(m_logged);
+    Logger.processInputs("RobotState/AlgaeEndEffector", m_logged);
     if(Constants.tuningMode) {
       Logger.recordOutput("RobotState/AlgaeEndEffector/hasAlgae", hasAlgaeTrigger());
     }
