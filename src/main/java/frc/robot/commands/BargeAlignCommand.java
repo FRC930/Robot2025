@@ -32,12 +32,11 @@ public class BargeAlignCommand extends AutoAlignCommand {
     public BargeAlignCommand(Drive drive, Supplier<Double> strafeControl) {
         super (
           (p)->p,
-          ()->new Transform2d(0.0,strafeControl.get() * adjustSpeed.get(),Rotation2d.kZero),
           drive
         );
         
         this.drivetrain = drive;
-        this.withControlScheme(ControllerType.COMPLEX_DRIVESUPPRESS);
+        this.withControlScheme(MovementMode.SUPPRESS_UNTIL_ROTATED);
         addRequirements(drive);
     }
 
