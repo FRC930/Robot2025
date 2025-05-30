@@ -17,76 +17,59 @@ import frc.robot.util.LoggedTunableNumber;
 
 public class AlgaeStowCommand extends SequentialCommandGroup {
 
-    
-
+    /*
+     * A container for the shoulder positions being sent to the command
+     */
     private enum ShoulderPositions {
         Final(new LoggedTunableNumber("Positions/AlgaeStowCommand/shoulder/FinalDegrees", 60.0));
 
         DoubleSupplier position;
-        MutAngle distance;
 
         ShoulderPositions(DoubleSupplier position) {
             this.position = position;
-            this.distance = Degrees.mutable(0.0);
-        }
-
-        public Angle angle() {
-            this.distance.mut_replace(this.position.getAsDouble(), Degrees);
-            return this.distance;
         }
     }
 
+    /*
+     * A container for elbow positions being sent to the command
+     */
     private enum ElbowPositions {
         Final(new LoggedTunableNumber("Positions/AlgaeStowCommand/elbow/FinalDegrees", 155));
 
         DoubleSupplier position;
-        MutAngle distance;
 
         ElbowPositions(DoubleSupplier position) {
             this.position = position;
-            this.distance = Degrees.mutable(0.0);
-        }
-
-        public Angle angle() {
-            this.distance.mut_replace(this.position.getAsDouble(), Degrees);
-            return this.distance;
-        }
+        } 
     }
 
+    /*
+     * A container for the elevator positions being sent to the command
+     */
     private enum ElevatorPositions {
         Final(new LoggedTunableNumber("Positions/AlgaeStowCommand/elevator/FinalInches", 0));
 
         DoubleSupplier position;
-        MutDistance distance;
 
         ElevatorPositions(DoubleSupplier position) {
             this.position = position;
-            this.distance = Inches.mutable(0.0);
-        }
-
-        public Distance distance() {
-            this.distance.mut_replace(this.position.getAsDouble(), Inches);
-            return this.distance;
         }
     }
 
+    /*
+     * Container for the wrist positions being sent to the command
+     */
     private enum WristPositions {
         Final(new LoggedTunableNumber("Positions/AlgaeStowCommand/wrist/FinalDegrees", 0));
 
         DoubleSupplier position;
-        MutAngle distance;
 
         WristPositions(DoubleSupplier position) {
             this.position = position;
-            this.distance = Degrees.mutable(0.0);
-        }
-
-        public Angle angle() {
-            this.distance.mut_replace(this.position.getAsDouble(), Degrees);
-            return this.distance;
         }
     }
 
+    //Instant command that sets robot joints to the algae stow position
     public AlgaeStowCommand(ArmJoint shoulder, ArmJoint elbow, Elevator elevator, Wrist wrist, AlgaeEndEffector algaeEE) {
         super(
             wrist.getNewWristTurnCommand(WristPositions.Final.position),
