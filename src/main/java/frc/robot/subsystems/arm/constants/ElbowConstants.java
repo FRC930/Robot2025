@@ -15,7 +15,8 @@ import frc.robot.util.Gains;
 import frc.robot.util.LoggedTunableGainsBuilder;
 
 /**
- * These really should be renamed to configs lol
+ * An implementation of the {@link ArmJointConstants} for the Elbow.
+ * {@inheritDoc}
  */
 public class ElbowConstants extends ArmJointConstants {
     public ElbowConstants() {
@@ -47,7 +48,7 @@ public class ElbowConstants extends ArmJointConstants {
 
         this.NumMotors = 1;
         this.SensorToMechanismGearing = 1.0;
-        this.MotorToSensorGearing = 50.0; //Gear Ratio
+        this.MotorToSensorGearing = 50.0;
         this.Length = Inches.of(15);
         this.Weight = Pounds.of(8.5);
         this.Motors = DCMotor.getKrakenX60(NumMotors);
@@ -63,8 +64,7 @@ public class ElbowConstants extends ArmJointConstants {
         this.LoggedName = "Elbow";
 
         /**
-         * This callback defines where we will put our mut_angle on initialize for the purpose of mechanism simulation
-         * <p> Whatever function is here gets called once on initialize, and should point to whatever mut_angle source we want to set.
+         * {@inheritDoc}
          */
         this.mechanismSimCallback = (d) -> {
             RobotState.instance().setElbowSource(d);

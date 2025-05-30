@@ -14,6 +14,10 @@ import frc.robot.util.CanDef.CanBus;
 import frc.robot.util.Gains;
 import frc.robot.util.LoggedTunableGainsBuilder;
 
+/**
+ * An implementation of the {@link ArmJointConstants} for the Shoulder.
+ * {@inheritDoc}
+ */
 public class ShoulderConstants extends ArmJointConstants {
     public ShoulderConstants() {
         this.LeaderProfile = CanDef.builder().id(9).bus(CanBus.CANivore).build();
@@ -50,6 +54,9 @@ public class ShoulderConstants extends ArmJointConstants {
         this.ZPosition = Meters.of(0.377);
         this.CanCoderOffset = Degrees.of(315.2);
         
+        /**
+         * {@inheritDoc}
+         */
         this.mechanismSimCallback = (d) -> {
             RobotState.instance().setShoulderSource(d);
         };
