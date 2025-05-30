@@ -13,16 +13,27 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffector;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIO;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIONova;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOSim;
+import frc.robot.subsystems.algaeendeffector.AlgaeEndEffectorIOTalonFX;
 import frc.robot.subsystems.arm.constants.ArmJointConstants;
 import frc.robot.util.LoggedTunableGainsBuilder;
 
+/**
+ * A {@link edu.wpi.first.wpilibj2.command.Subsystem} to control the articulation of our.
+ * Contains an {@link ArmJointIO} to communicate with either the hardware or the simulation.
+ */
 public class ArmJoint extends SubsystemBase {
 
-  private ArmJointIO m_armJointIO;
+  
+  private ArmJointIO m_IO;
 
   private final ArmJointConstants m_constants;
 
@@ -31,10 +42,14 @@ public class ArmJoint extends SubsystemBase {
   public LoggedTunableGainsBuilder tunableSlot0Gains;
   public LoggedTunableGainsBuilder tunableSlot1Gains;
   
-  private Supplier<Angle> previousJointAngleSupplier;
+  private Supplier<Angle> m_parentJointAngleSupplier;
 
+  /**
+   * Constructs an {@link ArmJoint} with the {@link ArmJointIO} and previous / parent {@link ArmJoint} specified.
+   * @param io A specified IO of either {@link ArmJointIOSim}, or {@link ArmJointIOTalonFX}. Automatically specified when running Sim or Real.
+   */
   public ArmJoint(ArmJointIO armJointIO, Optional<ArmJoint> previousJoint) {
-    m_armJointIO = armJointIO;
+    m_IO = armJointIO;
     m_loggedArm.angle = Degrees.mutable(0);
     m_loggedArm.angularVelocity = DegreesPerSecond.mutable(0);
     m_loggedArm.setPoint = Degrees.mutable(0);
@@ -44,12 +59,9 @@ public class ArmJoint extends SubsystemBase {
     m_loggedArm.voltage = Volts.mutable(0);
     m_loggedArm.internalSetPoint = Degrees.mutable(0);
     
-    previousJointAngleSupplier = () -> Degrees.zero();
-    previousJoint.ifPresent((j)->{previousJointAngleSupplier = j.getAngleSupplier();});
+    m_parentJointAngleSupplier = () -> Degrees.zero();
+    previousJoint.ifPresent((j)->{m_parentJointAngleSupplier = j.getAngleSupplier();});
 
-    // The weirdest hackiest part of this constants setup.
-    // Since we don't have an instance of this class in the IO, but we do have an instance of the IO in this class, we have 
-    //    to pass the constants instance back up from the IO to get an instance of it in the subsystem.
     m_constants = armJointIO.getConstants();
     m_constants.mechanismSimCallback.accept(m_loggedArm.angle);
     tunableSlot0Gains = m_constants.TalonFXGainsSlot0;
@@ -57,16 +69,29 @@ public class ArmJoint extends SubsystemBase {
     m_loggedArm.angle.mut_replace(m_constants.StartingAngle);
   }
 
+  /**
+   * A factory to return a {@link Supplier<Angle>} that returns what the joint's local angle is. It directly accesses the arm's angle through a Rotary Encoder.
+   * @return A constructed Supplier returning the arm's current angle.
+   */
   public Supplier<Angle> getAngleSupplier() {
     return ()->m_loggedArm.angle;
   }
 
-  public void setAngle(Angle angle) {
-    m_armJointIO.setTarget(angle);
+  /**
+   * A function to specify the {@link ArmJointIO} to reach the arm angle of {@code target}.
+   * @param target The specific {@link Angle} to set the {@link ArmJointIO}'s target to. The ArmJoint motor(s) will attempt to reach the set angle via PID's.
+   */
+  public void setAngle(Angle target) {
+    m_IO.setTarget(target);
   }
 
+  /**
+   * 
+   * @param angle
+   * @param slot
+   */
   public void setAngleWithSlot(Angle angle, int slot) {
-    m_armJointIO.setTargetWithSlot(angle, slot);
+    m_IO.setTargetWithSlot(angle, slot);
   }
   
   public Command getNewSetAngleCommand(DoubleSupplier degrees) {
@@ -170,9 +195,9 @@ public class ArmJoint extends SubsystemBase {
 
   @Override
   public void periodic() {
-    tunableSlot0Gains.ifGainsHaveChanged((gains) -> this.m_armJointIO.setGains(gains,0));
-    tunableSlot1Gains.ifGainsHaveChanged((gains) -> this.m_armJointIO.setGains(gains,1));
-    m_armJointIO.updateInputs(m_loggedArm);
+    tunableSlot0Gains.ifGainsHaveChanged((gains) -> this.m_IO.setGains(gains,0));
+    tunableSlot1Gains.ifGainsHaveChanged((gains) -> this.m_IO.setGains(gains,1));
+    m_IO.updateInputs(m_loggedArm);
     Logger.processInputs("RobotState/" + m_constants.LoggedName, m_loggedArm);
   }
 }
