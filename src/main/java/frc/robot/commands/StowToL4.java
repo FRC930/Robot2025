@@ -83,7 +83,7 @@ public class StowToL4 extends SequentialCommandGroup {
     private enum ElevatorPositions {
         Starting(new LoggedTunableNumber("Positions/StowToL4Command/elevator/StartingInches", 0)),
         SafeToSwingShoulder(new LoggedTunableNumber("Positions/StowToL4Command/elevator/SafeToSwingShoulderInches", 5.0)),
-        Final(new LoggedTunableNumber("Positions/StowToL4Command/elevator/FinalInches", 18));
+        Final(new LoggedTunableNumber("Positions/StowToL4Command/elevator/FinalInches", 20));
 
         DoubleSupplier position;
         MutDistance distance;
