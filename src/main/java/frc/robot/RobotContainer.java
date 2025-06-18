@@ -650,9 +650,9 @@ public class RobotContainer {
 
     controller.back()
       .onTrue(
-        new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEndEffector)
+        new StationIntakeCommand(shoulder, elbow, elevator, wrist, coralEndEffector, intakeSim)
       )
-      .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector));
+      .onFalse(new StationIntakeToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector, intakeSim));
 
     //#endregion
     //#region Co-Controller
