@@ -504,8 +504,8 @@ public class RobotContainer {
     ).and(
       () -> {return reefPositions.getAutoAlignSide() == AutoAlignSide.Right;}
     ).whileTrue(
-      Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L3, driveSimulation))
-      .alongWith(ReefScoreCommandFactory.getNewReefCoralScoreSequence(
+      // Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L3, driveSimulation))
+      (ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Right, 
         true,
         () -> SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
@@ -513,6 +513,7 @@ public class RobotContainer {
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
         () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive))
+        .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L4, driveSimulation)))
     ).onFalse(new ConditionalCommand(
       new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
       new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
@@ -569,7 +570,7 @@ public class RobotContainer {
     // Go to conditional coral level no auto align
     controller.rightBumper().and(()->!ReefPositionsUtil.getInstance().getIsAutoAligning())
     .onTrue(ReefPositionsUtil.getInstance().getCoralLevelSelector(coralLevelCommands)
-      .alongWith(Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L3, driveSimulation)))
+      .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L4, driveSimulation)))
     )
     .onFalse(new ConditionalCommand(
       new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
@@ -820,48 +821,12 @@ public class RobotContainer {
         )
     );
 
-    // Spawns 2000 Algae
-    simcontroller.povUp()
-      .onTrue(
-          new SequentialCommandGroup(
-              IntStream.range(0, 2000)
-                  .mapToObj(i -> Commands.runOnce(() -> SimulatedArena.getInstance()
-                  .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
-                    driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
-                    new Translation2d(0.4, 0),
-                    driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-                    driveSimulation.getSimulatedDriveTrainPose().getRotation(),
-                    Meters.of(1.35),
-                    MetersPerSecond.of(1.5),
-                    Degrees.of(-60)))))
-                  .toArray(Command[]::new)
-          )
-      );
-
-    // Spawns 2000 Coral
-    simcontroller.povDown()
-      .onTrue(
-          new SequentialCommandGroup(
-              IntStream.range(0, 2000)
-                  .mapToObj(i -> Commands.runOnce(() -> SimulatedArena.getInstance()
-        .addGamePieceProjectile(new ReefscapeCoralOnFly(
-          driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
-          new Translation2d(0.4, 0),
-          driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-          driveSimulation.getSimulatedDriveTrainPose().getRotation(),
-          Meters.of(1.35),
-          MetersPerSecond.of(1.5),
-          Degrees.of(-60)))))
-          .toArray(Command[]::new)
-          )
-      );
-
     simcontroller.a()
       .onTrue(Commands.runOnce(() -> {
         SimulatedArena.getInstance()
         .addGamePieceProjectile(ReefscapeCoralOnFly.DropFromCoralStation(
-                        ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true));
-                        intakeSim.setRunning(true);
+          ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true));
+          intakeSim.setRunning(true);
   })
     );
   }

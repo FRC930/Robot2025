@@ -60,8 +60,8 @@ public class IntakeIOSim {
         // final LoggedDashboardChooser<IntakePosition> intakePosChooser = new LoggedDashboardChooser<>("Intake Position");
         // IntakePosition pos = intakePosChooser.get();
         SimulatedArena.getInstance()
-                .addGamePieceProjectile(ReefscapeCoralOnFly.DropFromCoralStation(
-                        ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true));
+            .addGamePieceProjectile(ReefscapeCoralOnFly.DropFromCoralStation(
+                ReefscapeCoralOnFly.CoralStationsSide.LEFT_STATION, DriverStation.Alliance.Red, true));
     }
 
     public Command dropCoralCommand(){
@@ -74,6 +74,25 @@ public class IntakeIOSim {
     public void scoreCoral(ScoreLevel level, AbstractDriveTrainSimulation driveSimulation) {
         if (intakeSimulation.getGamePiecesAmount() > 0) {
             intakeSimulation.obtainGamePieceFromIntake();
+            // Score Level L1 Code
+            if (level == ScoreLevel.L1) {
+                SimulatedArena.getInstance()
+                .addGamePieceProjectile(new ReefscapeCoralOnFly(
+                driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+                // Obtain robot position from drive simulation
+                // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+                new Translation2d(0.35, 0),
+                // Obtain robot speed from drive simulation
+                driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+                // Obtain robot facing from drive simulation
+                driveSimulation.getSimulatedDriveTrainPose().getRotation(),
+                // The height at which the coral is ejected
+                Meters.of(0.2),
+                // The initial speed of the coral
+                MetersPerSecond.of(3),
+                // The coral is ejected at a 35-degree slope
+                Degrees.of(-35)));
+            }
             // Score Level L2 Code
             if (level == ScoreLevel.L2) {
                 SimulatedArena.getInstance()
@@ -89,9 +108,9 @@ public class IntakeIOSim {
                 // The height at which the coral is ejected
                 Meters.of(0.46),
                 // The initial speed of the coral
-                MetersPerSecond.of(2.5),
+                MetersPerSecond.of(-2.5),
                 // The coral is ejected at a 35-degree slope
-                Degrees.of(-35)));
+                Degrees.of(35)));
             }
             // Score Level L3 Code
             if (level == ScoreLevel.L3) {
@@ -130,25 +149,6 @@ public class IntakeIOSim {
                     MetersPerSecond.of(1),
                     // The coral is ejected vertically downwards
                     Degrees.of(-90)));
-            }
-            // Score Level L1 Code
-            else {
-                SimulatedArena.getInstance()
-                .addGamePieceProjectile(new ReefscapeCoralOnFly(
-                driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
-                // Obtain robot position from drive simulation
-                // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-                new Translation2d(0.35, 0),
-                // Obtain robot speed from drive simulation
-                driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-                // Obtain robot facing from drive simulation
-                driveSimulation.getSimulatedDriveTrainPose().getRotation(),
-                // The height at which the coral is ejected
-                Meters.of(0.2),
-                // The initial speed of the coral
-                MetersPerSecond.of(3),
-                // The coral is ejected at a 35-degree slope
-                Degrees.of(-35)));
             }
         }
     }
