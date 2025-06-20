@@ -48,7 +48,7 @@ public class ShoulderConstants extends ArmJointConstants {
         this.XPosition = Meters.of(0.07);
         this.YPosition = Inches.of(0);
         this.ZPosition = Meters.of(0.377);
-        this.CanCoderOffset = Degrees.of(223);
+        this.CanCoderOffset = Degrees.of(-51.24);
         
         this.mechanismSimCallback = (d) -> {
             RobotState.instance().setShoulderSource(d);
