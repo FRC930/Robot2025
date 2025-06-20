@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
 
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
@@ -10,6 +11,7 @@ import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -91,7 +93,7 @@ public class IntakeIOSim {
                 // The initial speed of the coral
                 MetersPerSecond.of(3),
                 // The coral is ejected at a 35-degree slope
-                Degrees.of(-35)));
+                Degrees.of(35)));
             }
             // Score Level L2 Code
             if (level == ScoreLevel.L2) {
@@ -108,7 +110,7 @@ public class IntakeIOSim {
                 // The height at which the coral is ejected
                 Meters.of(0.46),
                 // The initial speed of the coral
-                MetersPerSecond.of(-2.5),
+                MetersPerSecond.of(2.5),
                 // The coral is ejected at a 35-degree slope
                 Degrees.of(35)));
             }
@@ -129,7 +131,7 @@ public class IntakeIOSim {
                 // The initial speed of the coral
                 MetersPerSecond.of(2),
                 // The coral is ejected at a 35-degree slope
-                Degrees.of(-35)));
+                Degrees.of(35)));
             }
             // Score Level L4 Code
             if (level == ScoreLevel.L4) {
@@ -138,7 +140,7 @@ public class IntakeIOSim {
                     // Obtain robot position from drive simulation
                     driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
                     // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-                    new Translation2d(0.46, 0),
+                    new Translation2d(-1.15, 0.1),
                     // Obtain robot speed from drive simulation
                     driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                     // Obtain robot facing from drive simulation
@@ -148,7 +150,7 @@ public class IntakeIOSim {
                     // The initial speed of the coral
                     MetersPerSecond.of(1),
                     // The coral is ejected vertically downwards
-                    Degrees.of(-90)));
+                    Degrees.of(90)));
             }
         }
     }
