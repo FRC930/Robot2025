@@ -485,7 +485,7 @@ public class RobotContainer {
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
         () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive))
-        .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L4, driveSimulation)))
+        .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(reefPositions.getScoreLevel(), driveSimulation)))
     ).onFalse(
     new ConditionalCommand(
       new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
@@ -509,7 +509,7 @@ public class RobotContainer {
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
         () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive))
-        .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(ScoreLevel.L4, driveSimulation)))
+        .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(reefPositions.getScoreLevel(), driveSimulation)))
     ).onFalse(new ConditionalCommand(
       new L4ToStow(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),
       new StowCommand(shoulder, elbow, elevator, wrist, coralEndEffector, algaeEndEffector),

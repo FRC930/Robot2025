@@ -83,13 +83,13 @@ public class IntakeIOSim {
                 driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
                 // Obtain robot position from drive simulation
                 // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-                new Translation2d(0.35, 0),
+                new Translation2d(-1, 0),
                 // Obtain robot speed from drive simulation
                 driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                 // Obtain robot facing from drive simulation
                 driveSimulation.getSimulatedDriveTrainPose().getRotation(),
                 // The height at which the coral is ejected
-                Meters.of(0.2),
+                Meters.of(0.5),
                 // The initial speed of the coral
                 MetersPerSecond.of(3),
                 // The coral is ejected at a 35-degree slope
@@ -102,13 +102,13 @@ public class IntakeIOSim {
                 driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
                 // Obtain robot position from drive simulation
                 // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-                new Translation2d(0.35, 0),
+                new Translation2d(-1.1, 0),
                 // Obtain robot speed from drive simulation
                 driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                 // Obtain robot facing from drive simulation
                 driveSimulation.getSimulatedDriveTrainPose().getRotation(),
                 // The height at which the coral is ejected
-                Meters.of(0.46),
+                Meters.of(0.63),
                 // The initial speed of the coral
                 MetersPerSecond.of(2.5),
                 // The coral is ejected at a 35-degree slope
@@ -121,13 +121,13 @@ public class IntakeIOSim {
                 driveSimulation.getSimulatedDriveTrainPose().getTranslation(),
                 // Obtain robot position from drive simulation
                 // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-                new Translation2d(0.35, 0),
+                new Translation2d(-1, 0),
                 // Obtain robot speed from drive simulation
                 driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                 // Obtain robot facing from drive simulation
                 driveSimulation.getSimulatedDriveTrainPose().getRotation(),
                 // The height at which the coral is ejected
-                Meters.of(1.28),
+                Meters.of(1.1),
                 // The initial speed of the coral
                 MetersPerSecond.of(2),
                 // The coral is ejected at a 35-degree slope
