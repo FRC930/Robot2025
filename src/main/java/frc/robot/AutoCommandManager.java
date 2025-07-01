@@ -61,10 +61,10 @@ public class AutoCommandManager {
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Left, 
         true,
-        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        () -> SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
         SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
-        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive
       ),
 
@@ -88,10 +88,10 @@ public class AutoCommandManager {
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Left, 
         true,
-        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        () -> SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
         SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
-        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive
       ),
 
@@ -111,10 +111,10 @@ public class AutoCommandManager {
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Right, 
         true,
-        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        () -> SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
         SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
-        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive
       ),
 
@@ -310,10 +310,10 @@ public class AutoCommandManager {
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Left, 
         true,
-        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        () -> SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
         SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
-        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive
       )
     );
@@ -322,10 +322,10 @@ public class AutoCommandManager {
       ReefScoreCommandFactory.getNewReefCoralScoreSequence(
         ReefPosition.Right, 
         true,
-        SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
+        () -> SelectorCommandFactory.getCoralLevelPrepCommandSelector(shoulder, elbow, elevator, wrist), 
         SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEE),
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEE, drive),
-        SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
+        () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
         drive
       )
     );
