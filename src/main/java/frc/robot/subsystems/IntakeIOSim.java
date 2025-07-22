@@ -17,8 +17,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.util.ReefPositionsUtil.ScoreLevel;
 
+// Intake sim stuff for Maple-Sim
 public class IntakeIOSim {
     private final IntakeSimulation intakeSimulation;
+    // Configures the bumper size and intake settings
     public IntakeIOSim(AbstractDriveTrainSimulation driveTrain) {
         // Here, create the intake simulation with respect to the intake on your real robot
         this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
@@ -32,10 +34,10 @@ public class IntakeIOSim {
             Meters.of(0.2),
             // The intake is mounted on the back side of the chassis
             IntakeSimulation.IntakeSide.BACK,
-            // The intake can hold up to 1 note
+            // The intake can hold up to 1 gamepiece
             1);
     }
-
+    
     public void setRunning(boolean runIntake) {
         if (runIntake)
             intakeSimulation.startIntake(); // Extends the intake out from the chassis frame and starts detecting contacts with game pieces
@@ -72,7 +74,7 @@ public class IntakeIOSim {
           dropCoral();
         });
     }
-
+    // Scores coral for each level
     public void scoreCoral(ScoreLevel level, AbstractDriveTrainSimulation driveSimulation) {
         if (intakeSimulation.getGamePiecesAmount() > 0) {
             intakeSimulation.obtainGamePieceFromIntake();
