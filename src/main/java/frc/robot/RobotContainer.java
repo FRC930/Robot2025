@@ -195,6 +195,7 @@ public class RobotContainer {
 
     switch (Constants.currentMode) {
       case SIM:
+        // Talk
         // Sim robot, instantiate physics sim IO implementations
         // Configures the drive simulation to Maple-Sim configuration
         driveSimulation = new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
@@ -208,7 +209,6 @@ public class RobotContainer {
             new ModuleIOSim(driveSimulation.getModules()[2]),
             new ModuleIOSim(driveSimulation.getModules()[3]),
             driveSimulation::setSimulationWorldPose);
-
         vision =
             new AprilTagVision(
                 drive::setPose,
@@ -288,6 +288,7 @@ public class RobotContainer {
 
         climber = new Climber(new ClimberIOTalonFX(rioCanBuilder.id(19).build(), INVERT_ENDGAME));
 
+        // Talk
         // Initializes intake sim using drive simulation
         intakeSim = new IntakeIOSim(driveSimulation);
 
@@ -494,7 +495,8 @@ public class RobotContainer {
         SelectorCommandFactory.getCoralLevelScoreCommandSelector(shoulder, elbow, elevator, wrist, coralEndEffector),
         SelectorCommandFactory.getCoralLevelStopScoreCommandSelector(elbow, wrist, coralEndEffector, drive),
         () -> SelectorCommandFactory.getCoralLevelWaitUntilAtLevelCommandSelector(shoulder, elbow, elevator, wrist),
-        drive))
+        drive)) 
+        // Talk
         // Scores a coral using intake sim
         .andThen(Commands.runOnce(() -> intakeSim.scoreCoral(reefPositions.getScoreLevel(), driveSimulation)))
     ).onFalse(
@@ -612,6 +614,7 @@ public class RobotContainer {
     controller.start()
       .onTrue(new InstantCommand(() -> {reefPositions.setIsAutoAligning(!reefPositions.getIsAutoAligning());}));
     
+    // Talk
     /* Maple-Sim Spawn Game Pieces Button Bindings */
     controller.povUp()
       .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
@@ -803,6 +806,7 @@ public class RobotContainer {
   }
 
   public void configureMapleSimButtonBindings() {
+    // Talk
     // Spawns Algae
     simcontroller.povLeft()
       .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
@@ -817,6 +821,7 @@ public class RobotContainer {
         )
     );
 
+    // Talk
     // Spawns Coral
     simcontroller.povRight()
       .onTrue(Commands.runOnce(() -> SimulatedArena.getInstance()
@@ -831,6 +836,7 @@ public class RobotContainer {
         )
     );
 
+    // Talk
     simcontroller.a()
       .onTrue(Commands.runOnce(() -> {
         SimulatedArena.getInstance()
@@ -913,6 +919,7 @@ public class RobotContainer {
     }
   }
 
+  // Talk
   // Resets simulation and gamepieces
   public void resetSimulation() {
       if (Constants.currentMode != Constants.Mode.SIM) return;
@@ -921,6 +928,7 @@ public class RobotContainer {
       SimulatedArena.getInstance().resetFieldForAuto();
   }
 
+  // Talk
   // Makes sure the simulation is updated
   public void updateSimulation() {
         if (Constants.currentMode != Constants.Mode.SIM) return;
@@ -942,6 +950,7 @@ public class RobotContainer {
     Logger.recordOutput("ReefPositions/DeAlgaePos/Low", reefPositions.isSelected(DeAlgaeLevel.Low));
     Logger.recordOutput("ReefPositions/isAutoAlignEnabled", reefPositions.getIsAutoAligning());
 
+    // Talk
     // Logs robot position, coral position, algae position, and counts how many coral that the robot has
     Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
     Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));

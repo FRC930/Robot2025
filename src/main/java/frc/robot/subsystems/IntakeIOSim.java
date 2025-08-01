@@ -20,6 +20,7 @@ import frc.robot.util.ReefPositionsUtil.ScoreLevel;
 // Intake sim stuff for Maple-Sim
 public class IntakeIOSim {
     private final IntakeSimulation intakeSimulation;
+    // Talk
     // Configures the bumper size and intake settings
     public IntakeIOSim(AbstractDriveTrainSimulation driveTrain) {
         // Here, create the intake simulation with respect to the intake on your real robot
@@ -38,6 +39,7 @@ public class IntakeIOSim {
             1);
     }
     
+    // Talk
     public void setRunning(boolean runIntake) {
         if (runIntake)
             intakeSimulation.startIntake(); // Extends the intake out from the chassis frame and starts detecting contacts with game pieces
@@ -52,6 +54,7 @@ public class IntakeIOSim {
         });
     }
 
+    // Talk
     public boolean isGamePieceInsideIntake() {
         return intakeSimulation.getGamePiecesAmount() != 0; // True if there is a game piece in the intake
     }
@@ -60,6 +63,7 @@ public class IntakeIOSim {
         return intakeSimulation.getGamePiecesAmount();
     }
 
+    // Talk
     public void dropCoral(){
         // final LoggedDashboardChooser<IntakePosition> intakePosChooser = new LoggedDashboardChooser<>("Intake Position");
         // IntakePosition pos = intakePosChooser.get();
@@ -74,6 +78,8 @@ public class IntakeIOSim {
           dropCoral();
         });
     }
+    
+    // Talk
     // Scores coral for each level
     public void scoreCoral(ScoreLevel level, AbstractDriveTrainSimulation driveSimulation) {
         if (intakeSimulation.getGamePiecesAmount() > 0) {
@@ -156,10 +162,4 @@ public class IntakeIOSim {
             }
         }
     }
-
-    // public void launchNote() {
-    //     // if there is a note in the intake, it will be removed and return true; otherwise, returns false
-    //     if (intakeSimulation.obtainGamePieceFromIntake())
-    //         ShooterIOSim.launchNote(); // notify the simulated flywheels to launch a note
-    // }
 }

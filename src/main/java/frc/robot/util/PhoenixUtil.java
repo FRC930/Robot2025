@@ -68,11 +68,13 @@ public class PhoenixUtil {
 
   }
 
+  // Talk
+  // This code simluates time passing, so motors will be able to move fast rather than simulating incredibly short periods of time.
   public static double[] getSimulationOdometryTimeStamps() {
     final double[] odometryTimeStamps = new double[SimulatedArena.getSimulationSubTicksIn1Period()];
     for (int i = 0; i < odometryTimeStamps.length; i++) {
         odometryTimeStamps[i] = Timer.getFPGATimestamp()
-                - 0.02
+                - 0.02 // Simulates a 20 millisecond time shift.
                 + i * SimulatedArena.getSimulationDt().in(Seconds);
     }
 
