@@ -123,7 +123,7 @@ public class RobotContainer {
   private final Drive drive;
 
   private final double DRIVE_SPEED = 1.0;
-  private final double ANGULAR_SPEED = 0.75;
+  private final double ANGULAR_SPEED = 0.55;
   private final boolean INVERT_ENDGAME = true;
   private final Wrist wrist;
 
