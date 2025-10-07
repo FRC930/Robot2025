@@ -73,7 +73,7 @@ public class ReefScoreCommandFactory {
         //Left level overrides
     private static LoggedTunableNumber offsetLL1 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L1", 0.1804);
     private static LoggedTunableNumber offsetLL2 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L2", 0.18);
-    private static LoggedTunableNumber offsetLL3 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L3", 0.20);
+    private static LoggedTunableNumber offsetLL3 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L3", 0.20 - 0.051);
     private static LoggedTunableNumber offsetLL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Left/L4", 0.25);
         //Right level overrides
     private static LoggedTunableNumber offsetRL1 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Right/L1", 0.1238);
@@ -84,7 +84,7 @@ public class ReefScoreCommandFactory {
     private static LoggedTunableNumber offsetBFinalL1 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L1", 0.638);
     private static LoggedTunableNumber offsetBFinalL2 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L2", 0.7);
     private static LoggedTunableNumber offsetBFinalL3 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L3", 0.71);
-    private static LoggedTunableNumber offsetBFinalL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L4",0.72);
+    private static LoggedTunableNumber offsetBFinalL4 = new LoggedTunableNumber("AutoAlignCommands/ReefAlignCommand/Offsets/Back/L4",0.72 - 0.0254);
 
     /**
      * Finds the closest reef april tag (from the list of this alliance's apriltags) to a position.
